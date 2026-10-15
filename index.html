@@ -194,16 +194,23 @@ button,input,select,textarea{font-family:inherit}
 .empty-state{text-align:center;padding:26px 12px;color:var(--text-3);font-size:12.5px}
 .empty-state .big{font-size:26px;display:block;margin-bottom:10px;opacity:.5}
 
-/* ===== Study Activity heatmap — each day block now shows its studied time ===== */
-.heatmap{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;grid-auto-columns:minmax(46px,1fr);gap:5px;overflow-x:auto;padding-bottom:6px}
-.heat-cell{min-height:34px;border-radius:7px;background:rgba(255,255,255,.045);display:flex;align-items:center;justify-content:center;text-align:center;padding:2px 3px;font-size:10px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:rgba(255,255,255,.30);transition:transform .15s var(--ease)}
-.heat-cell:hover{transform:scale(1.06)}
-.heat-cell.l1{background:rgba(255,255,255,.16);color:rgba(255,255,255,.74)}
-.heat-cell.l2{background:rgba(255,255,255,.32);color:#fff}
-.heat-cell.l3{background:rgba(255,255,255,.55);color:#08080a}
-.heat-cell.l4{background:#fff;color:#08080a}
-.heat-legend{display:flex;align-items:center;gap:5px;justify-content:flex-end;font-size:10.5px;color:var(--text-3);margin-top:12px;font-weight:500}
-.heat-legend span{width:11px;height:11px;border-radius:3px;display:inline-block;border:1px solid rgba(255,255,255,.05)}
+.heatmap-wrap{overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.heatmap{display:grid;grid-template-rows:repeat(7,28px);grid-auto-flow:column;grid-auto-columns:minmax(34px,1fr);gap:5px;min-width:470px}
+.heat-cell{width:100%;height:28px;min-width:34px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;font-family:var(--mono);color:rgba(255,255,255,.45);line-height:1;transition:all .18s var(--ease);cursor:pointer;position:relative}
+.heat-cell:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.45);z-index:3;border-color:rgba(255,255,255,.35)}
+.heat-cell.l1{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.25)}
+.heat-cell.l2{background:rgba(255,255,255,.42);color:#08080a;border-color:rgba(255,255,255,.5);font-weight:800}
+.heat-cell.l3{background:rgba(255,255,255,.75);color:#08080a;border-color:#fff;font-weight:800}
+.heat-cell.l4{background:#ffffff;color:#000;border-color:#fff;font-weight:800;box-shadow:0 0 12px rgba(255,255,255,.35)}
+.heat-val{font-size:9px;letter-spacing:-.02em}
+.heat-val.empty{opacity:.22;font-size:8px;font-weight:500}
+.heat-legend{display:flex;align-items:center;gap:6px;justify-content:flex-end;font-size:10.5px;color:var(--text-3);margin-top:14px;font-weight:500}
+.heat-legend span{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid rgba(255,255,255,.08)}
+.heat-legend span.l0{background:rgba(255,255,255,.04)}
+.heat-legend span.l1{background:rgba(255,255,255,.18)}
+.heat-legend span.l2{background:rgba(255,255,255,.42)}
+.heat-legend span.l3{background:rgba(255,255,255,.75)}
+.heat-legend span.l4{background:#ffffff}
 
 .timer-layout{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
 @media (max-width:960px){.timer-layout{grid-template-columns:1fr}}
@@ -681,8 +688,6 @@ html.focus-mode body::after{display:none!important}
   .user-chip-email{display:none}
   .focus-content{gap:24px}
   .focus-goal{padding:16px 18px}
-  .heatmap{grid-auto-columns:minmax(40px,1fr);gap:4px}
-  .heat-cell{min-height:30px;font-size:9px;border-radius:6px;padding:2px}
 }
 /* ===== Planner ===== */
 .planner-layout{display:grid;grid-template-columns:216px minmax(0,1fr);gap:16px;align-items:start}
@@ -833,9 +838,46 @@ html.focus-mode body::after{display:none!important}
 .res-name a:hover{border-bottom-color:#fff}
 .res-url{font-size:10.5px;color:var(--text-3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
 .res-actions{display:flex;gap:5px;align-items:center;flex-shrink:0}
-.res-open,.res-del{width:29px;height:29px;border-radius:9px;border:1px solid var(--glass-border);background:rgba(255,255,255,.04);color:var(--text-2);font-size:13px;cursor:pointer;font-family:inherit;display:grid;place-items:center;text-decoration:none;transition:all .2s var(--ease)}
-.res-open:hover{color:#fff;background:rgba(255,255,255,.11)}
+.res-open,.res-action-btn,.res-del{width:29px;height:29px;border-radius:9px;border:1px solid var(--glass-border);background:rgba(255,255,255,.04);color:var(--text-2);font-size:13px;cursor:pointer;font-family:inherit;display:grid;place-items:center;text-decoration:none;transition:all .2s var(--ease)}
+.res-open:hover,.res-action-btn:hover{color:#fff;background:rgba(255,255,255,.11)}
 .res-del:hover{color:#ffb3bc;background:rgba(255,90,110,.13);border-color:rgba(255,90,110,.32)}
+
+/* ===== Resource Action & Reader Modals ===== */
+.res-choice-btn{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);color:var(--text);cursor:pointer;font-family:inherit;text-align:left;transition:all .2s var(--ease);width:100%}
+.res-choice-btn:hover{background:rgba(255,255,255,.08);border-color:var(--glass-border-2);transform:translateY(-1px)}
+.res-choice-btn .rc-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.res-choice-btn .rc-text{flex:1;min-width:0}
+.res-choice-btn .rc-title{font-size:13.5px;font-weight:700;color:#fff;margin-bottom:2px}
+.res-choice-btn .rc-desc{font-size:11.5px;color:var(--text-3);line-height:1.4}
+.res-choice-btn .rc-arrow{font-size:16px;color:var(--text-3);font-weight:700;padding-right:4px;transition:transform .2s var(--ease)}
+.res-choice-btn:hover .rc-arrow{color:#fff;transform:translateX(3px)}
+
+.doc-reader-modal{width:min(1100px,95vw);height:88vh;max-height:92vh;max-width:none;display:flex;flex-direction:column;padding:20px;background:rgba(16,16,20,.97);border-radius:24px;border:1px solid var(--glass-border-2)}
+.doc-reader-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+.doc-reader-title-box{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.doc-reader-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:18px;background:rgba(255,255,255,.06);flex-shrink:0}
+.doc-reader-title{font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-reader-sub{font-size:11.5px;color:var(--text-3);margin-top:2px}
+.doc-reader-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.doc-reader-btn{padding:8px 14px;font-size:12px;border-radius:10px}
+.doc-reader-body{flex:1;min-height:0;margin-top:14px;border-radius:14px;overflow:hidden;background:#0d0d12;border:1px solid rgba(255,255,255,.06);position:relative}
+.doc-reader-iframe{width:100%;height:100%;border:none;display:block}
+@media (max-width:768px){
+  .doc-reader-modal{width:100vw;height:100vh;max-height:100vh;border-radius:0;padding:12px}
+  .doc-reader-title-box{width:100%}
+  .doc-reader-actions{width:100%;justify-content:flex-end}
+}
+
+/* ===== Study Resource Sections ===== */
+.res-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.res-link-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:all .2s var(--ease);cursor:pointer;position:relative}
+.res-link-card:hover{background:rgba(255,255,255,.065);border-color:var(--glass-border-2);transform:translateY(-1px)}
+.res-link-icon{width:38px;height:38px;border-radius:11px;background:rgba(92,200,255,.1);color:#8ad4ff;display:grid;place-items:center;font-size:16px;flex-shrink:0;border:1px solid rgba(92,200,255,.2)}
+.res-link-info{flex:1;min-width:0}
+.res-link-title{font-size:13px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-link-meta{font-size:11px;color:var(--text-3);margin-top:2px;display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-link-tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);color:var(--text-2);text-transform:uppercase;letter-spacing:.04em}
+.res-link-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .res-add{width:100%;padding:11px;border-radius:13px;border:1px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.02);color:var(--text-2);font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s var(--ease)}
 .res-add:hover{border-style:solid;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.07);color:#fff}
 .res-upload-hint{font-size:11px;color:var(--text-3);line-height:1.5;margin-top:-4px}
@@ -887,7 +929,393 @@ html.focus-mode body::after{display:none!important}
   .dock-btn svg{width:16px;height:16px}
   .betting-board{grid-template-columns:1fr 1fr}
   .bet-zone{padding:12px 10px}
-  .bet-zone-name{font-size:12.5px}
+}
+
+/* ===== Minimalist White Theme ===== */
+[data-theme="white"]{
+  --bg:#f8f9fa;
+  --glass-border:rgba(0,0,0,.08);
+  --glass-border-2:rgba(0,0,0,.15);
+  --text:#0f172a;
+  --text-2:#475569;
+  --text-3:#94a3b8;
+  --accent:#0f172a;
+  --accent-ink:#ffffff;
+  --accent-soft:rgba(0,0,0,.04);
+  --accent-glow:rgba(0,0,0,.12);
+  --shadow-glass:0 4px 20px -2px rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.03);
+  --shadow-lift:0 12px 32px -4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.04);
+  --inner-hi:inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(0,0,0,.02);
+}
+[data-theme="white"] body{
+  background:var(--bg);
+  color:var(--text);
+}
+[data-theme="white"] body::after{
+  background-image:radial-gradient(circle at 1px 1px, rgba(0,0,0,.035) 1px, transparent 0);
+  opacity:.7;
+}
+[data-theme="white"] .bg-orbs{
+  opacity:.18;
+  filter:saturate(30%) blur(120px);
+}
+[data-theme="white"] ::selection{
+  background:#0f172a;
+  color:#ffffff;
+}
+[data-theme="white"] ::-webkit-scrollbar-thumb{
+  background:rgba(0,0,0,.18);
+}
+[data-theme="white"] ::-webkit-scrollbar-thumb:hover{
+  background:rgba(0,0,0,.3);
+}
+
+/* Floating Pill Dock */
+[data-theme="white"] .dock{
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 10px 32px -4px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.02);
+}
+[data-theme="white"] .dock-btn{
+  color:#64748b;
+}
+[data-theme="white"] .dock-btn:hover{
+  color:#0f172a;
+  background:rgba(0,0,0,.04);
+}
+[data-theme="white"] .dock-btn.active{
+  background:#0f172a;
+  color:#ffffff;
+  box-shadow:0 4px 14px rgba(15,23,42,.2);
+}
+[data-theme="white"] .dock-divider{
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.12),transparent);
+}
+
+/* Cards, Banners, Panels */
+[data-theme="white"] .card,
+[data-theme="white"] .banner,
+[data-theme="white"] .timer-card,
+[data-theme="white"] .pet-card,
+[data-theme="white"] .breaks-hero,
+[data-theme="white"] .wheel-stage,
+[data-theme="white"] .shop-item,
+[data-theme="white"] .ach-card,
+[data-theme="white"] .profile-hero,
+[data-theme="white"] .res-subject,
+[data-theme="white"] .week-day,
+[data-theme="white"] .auth-card,
+[data-theme="white"] .modal,
+[data-theme="white"] .doc-reader-modal,
+[data-theme="white"] .res-choice-card,
+[data-theme="white"] .planner-ribbon{
+  background:#ffffff;
+  border-color:rgba(0,0,0,.08);
+  box-shadow:0 2px 12px rgba(0,0,0,.03), 0 1px 2px rgba(0,0,0,.02);
+}
+[data-theme="white"] .card:hover,
+[data-theme="white"] .shop-item:hover,
+[data-theme="white"] .ach-card:hover{
+  border-color:rgba(0,0,0,.16);
+  box-shadow:0 8px 24px -4px rgba(0,0,0,.06);
+}
+
+/* Typography Overrides */
+[data-theme="white"] .page-title,
+[data-theme="white"] .card-title,
+[data-theme="white"] .quote,
+[data-theme="white"] .timer-display,
+[data-theme="white"] .big-num,
+[data-theme="white"] .breaks-hero-title,
+[data-theme="white"] .breaks-jar-num,
+[data-theme="white"] .profile-name,
+[data-theme="white"] .shop-name,
+[data-theme="white"] .ach-name,
+[data-theme="white"] .res-subj-name,
+[data-theme="white"] .res-doc-name,
+[data-theme="white"] .week-day-title,
+[data-theme="white"] .subject-row-head,
+[data-theme="white"] .user-chip-email,
+[data-theme="white"] .pill b,
+[data-theme="white"] .warn-title,
+[data-theme="white"] .auth-title,
+[data-theme="white"] .bet-zone-name,
+[data-theme="white"] .stat-value,
+[data-theme="white"] .break-stat .val,
+[data-theme="white"] .wheel-tokens-bar .val{
+  color:#0f172a!important;
+}
+
+/* Timer Ring */
+[data-theme="white"] .ring .ring-bg{
+  stroke:#e2e8f0;
+}
+[data-theme="white"] .ring .ring-fg{
+  stroke:#0f172a;
+}
+
+/* Buttons */
+[data-theme="white"] .btn.primary,
+[data-theme="white"] .auth-submit,
+[data-theme="white"] .spin-btn,
+[data-theme="white"] .gamble-submit{
+  background:#0f172a;
+  color:#ffffff!important;
+  box-shadow:0 4px 14px rgba(15,23,42,.15);
+}
+[data-theme="white"] .btn.primary:hover,
+[data-theme="white"] .auth-submit:hover,
+[data-theme="white"] .spin-btn:hover,
+[data-theme="white"] .gamble-submit:hover{
+  background:#000000;
+  box-shadow:0 6px 20px rgba(0,0,0,.22);
+}
+[data-theme="white"] .btn.ghost,
+[data-theme="white"] .btn.soft,
+[data-theme="white"] .icon-btn,
+[data-theme="white"] .planner-chip,
+[data-theme="white"] .pill,
+[data-theme="white"] .user-chip,
+[data-theme="white"] .shop-balance,
+[data-theme="white"] .wheel-tokens-bar,
+[data-theme="white"] .banner-tag,
+[data-theme="white"] .gamble-quick button{
+  background:#f1f5f9;
+  border-color:rgba(0,0,0,.08);
+  color:#334155;
+}
+[data-theme="white"] .btn.ghost:hover,
+[data-theme="white"] .btn.soft:hover,
+[data-theme="white"] .icon-btn:hover{
+  background:#e2e8f0;
+  color:#0f172a;
+}
+[data-theme="white"] .planner-chip.active{
+  background:#0f172a;
+  color:#ffffff!important;
+  border-color:#0f172a;
+}
+[data-theme="white"] .lv-badge{
+  background:#0f172a;
+  color:#ffffff;
+}
+
+/* Inputs, Selects & Forms */
+[data-theme="white"] input[type=text],
+[data-theme="white"] input[type=number],
+[data-theme="white"] input[type=email],
+[data-theme="white"] input[type=password],
+[data-theme="white"] select,
+[data-theme="white"] textarea,
+[data-theme="white"] .planner-select,
+[data-theme="white"] .planner-input-wrap input,
+[data-theme="white"] .gamble-amount-box input,
+[data-theme="white"] .res-input,
+[data-theme="white"] .fair-row code,
+[data-theme="white"] .fair-row input{
+  background:#f8fafc!important;
+  border:1px solid #e2e8f0!important;
+  color:#0f172a!important;
+}
+[data-theme="white"] input:focus,
+[data-theme="white"] select:focus,
+[data-theme="white"] textarea:focus{
+  background:#ffffff!important;
+  border-color:#0f172a!important;
+  box-shadow:0 0 0 3px rgba(15,23,42,.08)!important;
+}
+
+/* Overlays & Modals */
+[data-theme="white"] .modal-backdrop,
+[data-theme="white"] #authGate,
+[data-theme="white"] #loadingOverlay,
+[data-theme="white"] .doc-reader-backdrop,
+[data-theme="white"] .res-choice-backdrop{
+  background:rgba(15,23,42,.35);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+[data-theme="white"] .doc-reader-header{
+  background:#ffffff;
+  border-bottom-color:#e2e8f0;
+}
+[data-theme="white"] .doc-reader-title{
+  color:#0f172a;
+}
+[data-theme="white"] .doc-reader-body{
+  background:#f1f5f9;
+}
+[data-theme="white"] .doc-reader-canvas-card{
+  background:#ffffff;
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+/* Planner & Tasks */
+[data-theme="white"] .ribbon-item{
+  color:#64748b;
+}
+[data-theme="white"] .ribbon-item:hover{
+  background:#f1f5f9;
+  color:#0f172a;
+}
+[data-theme="white"] .ribbon-item.active{
+  background:#0f172a;
+  color:#ffffff;
+}
+[data-theme="white"] .ribbon-badge{
+  background:#e2e8f0;
+  color:#334155;
+}
+[data-theme="white"] .ribbon-item.active .ribbon-badge{
+  background:rgba(255,255,255,.2);
+  color:#ffffff;
+}
+[data-theme="white"] .todo-item,
+[data-theme="white"] .break-source,
+[data-theme="white"] .break-log-item,
+[data-theme="white"] .drop-item,
+[data-theme="white"] .res-item,
+[data-theme="white"] .payout-row,
+[data-theme="white"] .session-item{
+  background:#f8fafc;
+  border-color:#e2e8f0;
+  color:#0f172a;
+}
+[data-theme="white"] .todo-title,
+[data-theme="white"] .res-item-title,
+[data-theme="white"] .break-source .src-name,
+[data-theme="white"] .break-log-item .bl-name,
+[data-theme="white"] .drop-item .di-name{
+  color:#0f172a;
+}
+
+/* Heatmap in White Theme */
+[data-theme="white"] .heat-cell{
+  background:#f1f5f9;
+  border-color:#e2e8f0;
+  color:#94a3b8;
+}
+[data-theme="white"] .heat-cell:hover{
+  box-shadow:0 6px 16px rgba(0,0,0,.08);
+  border-color:#0f172a;
+}
+[data-theme="white"] .heat-cell.l1{
+  background:#e2e8f0;
+  color:#1e293b;
+  border-color:#cbd5e1;
+}
+[data-theme="white"] .heat-cell.l2{
+  background:#94a3b8;
+  color:#ffffff;
+  border-color:#64748b;
+}
+[data-theme="white"] .heat-cell.l3{
+  background:#475569;
+  color:#ffffff;
+  border-color:#334155;
+}
+[data-theme="white"] .heat-cell.l4{
+  background:#0f172a;
+  color:#ffffff;
+  border-color:#0f172a;
+  box-shadow:0 2px 8px rgba(15,23,42,.25);
+}
+[data-theme="white"] .heat-val.empty{
+  opacity:.35;
+  color:#94a3b8;
+}
+[data-theme="white"] .heat-legend span.l0{background:#f1f5f9;border-color:#e2e8f0}
+[data-theme="white"] .heat-legend span.l1{background:#e2e8f0;border-color:#cbd5e1}
+[data-theme="white"] .heat-legend span.l2{background:#94a3b8;border-color:#64748b}
+[data-theme="white"] .heat-legend span.l3{background:#475569;border-color:#334155}
+[data-theme="white"] .heat-legend span.l4{background:#0f172a;border-color:#0f172a}
+
+/* Secondary Elements */
+[data-theme="white"] .progress{
+  background:#e2e8f0;
+}
+[data-theme="white"] .progress i{
+  background:#0f172a;
+}
+[data-theme="white"] .mini-bar{
+  background:#e2e8f0;
+  border-color:#cbd5e1;
+}
+[data-theme="white"] .mini-bar i{
+  background:#0f172a;
+}
+[data-theme="white"] .breaks-jar{
+  background:#f1f5f9;
+  border-color:#e2e8f0;
+}
+[data-theme="white"] .breaks-jar::after{
+  background:linear-gradient(180deg,rgba(15,23,42,.15),rgba(15,23,42,.05));
+}
+[data-theme="white"] .bet-zone{
+  background:#f8fafc;
+  border-color:#e2e8f0;
+}
+[data-theme="white"] .bet-zone:hover{
+  background:#f1f5f9;
+  border-color:#cbd5e1;
+}
+[data-theme="white"] .bet-zone.active{
+  background:#0f172a;
+  color:#ffffff!important;
+  border-color:#0f172a;
+}
+[data-theme="white"] .bet-zone.active .bet-zone-name,
+[data-theme="white"] .bet-zone.active .bet-zone-desc{
+  color:#ffffff!important;
+}
+[data-theme="white"] .wheel-hub{
+  background:radial-gradient(circle at 35% 30%,#ffffff,#f1f5f9);
+  border-color:#e2e8f0;
+}
+[data-theme="white"] .wheel-hub-txt{
+  color:#0f172a;
+}
+[data-theme="white"] .gamble-currency-tabs{
+  background:#f1f5f9;
+  border-color:#e2e8f0;
+}
+[data-theme="white"] .gamble-currency-tab.active{
+  background:#0f172a;
+  color:#ffffff;
+}
+[data-theme="white"] .auth-tabs{
+  background:#f1f5f9;
+  border-color:#e2e8f0;
+}
+[data-theme="white"] .auth-tab.active{
+  background:#0f172a;
+  color:#ffffff;
+}
+[data-theme="white"] .warn-banner{
+  background:#f8fafc;
+  border-color:#e2e8f0;
+}
+[data-theme="white"] .res-choice-btn.primary{
+  background:#0f172a;
+  color:#ffffff;
+}
+[data-theme="white"] .res-choice-btn.secondary{
+  background:#f1f5f9;
+  border-color:#e2e8f0;
+  color:#0f172a;
+}
+[data-theme="white"] .subject-bar{
+  background:#e2e8f0;
+}
+[data-theme="white"] .subject-bar i{
+  background:#0f172a;
+}
+[data-theme="white"] .user-chip-avatar{
+  background:#0f172a;
+  color:#ffffff;
+}
 }
 </style>
 </head>
@@ -946,6 +1374,10 @@ html.focus-mode body::after{display:none!important}
     <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2.5v3.5M16 2.5v3.5"/><path d="M7.5 13.5h3M7.5 17h6.5"/></svg>
     <span>Planner</span>
   </button>
+  <button class="dock-btn" data-view="resources" title="Study Resources">
+    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h6M9 11h4"/></svg>
+    <span>Resources</span>
+  </button>
   <button class="dock-btn" data-view="timer" title="Focus">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
     <span>Focus</span>
@@ -996,6 +1428,7 @@ html.focus-mode body::after{display:none!important}
         <div class="pill coin" title="Study Coins">🪙 <b id="topCoins">0</b></div>
         <div class="pill" id="streakPill" title="Study Streak">🔥 <b id="topStreak">0</b><span class="pill-lbl">day</span></div>
         <div class="pill level-pill" title="Level"><span class="lv-badge">Lv <b id="topLevel">1</b></span><span class="mini-bar"><i id="miniBar" style="width:0%"></i></span></div>
+        <button class="icon-btn" id="themeToggleBtn" type="button" title="Switch to Minimalist White Theme" aria-label="Toggle Theme"><span id="themeToggleIcon">☀</span></button>
         <button class="icon-btn" id="settingsBtn" title="Settings">⚙</button>
       </div>
     </header>
@@ -1042,8 +1475,8 @@ html.focus-mode body::after{display:none!important}
 
       <div class="card">
         <h3 class="card-title"><span class="dot"></span>Study Activity — Last 13 Weeks</h3>
-        <div class="heatmap" id="heatmap"></div>
-        <div class="heat-legend">Less<span style="background:rgba(255,255,255,.045)"></span><span style="background:rgba(255,255,255,.16)"></span><span style="background:rgba(255,255,255,.32)"></span><span style="background:rgba(255,255,255,.55)"></span><span style="background:#fff"></span>More</div>
+        <div class="heatmap-wrap"><div class="heatmap" id="heatmap"></div></div>
+        <div class="heat-legend">Less<span class="l0"></span><span class="l1"></span><span class="l2"></span><span class="l3"></span><span class="l4"></span>More</div>
       </div>
     </section>
 
@@ -1061,11 +1494,6 @@ html.focus-mode body::after{display:none!important}
             <span class="ribbon-ico">▦</span>
             <span class="ribbon-txt">Weekly Schedule</span>
             <span class="ribbon-badge" id="ribbonScheduleBadge">0</span>
-          </button>
-          <button type="button" class="ribbon-item" data-planner-tab="resources">
-            <span class="ribbon-ico">◈</span>
-            <span class="ribbon-txt">Study Resources</span>
-            <span class="ribbon-badge" id="ribbonResourcesBadge">0</span>
           </button>
         </aside>
 
@@ -1138,29 +1566,75 @@ html.focus-mode body::after{display:none!important}
             </div>
           </div>
 
-          <!-- ===== STUDY RESOURCES ===== -->
-          <div class="planner-page" id="plannerPage-resources">
-            <div class="card planner-card">
-              <div class="planner-head">
-                <div>
-                  <h3>Study Resources</h3>
-                  <div class="ph-sub">Group links, PDFs and files by subject so nothing gets lost.</div>
-                </div>
-                <div class="planner-head-actions">
-                  <button type="button" class="planner-chip" data-p-action="focus-res-subject-input">＋ Add subject</button>
-                </div>
-              </div>
-
-              <div class="planner-form">
-                <div class="planner-input-wrap"><input type="text" id="resSubjectInput" maxlength="40" placeholder="New subject name (e.g. Physics, Calculus…)" autocomplete="off"></div>
-                <button type="button" class="btn primary planner-add" id="resSubjectAddBtn">+ Add Subject</button>
-              </div>
-            </div>
-
-            <div id="plannerBody-resources"></div>
-          </div>
-
         </div>
+      </div>
+    </section>
+
+    <!-- ===== TOP-LEVEL STUDY RESOURCES VIEW ===== -->
+    <section class="view" id="view-resources">
+      <!-- TOP BAR: ADD SUBJECT & SECTION FILTER -->
+      <div class="card planner-card" style="margin-bottom:20px">
+        <div class="planner-head">
+          <div>
+            <h3>Manage Subjects</h3>
+            <div class="ph-sub">Create or remove subject folders to organize both your web links and PDF documents.</div>
+          </div>
+          <div class="planner-head-actions">
+            <div class="planner-filter">
+              <button type="button" class="planner-chip active" data-res-view-mode="all">All</button>
+              <button type="button" class="planner-chip" data-res-view-mode="links">🔗 Web Links (<span id="resLinksTotalBadge">0</span>)</button>
+              <button type="button" class="planner-chip" data-res-view-mode="files">📁 Subject PDFs (<span id="resFilesTotalBadge">0</span>)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="planner-form">
+          <div class="planner-input-wrap">
+            <input type="text" id="resSubjectInput" maxlength="40" placeholder="New subject name (e.g. Physics, Calculus, Chemistry…)" autocomplete="off">
+          </div>
+          <button type="button" class="btn primary planner-add" id="resSubjectAddBtn">+ Add Subject</button>
+        </div>
+      </div>
+
+      <!-- SECTION 1 (UPPER): STUDY WEB LINKS (SUBJECT BOXES / FOLDERS) -->
+      <div class="card planner-card" id="resLinksSection" style="margin-bottom:22px">
+        <div class="planner-head">
+          <div>
+            <h3>🔗 Study Web Links</h3>
+            <div class="ph-sub">Websites, online tools, documentation and videos grouped into subject folders.</div>
+          </div>
+          <div class="planner-head-actions">
+            <span class="planner-chip" id="resLinksCountBadge" style="cursor:default">0 links</span>
+          </div>
+        </div>
+
+        <div class="planner-form">
+          <div class="planner-input-wrap" style="flex:1.5">
+            <input type="text" id="resLinkUrlInput" placeholder="Paste study web link (https://…)" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="planner-input-wrap" style="flex:1">
+            <input type="text" id="resLinkNameInput" maxlength="120" placeholder="Website title (e.g. Khan Academy)" autocomplete="off">
+          </div>
+          <select class="planner-select" id="resLinkSubjectSelect" title="Select subject folder"></select>
+          <button type="button" class="btn primary planner-add" id="resLinkAddBtn">+ Add Link</button>
+        </div>
+
+        <div id="plannerBody-links" style="margin-top:20px"></div>
+      </div>
+
+      <!-- SECTION 2 (BOTTOM): SUBJECT DOCUMENTS & PDFS (SUBJECT BOXES / FOLDERS) -->
+      <div class="card planner-card" id="resFilesSection">
+        <div class="planner-head">
+          <div>
+            <h3>📁 Subject Documents &amp; PDFs</h3>
+            <div class="ph-sub">Store PDF files, textbook chapters, lecture slides and notes grouped into subject folders.</div>
+          </div>
+          <div class="planner-head-actions">
+            <span class="planner-chip" id="resFilesCountBadge" style="cursor:default">0 files</span>
+          </div>
+        </div>
+
+        <div id="plannerBody-files" style="margin-top:16px"></div>
       </div>
     </section>
 
@@ -1637,12 +2111,73 @@ html.focus-mode body::after{display:none!important}
         <label for="resFileInput">Choose a file</label>
         <input type="file" id="resFileInput">
       </div>
-      <div class="res-upload-hint" style="margin-bottom:16px">Files up to 2&nbsp;MB are stored with your account and sync across devices. Bigger files are attached for this session only — a link is safer for large material.</div>
+      <div class="res-upload-hint" style="margin-bottom:16px">Files up to 10&nbsp;MB are stored with your account and sync across devices.</div>
     </div>
 
     <div class="modal-actions">
       <button type="button" class="btn ghost" id="resModalCancel">Cancel</button>
       <button type="button" class="btn primary" id="resModalSave">Add Resource</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLANNER · RESOURCE ACTION MODAL (READ ONLINE VS DOWNLOAD) -->
+<div class="modal-backdrop" id="resActionBackdrop">
+  <div class="modal" style="max-width:440px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div id="resActionIcon" style="width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:rgba(255,255,255,.07);flex-shrink:0">📕</div>
+      <div style="flex:1;min-width:0">
+        <h3 id="resActionTitle" style="font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Document Name</h3>
+        <p class="modal-sub" id="resActionMeta" style="margin-bottom:0">PDF Document · 1.2 MB</p>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text-3);margin-bottom:16px">Choose how you'd like to open this resource:</div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+      <button type="button" class="res-choice-btn" id="resChoiceRead">
+        <span class="rc-icon">📖</span>
+        <div class="rc-text">
+          <div class="rc-title">Read Online</div>
+          <div class="rc-desc">View PDF directly in your browser without downloading</div>
+        </div>
+        <span class="rc-arrow">→</span>
+      </button>
+
+      <button type="button" class="res-choice-btn" id="resChoiceDownload">
+        <span class="rc-icon">⬇</span>
+        <div class="rc-text">
+          <div class="rc-title">Download File</div>
+          <div class="rc-desc">Save a copy to your computer</div>
+        </div>
+        <span class="rc-arrow">→</span>
+      </button>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="resChoiceCancel" style="flex:1;justify-content:center">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLANNER · IN-APP DOCUMENT READER MODAL -->
+<div class="modal-backdrop" id="docReaderBackdrop">
+  <div class="modal doc-reader-modal" id="docReaderModal">
+    <div class="doc-reader-head">
+      <div class="doc-reader-title-box">
+        <span class="doc-reader-icon" id="docReaderIcon">📕</span>
+        <div style="min-width:0">
+          <div class="doc-reader-title" id="docReaderTitle">Document Name</div>
+          <div class="doc-reader-sub" id="docReaderSub">Subject · PDF Document</div>
+        </div>
+      </div>
+      <div class="doc-reader-actions">
+        <button type="button" class="btn ghost doc-reader-btn" id="docReaderNewTab" title="Open in new browser tab">↗ New Tab</button>
+        <button type="button" class="btn primary doc-reader-btn" id="docReaderDownload" title="Download file">⬇ Download</button>
+        <button type="button" class="pdel" id="docReaderClose" title="Close reader" style="width:34px;height:34px;font-size:17px">✕</button>
+      </div>
+    </div>
+    <div class="doc-reader-body" id="docReaderBody">
+      <!-- Embedded document viewer dynamically rendered -->
     </div>
   </div>
 </div>
@@ -1741,7 +2276,7 @@ const DEFAULT_SUBJECTS = ['General'];
 const DEFAULTS = {
   sessions:[], xp:0, coins:0, totalXpEarned:0, coinsEarned:0, bestStreak:0,
   achievements:{}, freezeCards:0, frozenDays:[], boosterExpiresAt:0,
-  ownedThemes:['default'], currentTheme:'default', ownedFrames:['none'],
+  ownedThemes:['default','white'], currentTheme:'default', ownedFrames:['none'],
   currentFrame:'none', petFedUntil:0, spinTokensSpent:0,
   breakMinutes:0, breakMinutesUsed:0,
   breakEarnedTotal:0, breakFromWheel:0, breakSessions:0,
@@ -1809,6 +2344,9 @@ function normalizeState(raw){
   if(!m.profileTheme || !m.ownedProfileThemes.includes(m.profileTheme)) m.profileTheme = 'default';
   m.ownedProfileBorders = Array.isArray(m.ownedProfileBorders) && m.ownedProfileBorders.length ? m.ownedProfileBorders : ['default','minimal'];
   if(!m.profileBorder || !m.ownedProfileBorders.includes(m.profileBorder)) m.profileBorder = 'default';
+  m.ownedThemes = Array.isArray(m.ownedThemes) && m.ownedThemes.length ? m.ownedThemes : ['default','white'];
+  if(!m.ownedThemes.includes('white')) m.ownedThemes.push('white');
+  if(!m.currentTheme || !m.ownedThemes.includes(m.currentTheme)) m.currentTheme = 'default';
   // Migrate old keys if present
   if(m.sicboClientSeed && !m.gambleClientSeed) m.gambleClientSeed = m.sicboClientSeed;
   if(m.sicboNonce && !m.gambleNonce) m.gambleNonce = m.sicboNonce;
@@ -1858,10 +2396,10 @@ function normalizeState(raw){
       fileName: cleanText(r.fileName, 160),
       fileSize: Number(r.fileSize) || 0,
       fileType: cleanText(r.fileType, 120),
-      data: data.slice(0, 3000000),
+      data: data.slice(0, 15000000),
       createdAt: Number(r.createdAt) || Date.now()
     };
-  }).filter(r => r.url || r.data);
+  }).filter(r => r.kind === 'file' ? (r.data || r.fileName) : r.url);
   m.resourceSubjects = (Array.isArray(m.resourceSubjects) ? m.resourceSubjects : [])
     .map(s => cleanText(s, 40)).filter(s => s && !DEFAULT_SUBJECTS.includes(s))
     .filter((s, i, a) => a.indexOf(s) === i).slice(0, 60);
@@ -2965,6 +3503,7 @@ setInterval(()=>renderQuote(false), 14000);
 const SHOP_ITEMS = [
   { id:'freeze', icon:'❄', name:'Streak Freeze Card', desc:'Protects your streak if you miss a day. Max 3.', price:150, type:'consumable' },
   { id:'booster', icon:'⚡', name:'XP Booster 2×', desc:'Doubles XP earned for the next 24 hours.', price:100, type:'consumable' },
+  { id:'theme_white', icon:'☀', name:'Minimalist White', desc:'Clean, high-contrast monochrome light theme.', price:0, type:'theme', value:'white' },
   { id:'theme_cyberpunk', icon:'◈', name:'Lavender Theme', desc:'Soft lavender-white accents.', price:300, type:'theme', value:'cyberpunk' },
   { id:'theme_forest', icon:'❦', name:'Mint Theme', desc:'Calm mint-white accents on true black.', price:300, type:'theme', value:'forest' },
   { id:'theme_arcade', icon:'▣', name:'Warm Theme', desc:'Warm amber-white accents.', price:300, type:'theme', value:'arcade' },
@@ -3318,7 +3857,7 @@ function drawWheel(){
     ctx.font = '600 '+fontSize+'px Inter, system-ui, sans-serif';
     ctx.fillText(shortTxt, R-16, 0); ctx.restore();
   }
-  ctx.beginPath(); ctx.arc(cx,cy,52,0,Math.PI*2); ctx.fillStyle = '#050508'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,cy,52,0,Math.PI*2); ctx.fillStyle = (state.currentTheme === 'white') ? '#ffffff' : '#050508'; ctx.fill();
 }
 function spinWheel(){
   if(wheelSpinning) return;
@@ -3465,8 +4004,40 @@ function saveCustomize(){
   toast('✎','Rewards customized','');
 }
 
-function applyTheme(theme){ document.documentElement.setAttribute('data-theme', theme||'default'); setTimeout(drawWheel,20); }
+function updateThemeToggleBtn(){
+  const icon = document.getElementById('themeToggleIcon');
+  const btn = document.getElementById('themeToggleBtn');
+  if(!btn) return;
+  const isWhite = state.currentTheme === 'white';
+  if(icon) icon.textContent = isWhite ? '🌙' : '☀';
+  btn.title = isWhite ? 'Switch to Dark Theme' : 'Switch to Minimalist White Theme';
+  btn.setAttribute('aria-label', btn.title);
+}
+
+function toggleTheme(){
+  const next = state.currentTheme === 'white' ? 'default' : 'white';
+  state.currentTheme = next;
+  if(!state.ownedThemes.includes(next)) state.ownedThemes.push(next);
+  saveState();
+  applyTheme(next);
+  toast(next === 'white' ? '☀' : '🌙', next === 'white' ? 'White Theme activated' : 'Dark Theme activated', 'Minimalist design');
+}
+
+function applyTheme(theme){
+  const t = theme || 'default';
+  document.documentElement.setAttribute('data-theme', t);
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if(metaTheme) metaTheme.setAttribute('content', t === 'white' ? '#f8f9fa' : '#08080a');
+  updateThemeToggleBtn();
+  setTimeout(drawWheel, 20);
+}
 applyTheme(state.currentTheme);
+
+const _tBtn = document.getElementById('themeToggleBtn');
+if(_tBtn && !_tBtn.dataset.bound){
+  _tBtn.dataset.bound = '1';
+  _tBtn.addEventListener('click', toggleTheme);
+}
 
 function petMood(){
   const streak = computeStreak(); const todayKey = ymd(new Date());
@@ -3849,17 +4420,9 @@ function renderRecentSessions(){
   if(recent.length===0){ container.innerHTML = '<div class="empty-state"><span class="big">◌</span>No sessions yet.</div>'; return; }
   container.innerHTML = recent.map(s => '<div class="session-item"><div class="session-emoji">◐</div><div class="session-info"><div class="session-subject">'+escapeHtml(s.subject)+'</div><div class="session-time">'+relativeTime(s.ts)+'</div></div><div class="session-dur">'+formatDuration(s.seconds)+'</div></div>').join('');
 }
-// Compact label used on the study-activity blocks (e.g. "45m", "1h30", "12h")
-function heatTimeLabel(secs){
-  if(!secs) return '';
-  const m = Math.round(secs/60);
-  if(m < 60) return m + 'm';
-  const h = Math.floor(m/60), mm = m % 60;
-  if(mm === 0) return h + 'h';
-  return h + 'h' + String(mm).padStart(2,'0');
-}
 function renderHeatmap(){
   const container = document.getElementById('heatmap');
+  if(!container) return;
   const today = startOfDay(new Date()); const totalDays = 91;
   let start = addDays(today, -(totalDays-1));
   const off = (start.getDay()+6)%7; start = addDays(start,-off);
@@ -3867,10 +4430,21 @@ function renderHeatmap(){
   while(cursor <= today && guard < 200){
     const k = ymd(cursor); const secs = secondsOnDate(k);
     let level = 0;
-    if(secs > 0){ const m = secs/60; if(m<30) level=1; else if(m<60) level=2; else if(m<120) level=3; else level=4; }
-    const label = heatTimeLabel(secs);
-    cells.push('<div class="heat-cell l'+level+'" title="'+cursor.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})+' — '+(secs>0?formatDuration(secs):'No study')+'">'+label+'</div>');
-    cursor = addDays(cursor,1); guard++;
+    let label = '<span class="heat-val empty">0h</span>';
+    if(secs > 0){
+      const m = secs/60;
+      if(m < 30) level = 1;
+      else if(m < 60) level = 2;
+      else if(m < 120) level = 3;
+      else level = 4;
+      const hrs = secs / 3600;
+      const str = hrs >= 10 ? Math.round(hrs) + 'h' : (hrs >= 1 ? (hrs % 1 === 0 ? hrs.toFixed(0) : hrs.toFixed(1)) + 'h' : hrs.toFixed(1) + 'h');
+      label = '<span class="heat-val">' + str + '</span>';
+    }
+    const fullDate = cursor.toLocaleDateString([], { weekday:'short', month:'short', day:'numeric' });
+    const fullDuration = secs > 0 ? formatDuration(secs) : 'No study';
+    cells.push('<div class="heat-cell l' + level + '" title="' + fullDate + ' — ' + fullDuration + '">' + label + '</div>');
+    cursor = addDays(cursor, 1); guard++;
   }
   container.innerHTML = cells.join('');
 }
@@ -3964,7 +4538,20 @@ const plannerUI = { modalSubject:null, modalKind:'link', modalFile:null };
 
 function setPlannerTab(tab, opts){
   opts = opts || {};
-  state.plannerTab = ['todo','schedule','resources'].includes(tab) ? tab : 'todo';
+  if(tab === 'resources'){
+    const dockResBtn = document.querySelector('.dock-btn[data-view="resources"]');
+    if(dockResBtn){
+      dockResBtn.click();
+      if(opts.restore){
+        setTimeout(() => {
+          const el = document.querySelector(opts.restore);
+          if(el && typeof el.focus === 'function') el.focus();
+        }, 80);
+      }
+      return;
+    }
+  }
+  state.plannerTab = ['todo','schedule'].includes(tab) ? tab : 'todo';
   document.querySelectorAll('.ribbon-item').forEach(b => b.classList.toggle('active', b.dataset.plannerTab === state.plannerTab));
   document.querySelectorAll('.planner-page').forEach(p => p.classList.toggle('active', p.id === 'plannerPage-' + state.plannerTab));
   const restoreSel = opts.restore || null;
@@ -3984,13 +4571,15 @@ function setTodoFilter(f){
 function plannerSnapshot(){
   const t = document.getElementById('todoInput');
   const r = document.getElementById('resSubjectInput');
+  const lu = document.getElementById('resLinkUrlInput');
+  const ln = document.getElementById('resLinkNameInput');
   const a = document.activeElement;
   let sel = null;
   try{ if(a && typeof a.selectionStart === 'number') sel = [a.selectionStart, a.selectionEnd]; }catch(e){}
   const week = state.plannerTab === 'schedule' ? scheduleDrafts() : Object.assign({}, _drafts.week || {});
   // clears requested by a handler always win over the pre-action DOM value
   Object.keys(_clearedAdds).forEach(k => { week[k] = ''; });
-  return { todoVal: t ? t.value : '', resVal: r ? r.value : '', active: a, sel: sel, week: week };
+  return { todoVal: t ? t.value : '', resVal: r ? r.value : '', linkUrl: lu ? lu.value : '', linkName: ln ? ln.value : '', active: a, sel: sel, week: week };
 }
 function plannerRestore(snapshot, focusSel){
   if(!snapshot) return;
@@ -3998,6 +4587,10 @@ function plannerRestore(snapshot, focusSel){
   if(t && snapshot.todoVal && !t.value) t.value = snapshot.todoVal;
   const r = document.getElementById('resSubjectInput');
   if(r && snapshot.resVal && !r.value) r.value = snapshot.resVal;
+  const lu = document.getElementById('resLinkUrlInput');
+  if(lu && snapshot.linkUrl && !lu.value) lu.value = snapshot.linkUrl;
+  const ln = document.getElementById('resLinkNameInput');
+  if(ln && snapshot.linkName && !ln.value) ln.value = snapshot.linkName;
   if(focusSel){
     const nf = document.querySelector(focusSel);
     if(nf && typeof nf.focus === 'function'){ try{ nf.focus(); }catch(e){} }
@@ -4269,31 +4862,129 @@ function renderSchedulePage(){
 }
 
 function renderResourcesPage(){
-  const host = document.getElementById('plannerBody-resources');
+  const linksHost = document.getElementById('plannerBody-links');
+  const filesHost = document.getElementById('plannerBody-files');
+  const linksBadge = document.getElementById('resLinksCountBadge');
+  const filesBadge = document.getElementById('resFilesCountBadge');
+  const linksTotalBadge = document.getElementById('resLinksTotalBadge');
+  const filesTotalBadge = document.getElementById('resFilesTotalBadge');
+  const linkSubSel = document.getElementById('resLinkSubjectSelect');
   const subjects = allResourceSubjects();
   const icons = RESOURCE_ICONS;
-  host.innerHTML = '<div class="res-grid">' + subjects.map(sub => {
-    const items = (state.resources || []).filter(r => r.subject === sub).sort((a, b) => b.createdAt - a.createdAt);
-    const custom = !DEFAULT_SUBJECTS.includes(sub);
-    const body = items.length ? items.map(r => {
-      const isLink = r.kind === 'link' && r.url;
-      const ico = isLink ? '🔗' : (r.fileType && r.fileType.indexOf('pdf') > -1 ? '📕' : '📎');
-      const sub2 = isLink ? (shortHost(r.url) || r.url) : ((r.fileName || 'Attached file') + (r.fileSize ? ' · ' + fileSizeText(r.fileSize) : ''));
-      return '<div class="res-item">'
-        + '<div class="res-icon ' + (isLink ? 'link' : 'file') + '">' + ico + '</div>'
-        + '<div class="res-info"><div class="res-name">' + (isLink ? '<a href="' + escapeHtml(r.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(r.name) + '</a>' : escapeHtml(r.name)) + '</div>'
-        + '<div class="res-url">' + escapeHtml(sub2) + '</div></div>'
-        + '<div class="res-actions">' + (isLink ? '<a class="res-open" href="' + escapeHtml(r.url) + '" target="_blank" rel="noopener noreferrer" title="Open link">↗</a>' : '')
-        + '<button type="button" class="res-del" data-res-del="' + r.id + '" title="Remove resource">✕</button></div></div>';
-    }).join('') : '<div class="wd-empty">No material yet for this subject.</div>';
-    return '<div class="res-subject">'
-      + '<div class="res-subject-head"><div class="res-subject-ico">' + (icons[sub] || '◆') + '</div>'
-      + '<div class="res-subject-info"><div class="res-subject-name">' + escapeHtml(sub) + '</div><div class="res-subject-meta">' + items.length + ' item' + (items.length === 1 ? '' : 's') + (custom ? ' · custom subject' : '') + '</div></div>'
-      + (custom ? '<button type="button" class="pdel" data-res-subject-del="' + escapeHtml(sub) + '" title="Delete subject and its resources">✕</button>' : '') + '</div>'
-      + '<div class="res-list">' + body + '</div>'
-      + '<button type="button" class="res-add" data-res-add="' + escapeHtml(sub) + '">＋ Add link or file</button>'
-      + '</div>';
-  }).join('') + '</div>';
+
+  // Populate link subject select dropdown
+  if(linkSubSel){
+    const curVal = linkSubSel.value;
+    linkSubSel.innerHTML = subjects.map(s => '<option value="' + escapeHtml(s) + '">' + (icons[s] || '◆') + ' ' + escapeHtml(s) + '</option>').join('');
+    if(curVal && subjects.includes(curVal)) linkSubSel.value = curVal;
+  }
+
+  const allRes = state.resources || [];
+  const links = allRes.filter(r => r.kind === 'link').sort((a, b) => b.createdAt - a.createdAt);
+  const files = allRes.filter(r => r.kind === 'file').sort((a, b) => b.createdAt - a.createdAt);
+
+  if(linksBadge) linksBadge.textContent = links.length + ' link' + (links.length === 1 ? '' : 's');
+  if(filesBadge) filesBadge.textContent = files.length + ' file' + (files.length === 1 ? '' : 's');
+  if(linksTotalBadge) linksTotalBadge.textContent = links.length;
+  if(filesTotalBadge) filesTotalBadge.textContent = files.length;
+
+  // SECTION 1 (UPPER): Study Web Links — Grouped into Subject Boxes (Folders)
+  if(linksHost){
+    linksHost.innerHTML = '<div class="res-grid">' + subjects.map(sub => {
+      const subLinks = links.filter(r => r.subject === sub);
+      const custom = !DEFAULT_SUBJECTS.includes(sub);
+      const body = subLinks.length ? subLinks.map(r => {
+        const host = shortHost(r.url) || r.url;
+        return '<div class="res-item" data-res-link-url="' + escapeHtml(r.url) + '" style="cursor:pointer" title="Open ' + escapeHtml(r.name) + ' in new tab">'
+          + '<div class="res-icon link">🔗</div>'
+          + '<div class="res-info">'
+          + '<div class="res-name"><a href="' + escapeHtml(r.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(r.name) + '</a></div>'
+          + '<div class="res-url">' + escapeHtml(host) + '</div>'
+          + '</div>'
+          + '<div class="res-actions">'
+          + '<a class="res-open" href="' + escapeHtml(r.url) + '" target="_blank" rel="noopener noreferrer" title="Open webpage in new tab">↗</a>'
+          + '<button type="button" class="res-del" data-res-del="' + r.id + '" title="Remove link">✕</button>'
+          + '</div>'
+          + '</div>';
+      }).join('') : '<div class="wd-empty">No web links saved for this subject yet.</div>';
+
+      return '<div class="res-subject">'
+        + '<div class="res-subject-head"><div class="res-subject-ico">' + (icons[sub] || '◆') + '</div>'
+        + '<div class="res-subject-info"><div class="res-subject-name">' + escapeHtml(sub) + '</div><div class="res-subject-meta">' + subLinks.length + ' link' + (subLinks.length === 1 ? '' : 's') + (custom ? ' · custom subject' : '') + '</div></div>'
+        + (custom ? '<button type="button" class="pdel" data-res-subject-del="' + escapeHtml(sub) + '" title="Delete subject and its links">✕</button>' : '') + '</div>'
+        + '<div class="res-list">' + body + '</div>'
+        + '<button type="button" class="res-add" data-res-add-link="' + escapeHtml(sub) + '">＋ Add Link to ' + escapeHtml(sub) + '</button>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
+
+  // Bottom section: Subject Documents & PDFs (files only)
+  if(filesHost){
+    filesHost.innerHTML = '<div class="res-grid">' + subjects.map(sub => {
+      const subFiles = files.filter(r => r.subject === sub);
+      const custom = !DEFAULT_SUBJECTS.includes(sub);
+      const body = subFiles.length ? subFiles.map(r => {
+        const ico = (r.fileType && r.fileType.indexOf('pdf') > -1) ? '📕' : '📎';
+        const meta = (r.fileName || 'Attached file') + (r.fileSize ? ' · ' + fileSizeText(r.fileSize) : '');
+        return '<div class="res-item" data-res-card="' + r.id + '" style="cursor:pointer" title="Click to open options (Read Online or Download)">'
+          + '<div class="res-icon file">' + ico + '</div>'
+          + '<div class="res-info">'
+          + '<div class="res-name">' + escapeHtml(r.name) + '</div>'
+          + '<div class="res-url">' + escapeHtml(meta) + '</div>'
+          + '</div>'
+          + '<div class="res-actions">'
+          + '<button type="button" class="res-action-btn" data-res-direct="read" data-res-id="' + r.id + '" title="Read online without downloading">📖</button>'
+          + '<button type="button" class="res-action-btn" data-res-direct="download" data-res-id="' + r.id + '" title="Download resource">⬇</button>'
+          + '<button type="button" class="res-del" data-res-del="' + r.id + '" title="Remove file">✕</button>'
+          + '</div>'
+          + '</div>';
+      }).join('') : '<div class="wd-empty">No PDF or document files yet for this subject.</div>';
+
+      return '<div class="res-subject">'
+        + '<div class="res-subject-head"><div class="res-subject-ico">' + (icons[sub] || '◆') + '</div>'
+        + '<div class="res-subject-info"><div class="res-subject-name">' + escapeHtml(sub) + '</div><div class="res-subject-meta">' + subFiles.length + ' file' + (subFiles.length === 1 ? '' : 's') + (custom ? ' · custom subject' : '') + '</div></div>'
+        + (custom ? '<button type="button" class="pdel" data-res-subject-del="' + escapeHtml(sub) + '" title="Delete subject and its files">✕</button>' : '') + '</div>'
+        + '<div class="res-list">' + body + '</div>'
+        + '<button type="button" class="res-add" data-res-upload-file="' + escapeHtml(sub) + '">＋ Upload PDF / Document</button>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
+}
+
+function addWebLinkFromInput(){
+  const urlInp = document.getElementById('resLinkUrlInput');
+  const nameInp = document.getElementById('resLinkNameInput');
+  const subSel = document.getElementById('resLinkSubjectSelect');
+  if(!urlInp) return;
+  const rawUrl = (urlInp.value || '').trim();
+  const url = normUrl(rawUrl);
+  if(!url){
+    toast('⚠', 'Invalid web link', 'Please enter a valid URL, e.g. https://…');
+    urlInp.focus();
+    return;
+  }
+  const name = (nameInp && nameInp.value ? nameInp.value.trim() : '') || shortHost(url) || 'Study Link';
+  const subject = (subSel && subSel.value) ? subSel.value : 'General';
+
+  state.resources = state.resources || [];
+  state.resources.push({
+    id: uid('rs'),
+    subject: subject,
+    name: name.slice(0, 120),
+    kind: 'link',
+    url: url,
+    fileName: '',
+    fileSize: 0,
+    fileType: '',
+    data: '',
+    createdAt: Date.now()
+  });
+
+  urlInp.value = '';
+  if(nameInp) nameInp.value = '';
+  saveState();
+  renderPlanner();
+  toast('🔗', 'Link saved', name + ' (' + subject + ')');
 }
 
 function addTodoFromInput(){
@@ -4347,21 +5038,22 @@ function deleteResourceSubject(name){
   toast('✕', 'Subject deleted', name);
 }
 function openResourceModal(subject){
-  plannerUI.modalSubject = subject;
-  plannerUI.modalKind = 'link';
+  plannerUI.modalSubject = subject || 'General';
+  plannerUI.modalKind = 'file';
   plannerUI.modalFile = null;
+  plannerUI.filePromise = null;
   const t = document.getElementById('resourceModalTitle');
   const s = document.getElementById('resourceModalSub');
-  if(t) t.textContent = 'Add Resource · ' + subject;
-  if(s) s.textContent = 'Attach a link or a file to "' + subject + '".';
+  if(t) t.textContent = 'Upload PDF / Document · ' + (subject || 'General');
+  if(s) s.textContent = 'Attach a PDF or file to "' + (subject || 'General') + '".';
   const n = document.getElementById('resNameInput'); if(n) n.value = '';
   const u = document.getElementById('resUrlInput'); if(u) u.value = '';
   const f = document.getElementById('resFileInput'); if(f) f.value = '';
   const meta = document.getElementById('resFileMeta'); if(meta) meta.remove();
-  setResourceModalKind('link');
+  setResourceModalKind('file');
   const bd = document.getElementById('resourceBackdrop');
   if(bd) bd.classList.add('open');
-  setTimeout(() => { if(n) n.focus(); }, 60);
+  setTimeout(() => { if(f) f.focus(); }, 60);
 }
 function closeResourceModal(){ const bd = document.getElementById('resourceBackdrop'); if(bd) bd.classList.remove('open'); }
 function setResourceModalKind(kind){
@@ -4373,7 +5065,7 @@ function setResourceModalKind(kind){
   const lf = document.getElementById('resLinkFields'); if(lf) lf.style.display = kind === 'link' ? 'block' : 'none';
   const ff = document.getElementById('resFileFields'); if(ff) ff.style.display = kind === 'file' ? 'block' : 'none';
 }
-function saveResourceFromModal(){
+async function saveResourceFromModal(){
   const subject = plannerUI.modalSubject;
   if(!subject) return;
   const nameRaw = (document.getElementById('resNameInput').value || '').trim();
@@ -4383,6 +5075,13 @@ function saveResourceFromModal(){
     if(!url){ toast('⚠', 'Link not valid', 'Paste a full web address, e.g. https://…'); document.getElementById('resUrlInput').focus(); return; }
     state.resources.push({ id: uid('rs'), subject: subject, name: (nameRaw || shortHost(url) || 'Resource').slice(0, 120), kind:'link', url: url, fileName:'', fileSize:0, fileType:'', data:'', createdAt: Date.now() });
   } else {
+    const inp = document.getElementById('resFileInput');
+    if(!plannerUI.modalFile && inp && inp.files && inp.files[0]){
+      readFileIntoResourceModal();
+    }
+    if(plannerUI.filePromise && plannerUI.modalFile && plannerUI.modalFile.loading){
+      await plannerUI.filePromise;
+    }
     const f = plannerUI.modalFile;
     if(!f){ toast('⚠', 'No file chosen', 'Pick a file to attach.'); document.getElementById('resFileInput').focus(); return; }
     state.resources.push({ id: uid('rs'), subject: subject, name: (nameRaw || f.name || 'Attachment').slice(0, 120), kind:'file', url:'', fileName:(f.name || 'file').slice(0, 160), fileSize:f.size || 0, fileType:(f.type || '').slice(0, 120), data:f.data || '', createdAt: Date.now() });
@@ -4395,26 +5094,214 @@ function readFileIntoResourceModal(){
   const inp = document.getElementById('resFileInput');
   const old = document.getElementById('resFileMeta');
   if(old) old.remove();
-  if(!inp || !inp.files || !inp.files[0]){ plannerUI.modalFile = null; return; }
+  if(!inp || !inp.files || !inp.files[0]){ plannerUI.modalFile = null; plannerUI.filePromise = null; return; }
   const f = inp.files[0];
   const meta = document.createElement('div');
   meta.id = 'resFileMeta';
   meta.className = 'res-file-meta';
-  if(f.size > 2 * 1024 * 1024){
+  if(f.size > 10 * 1024 * 1024){
     plannerUI.modalFile = { name:f.name, size:f.size, type:f.type, data:'' };
-    meta.textContent = fileSizeText(f.size) + ' · too large to store — attached for this session only (add a link for anything permanent).';
+    plannerUI.filePromise = null;
+    meta.textContent = fileSizeText(f.size) + ' · file exceeds 10 MB limit.';
   } else {
     meta.textContent = fileSizeText(f.size) + ' · reading…';
     const rd = new FileReader();
-    rd.onload = () => {
-      plannerUI.modalFile = { name:f.name, size:f.size, type:f.type, data:String(rd.result || '') };
-      meta.textContent = fileSizeText(f.size) + ' · ready to attach';
-    };
-    rd.onerror = () => { plannerUI.modalFile = { name:f.name, size:f.size, type:f.type, data:'' }; meta.textContent = fileSizeText(f.size) + ' · could not read file contents'; };
-    try{ rd.readAsDataURL(f); }catch(e){ plannerUI.modalFile = { name:f.name, size:f.size, type:f.type, data:'' }; meta.textContent = fileSizeText(f.size) + ' · could not read file contents'; }
+    plannerUI.modalFile = { name:f.name, size:f.size, type:f.type, data:'', loading:true };
+    plannerUI.filePromise = new Promise((resolve) => {
+      rd.onload = () => {
+        if(plannerUI.modalFile){
+          plannerUI.modalFile.data = String(rd.result || '');
+          plannerUI.modalFile.loading = false;
+        }
+        meta.textContent = fileSizeText(f.size) + ' · ready to attach';
+        resolve();
+      };
+      rd.onerror = () => {
+        if(plannerUI.modalFile){
+          plannerUI.modalFile.loading = false;
+        }
+        meta.textContent = fileSizeText(f.size) + ' · could not read file contents';
+        resolve();
+      };
+    });
+    try{ rd.readAsDataURL(f); }catch(e){
+      if(plannerUI.modalFile) plannerUI.modalFile.loading = false;
+      meta.textContent = fileSizeText(f.size) + ' · could not read file contents';
+    }
   }
   const field = document.getElementById('resFileFields');
   if(field) field.appendChild(meta);
+  const nameInp = document.getElementById('resNameInput');
+  if(nameInp && !nameInp.value.trim()){
+    nameInp.value = f.name;
+  }
+}
+
+let currentActionResource = null;
+let docReaderActiveBlobUrl = null;
+
+function dataUrlToBlob(dataUrl){
+  if(!dataUrl || typeof dataUrl !== 'string') return null;
+  const parts = dataUrl.split(';base64,');
+  if(parts.length < 2) return null;
+  const contentType = parts[0].replace(/^data:/, '') || 'application/pdf';
+  try{
+    const byteCharacters = atob(parts[1]);
+    const byteArrays = [];
+    const sliceSize = 1024;
+    for(let offset = 0; offset < byteCharacters.length; offset += sliceSize){
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+      const byteNumbers = new Array(slice.length);
+      for(let i = 0; i < slice.length; i++){
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      byteArrays.push(new Uint8Array(byteNumbers));
+    }
+    return new Blob(byteArrays, { type: contentType });
+  }catch(e){
+    console.error('[StudyFlow] Failed to convert dataUrl to blob', e);
+    return null;
+  }
+}
+
+function openResourceAction(id){
+  const r = (state.resources || []).find(x => x.id === id);
+  if(!r) return;
+  if(r.kind === 'link'){
+    window.open(r.url, '_blank', 'noopener,noreferrer');
+    toast('↗', 'Opened link', r.name);
+    return;
+  }
+  currentActionResource = r;
+  const icon = (r.fileType && r.fileType.includes('pdf')) ? '📕' : '📎';
+  const typeLabel = (r.fileType && r.fileType.includes('pdf')) ? 'PDF Document' : (r.fileType || 'File');
+  const metaText = r.subject + ' · ' + (r.fileName || 'Attached file') + (r.fileSize ? ' · ' + fileSizeText(r.fileSize) : '') + ' · ' + typeLabel;
+
+  const iconEl = document.getElementById('resActionIcon');
+  if(iconEl) iconEl.textContent = icon;
+  const titleEl = document.getElementById('resActionTitle');
+  if(titleEl) titleEl.textContent = r.name;
+  const metaEl = document.getElementById('resActionMeta');
+  if(metaEl) metaEl.textContent = metaText;
+
+  const readBtn = document.getElementById('resChoiceRead');
+  const dlBtn = document.getElementById('resChoiceDownload');
+  if(readBtn){
+    const desc = readBtn.querySelector('.rc-desc');
+    if(desc) desc.textContent = 'View PDF/document directly in the app without downloading';
+  }
+  if(dlBtn){
+    const desc = dlBtn.querySelector('.rc-desc');
+    if(desc) desc.textContent = 'Save a copy to your computer';
+  }
+
+  const bd = document.getElementById('resActionBackdrop');
+  if(bd) bd.classList.add('open');
+}
+
+function closeResourceAction(){
+  const bd = document.getElementById('resActionBackdrop');
+  if(bd) bd.classList.remove('open');
+  currentActionResource = null;
+}
+
+function closeDocReader(){
+  const bd = document.getElementById('docReaderBackdrop');
+  if(bd) bd.classList.remove('open');
+  const body = document.getElementById('docReaderBody');
+  if(body) body.innerHTML = '';
+  if(docReaderActiveBlobUrl){
+    URL.revokeObjectURL(docReaderActiveBlobUrl);
+    docReaderActiveBlobUrl = null;
+  }
+}
+
+function readResourceOnline(r){
+  if(!r) return;
+  if(r.kind === 'link'){
+    window.open(r.url, '_blank', 'noopener,noreferrer');
+    toast('↗', 'Opened link', r.name);
+    return;
+  }
+  if(!r.data){
+    toast('⚠', 'No document data', 'This file has no saved content to display.');
+    return;
+  }
+
+  closeResourceAction();
+
+  if(docReaderActiveBlobUrl){
+    URL.revokeObjectURL(docReaderActiveBlobUrl);
+    docReaderActiveBlobUrl = null;
+  }
+
+  const blob = dataUrlToBlob(r.data);
+  if(!blob){
+    toast('⚠', 'Cannot read file', 'The file data could not be parsed.');
+    return;
+  }
+  const blobUrl = URL.createObjectURL(blob);
+  docReaderActiveBlobUrl = blobUrl;
+
+  const titleEl = document.getElementById('docReaderTitle');
+  if(titleEl) titleEl.textContent = r.name;
+  const subEl = document.getElementById('docReaderSub');
+  if(subEl) subEl.textContent = r.subject + ' · ' + (r.fileName || 'PDF Document') + (r.fileSize ? ' · ' + fileSizeText(r.fileSize) : '');
+  const iconEl = document.getElementById('docReaderIcon');
+  if(iconEl) iconEl.textContent = r.fileType && r.fileType.includes('pdf') ? '📕' : '📎';
+
+  const newTabBtn = document.getElementById('docReaderNewTab');
+  if(newTabBtn){
+    newTabBtn.onclick = () => window.open(blobUrl, '_blank');
+  }
+  const dlBtn = document.getElementById('docReaderDownload');
+  if(dlBtn){
+    dlBtn.onclick = () => downloadResource(r);
+  }
+
+  const body = document.getElementById('docReaderBody');
+  if(body){
+    const isPdf = (r.fileType && r.fileType.includes('pdf')) || (r.fileName && r.fileName.toLowerCase().endsWith('.pdf')) || r.data.startsWith('data:application/pdf');
+    const isImage = (r.fileType && r.fileType.startsWith('image/')) || (r.fileName && /\.(png|jpe?g|gif|webp|svg)$/i.test(r.fileName));
+    if(isPdf){
+      body.innerHTML = '<iframe class="doc-reader-iframe" src="' + blobUrl + '#toolbar=1&navpanes=1" title="' + escapeHtml(r.name) + '"></iframe>';
+    } else if(isImage){
+      body.innerHTML = '<div style="display:grid;place-items:center;height:100%;overflow:auto;padding:20px;background:#050508"><img src="' + blobUrl + '" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.6)" alt="' + escapeHtml(r.name) + '"></div>';
+    } else {
+      body.innerHTML = '<iframe class="doc-reader-iframe" src="' + blobUrl + '" title="' + escapeHtml(r.name) + '"></iframe>';
+    }
+  }
+
+  const bd = document.getElementById('docReaderBackdrop');
+  if(bd) bd.classList.add('open');
+  toast('📖', 'Reading online', r.name);
+}
+
+function downloadResource(r){
+  if(!r) return;
+  if(r.kind === 'link'){
+    try{
+      navigator.clipboard.writeText(r.url);
+      toast('📋', 'Link copied', r.url);
+    }catch(e){
+      window.open(r.url, '_blank');
+    }
+    return;
+  }
+  if(!r.data){
+    toast('⚠', 'No download data', 'This file has no saved content to download.');
+    return;
+  }
+  const blob = dataUrlToBlob(r.data);
+  const url = blob ? URL.createObjectURL(blob) : r.data;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = r.fileName || r.name || 'study-resource';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  if(blob) setTimeout(() => URL.revokeObjectURL(url), 2000);
+  toast('⬇', 'Downloading resource', r.fileName || r.name);
 }
 
 function startWeekEdit(dayIdx, taskId){
@@ -4464,8 +5351,10 @@ function clearWeekDone(){
 let _noteTimer = null;
 function plannerStaticInit(){
   const view = document.getElementById('view-planner');
+  const resView = document.getElementById('view-resources');
+  const containers = [view, resView].filter(Boolean);
 
-  view.addEventListener('click', e => {
+  const handlePlannerClick = e => {
     const t = e.target;
     if(!t || !t.closest) return;
 
@@ -4474,6 +5363,34 @@ function plannerStaticInit(){
 
     const filterBtn = t.closest('[data-todo-filter]');
     if(filterBtn){ setTodoFilter(filterBtn.dataset.todoFilter); return; }
+
+    const vmBtn = t.closest('[data-res-view-mode]');
+    if(vmBtn){
+      const mode = vmBtn.dataset.resViewMode;
+      document.querySelectorAll('[data-res-view-mode]').forEach(b => b.classList.toggle('active', b === vmBtn));
+      const s1 = document.getElementById('resLinksSection');
+      const s2 = document.getElementById('resFilesSection');
+      if(s1 && s2){
+        if(mode === 'all'){ s1.style.display = 'block'; s2.style.display = 'block'; }
+        else if(mode === 'links'){ s1.style.display = 'block'; s2.style.display = 'none'; }
+        else if(mode === 'files'){ s1.style.display = 'none'; s2.style.display = 'block'; }
+      }
+      return;
+    }
+
+    const addLinkBtn = t.closest('[data-res-add-link]');
+    if(addLinkBtn){
+      const sub = addLinkBtn.dataset.resAddLink;
+      const subSel = document.getElementById('resLinkSubjectSelect');
+      if(subSel) subSel.value = sub;
+      const urlInp = document.getElementById('resLinkUrlInput');
+      if(urlInp){
+        urlInp.focus();
+        urlInp.scrollIntoView({ behavior:'smooth', block:'center' });
+      }
+      toast('🔗', 'Add link to ' + sub, 'Paste URL above and press Add Link');
+      return;
+    }
 
     const actBtn = t.closest('[data-p-action]');
     if(actBtn){
@@ -4487,15 +5404,19 @@ function plannerStaticInit(){
       } else if(a === 'week-clear-done'){
         clearWeekDone();
       } else if(a === 'focus-res-subject-input'){
+        const dockResBtn = document.querySelector('.dock-btn[data-view="resources"]');
+        if(dockResBtn) dockResBtn.click();
         const inp = document.getElementById('resSubjectInput');
-        if(state.plannerTab !== 'resources') setPlannerTab('resources', { restore:'#resSubjectInput' });
-        else if(inp){ inp.focus(); }
+        if(inp) inp.focus();
       }
       return;
     }
 
-    const resAdd = t.closest('[data-res-add]');
-    if(resAdd){ openResourceModal(resAdd.dataset.resAdd); return; }
+    const resUpload = t.closest('[data-res-upload-file]') || t.closest('[data-res-add]');
+    if(resUpload){
+      openResourceModal(resUpload.dataset.resUploadFile || resUpload.dataset.resAdd);
+      return;
+    }
 
     const resDelSub = t.closest('[data-res-subject-del]');
     if(resDelSub){ deleteResourceSubject(resDelSub.dataset.resSubjectDel); return; }
@@ -4509,6 +5430,30 @@ function plannerStaticInit(){
         saveState(); renderPlanner();
         toast('✕', 'Resource removed', item.name);
       }
+      return;
+    }
+
+    const resDirect = t.closest('[data-res-direct]');
+    if(resDirect){
+      const act = resDirect.dataset.resDirect;
+      const id = resDirect.dataset.resId;
+      const item = (state.resources || []).find(r => r.id === id);
+      if(item){
+        if(act === 'read') readResourceOnline(item);
+        else if(act === 'download') downloadResource(item);
+      }
+      return;
+    }
+
+    const linkCard = t.closest('[data-res-link-url]');
+    if(linkCard && !t.closest('[data-res-del]') && !t.closest('.res-open')){
+      window.open(linkCard.dataset.resLinkUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    const resCard = t.closest('[data-res-card]');
+    if(resCard && !t.closest('[data-res-del]') && !t.closest('[data-res-direct]')){
+      openResourceAction(resCard.dataset.resCard);
       return;
     }
     const wdDel = t.closest('[data-week-del]');
@@ -4542,90 +5487,97 @@ function plannerStaticInit(){
       if(ta) ta.focus();
       return;
     }
-  });
+  };
 
-  view.addEventListener('change', e => {
-    const chk = e.target.closest ? e.target.closest('[data-todo-check]') : null;
-    if(chk){
-      const id = chk.dataset.todoCheck;
-      const task = (state.todos || []).filter(x => x.id === id)[0];
-      if(task){
-        task.status = chk.checked ? 'done' : 'todo';
-        task.completedAt = chk.checked ? Date.now() : null;
-        if(chk.checked){
-          const p = plannerPayout(PLANNER_REWARDS.todoTask);
-          plannerAward(p, 'Task complete', task.text.slice(0, 50));
-        } else { saveState(); renderPlanner(); }
-      }
-      return;
-    }
-    const wchk = e.target.closest ? e.target.closest('[data-week-check]') : null;
-    if(wchk){
-      const p = wchk.dataset.weekCheck.split('|'), d = Number(p[0]), id = p[1];
-      const day = state.weekPlan[d];
-      const task = day ? day.tasks.filter(x => x.id === id)[0] : null;
-      if(task){
-        task.done = wchk.checked;
-        if(wchk.checked){
-          const pay = plannerPayout(PLANNER_REWARDS.weekTask);
-          if(weekFullyDone()){
-            const wc = plannerPayout(PLANNER_REWARDS.weekComplete);
-            pay.coins += wc.coins; pay.tokens += wc.tokens; pay.xp += wc.xp;
-            plannerAward(pay, '🏆 Week complete!', 'Every task done — huge work');
-            return;
-          }
-          if(day.tasks.length && day.tasks.every(t => t.done)){
-            const dc = plannerPayout(PLANNER_REWARDS.dayComplete);
-            pay.coins += dc.coins; pay.tokens += dc.tokens; pay.xp += dc.xp;
-            plannerAward(pay, '✓ ' + WEEK_DAYS[d] + ' complete!', 'Every task of the day done');
-            return;
-          }
-          plannerAward(pay, 'Task complete', WEEK_DAYS[d] + ' · ' + task.text.slice(0, 40));
-        } else { saveState(); renderPlanner(); }
-      }
-      return;
-    }
-    const sel = e.target.closest ? e.target.closest('[data-todo-status]') : null;
-    if(sel){
-      const id = sel.dataset.todoStatus;
-      const task = (state.todos || []).filter(x => x.id === id)[0];
-      if(task){
-        const wasDone = task.status === 'done';
-        task.status = sel.value;
-        task.completedAt = sel.value === 'done' ? Date.now() : null;
-        if(!wasDone && sel.value === 'done'){
-          plannerAward(plannerPayout(PLANNER_REWARDS.todoTask), 'Task complete', task.text.slice(0, 50));
-        } else {
-          saveState(); renderPlanner();
-          toast('◉', 'Status updated', STATUS_LABEL[sel.value]);
+  containers.forEach(c => c.addEventListener('click', handlePlannerClick));
+
+  if(view){
+    view.addEventListener('change', e => {
+      const chk = e.target.closest ? e.target.closest('[data-todo-check]') : null;
+      if(chk){
+        const id = chk.dataset.todoCheck;
+        const task = (state.todos || []).filter(x => x.id === id)[0];
+        if(task){
+          task.status = chk.checked ? 'done' : 'todo';
+          task.completedAt = chk.checked ? Date.now() : null;
+          if(chk.checked){
+            const p = plannerPayout(PLANNER_REWARDS.todoTask);
+            plannerAward(p, 'Task complete', task.text.slice(0, 50));
+          } else { saveState(); renderPlanner(); }
         }
-      } else { renderPlanner(); }
-      return;
-    }
-    const fl = e.target.closest ? e.target.closest('#resFileInput') : null;
-    if(fl){ readFileIntoResourceModal(); return; }
-  });
+        return;
+      }
+      const wchk = e.target.closest ? e.target.closest('[data-week-check]') : null;
+      if(wchk){
+        const p = wchk.dataset.weekCheck.split('|'), d = Number(p[0]), id = p[1];
+        const day = state.weekPlan[d];
+        const task = day ? day.tasks.filter(x => x.id === id)[0] : null;
+        if(task){
+          task.done = wchk.checked;
+          if(wchk.checked){
+            const pay = plannerPayout(PLANNER_REWARDS.weekTask);
+            if(weekFullyDone()){
+              const wc = plannerPayout(PLANNER_REWARDS.weekComplete);
+              pay.coins += wc.coins; pay.tokens += wc.tokens; pay.xp += wc.xp;
+              plannerAward(pay, '🏆 Week complete!', 'Every task done — huge work');
+              return;
+            }
+            if(day.tasks.length && day.tasks.every(t => t.done)){
+              const dc = plannerPayout(PLANNER_REWARDS.dayComplete);
+              pay.coins += dc.coins; pay.tokens += dc.tokens; pay.xp += dc.xp;
+              plannerAward(pay, '✓ ' + WEEK_DAYS[d] + ' complete!', 'Every task of the day done');
+              return;
+            }
+            plannerAward(pay, 'Task complete', WEEK_DAYS[d] + ' · ' + task.text.slice(0, 40));
+          } else { saveState(); renderPlanner(); }
+        }
+        return;
+      }
+      const sel = e.target.closest ? e.target.closest('[data-todo-status]') : null;
+      if(sel){
+        const id = sel.dataset.todoStatus;
+        const task = (state.todos || []).filter(x => x.id === id)[0];
+        if(task){
+          const wasDone = task.status === 'done';
+          task.status = sel.value;
+          task.completedAt = sel.value === 'done' ? Date.now() : null;
+          if(!wasDone && sel.value === 'done'){
+            plannerAward(plannerPayout(PLANNER_REWARDS.todoTask), 'Task complete', task.text.slice(0, 50));
+          } else {
+            saveState(); renderPlanner();
+            toast('◉', 'Status updated', STATUS_LABEL[sel.value]);
+          }
+        } else { renderPlanner(); }
+        return;
+      }
+    });
 
-  view.addEventListener('input', e => {
-    if(e.target.matches && e.target.matches('[data-week-note]')){
-      const d = Number(e.target.dataset.weekNote);
-      clearTimeout(_noteTimer);
-      _noteTimer = setTimeout(() => saveWeekNote(d, e.target.value), 650);
-    }
-  });
+    view.addEventListener('input', e => {
+      if(e.target.matches && e.target.matches('[data-week-note]')){
+        const d = Number(e.target.dataset.weekNote);
+        clearTimeout(_noteTimer);
+        _noteTimer = setTimeout(() => saveWeekNote(d, e.target.value), 650);
+      }
+    });
+  }
 
-  view.addEventListener('keydown', e => {
+  const handleKeydown = e => {
     if(e.target.id === 'todoInput' && e.key === 'Enter'){ e.preventDefault(); addTodoFromInput(); return; }
     if(e.target.id === 'resSubjectInput' && e.key === 'Enter'){ e.preventDefault(); addResourceSubject(); return; }
+    if(e.target.id === 'resLinkUrlInput' && e.key === 'Enter'){ e.preventDefault(); addWebLinkFromInput(); return; }
+    if(e.target.id === 'resLinkNameInput' && e.key === 'Enter'){ e.preventDefault(); addWebLinkFromInput(); return; }
     if(e.target.matches && e.target.matches('[data-week-add]') && e.key === 'Enter'){
       e.preventDefault(); addWeekTask(Number(e.target.dataset.weekAdd));
     }
-  });
+  };
+  containers.forEach(c => c.addEventListener('keydown', handleKeydown));
 
   const todoAddBtn = document.getElementById('todoAddBtn');
   if(todoAddBtn) todoAddBtn.addEventListener('click', addTodoFromInput);
   const resAddBtn = document.getElementById('resSubjectAddBtn');
   if(resAddBtn) resAddBtn.addEventListener('click', addResourceSubject);
+  const resLinkAddBtn = document.getElementById('resLinkAddBtn');
+  if(resLinkAddBtn) resLinkAddBtn.addEventListener('click', addWebLinkFromInput);
 
   const resSave = document.getElementById('resModalSave');
   if(resSave) resSave.addEventListener('click', saveResourceFromModal);
@@ -4641,6 +5593,25 @@ function plannerStaticInit(){
   if(resUrl) resUrl.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); saveResourceFromModal(); } });
   const resName = document.getElementById('resNameInput');
   if(resName) resName.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); saveResourceFromModal(); } });
+
+  const resChoiceRead = document.getElementById('resChoiceRead');
+  if(resChoiceRead) resChoiceRead.addEventListener('click', () => {
+    if(currentActionResource) readResourceOnline(currentActionResource);
+  });
+  const resChoiceDl = document.getElementById('resChoiceDownload');
+  if(resChoiceDl) resChoiceDl.addEventListener('click', () => {
+    if(currentActionResource) downloadResource(currentActionResource);
+    closeResourceAction();
+  });
+  const resChoiceCancel = document.getElementById('resChoiceCancel');
+  if(resChoiceCancel) resChoiceCancel.addEventListener('click', closeResourceAction);
+  const resActionBackdrop = document.getElementById('resActionBackdrop');
+  if(resActionBackdrop) resActionBackdrop.addEventListener('click', e => { if(e.target === resActionBackdrop) closeResourceAction(); });
+
+  const docReaderClose = document.getElementById('docReaderClose');
+  if(docReaderClose) docReaderClose.addEventListener('click', closeDocReader);
+  const docReaderBackdrop = document.getElementById('docReaderBackdrop');
+  if(docReaderBackdrop) docReaderBackdrop.addEventListener('click', e => { if(e.target === docReaderBackdrop) closeDocReader(); });
 }
 
 function renderTimerSide(){  const todayKey = ymd(new Date()); const secs = secondsOnDate(todayKey);
@@ -4653,6 +5624,7 @@ function renderAll(){
   renderTopbar(); renderDashboard(); renderStats(); renderAchievements();
   renderTimerSide(); renderShop(); renderCompanionShop();
   renderWheel(); renderProfile(); renderBreaks(); renderPlanner();
+  renderResourcesPage();
   updateGambleBalances(); renderGambleHistory();
   updateGoalDisplayFromState();
   updateAuthUI();
@@ -4660,7 +5632,8 @@ function renderAll(){
 
 const PAGE_META = {
   dashboard:{title:'Dashboard', sub:"Welcome back — let's get focused."},
-  planner:{title:'Planner', sub:'To-do list, weekly schedule and study resources in one place.'},
+  planner:{title:'Planner', sub:'To-do list and weekly schedule in one place.'},
+  resources:{title:'Study Resources', sub:'Organize web links and PDF documents into subject folders.'},
   timer:{title:'Focus Timer', sub:'Deep work, one session at a time.'},
   gamble:{title:'Gamble', sub:'Roll 3 dice. Bet Over, Under, Even, Odd, or Any Triple.'},
   wheel:{title:'Lucky Wheel', sub:'Spin tokens, win rewards, redeem breaks.'},
@@ -4675,8 +5648,10 @@ document.querySelectorAll('.dock-btn').forEach(btn=>{
     const v = btn.dataset.view;
     document.querySelectorAll('.dock-btn').forEach(b=>b.classList.toggle('active', b===btn));
     document.querySelectorAll('.view').forEach(view=>view.classList.toggle('active', view.id==='view-'+v));
-    document.getElementById('pageTitle').textContent = PAGE_META[v].title;
-    document.getElementById('pageSub').textContent = PAGE_META[v].sub;
+    if(PAGE_META[v]){
+      document.getElementById('pageTitle').textContent = PAGE_META[v].title;
+      document.getElementById('pageSub').textContent = PAGE_META[v].sub;
+    }
     window.scrollTo({top:0, behavior:'smooth'});
     if(v==='stats') renderStats();
     if(v==='achievements') renderAchievements();
@@ -4686,6 +5661,7 @@ document.querySelectorAll('.dock-btn').forEach(btn=>{
     if(v==='gamble') initGamble();
     if(v==='breaks') renderBreaks();
     if(v==='planner') renderPlanner();
+    if(v==='resources') renderResourcesPage();
   });
 });
 document.getElementById('bannerStart').addEventListener('click',()=>{
@@ -4732,6 +5708,10 @@ document.getElementById('addSubjectSubmitBtn').addEventListener('click', addSubj
 document.getElementById('newSubjectInput').addEventListener('keydown', e=>{ if(e.key === 'Enter'){ e.preventDefault(); addSubjectFromModal(); } });
 
 document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape'){
+    closeDocReader();
+    closeResourceAction();
+  }
   const tag = (e.target.tagName||'').toLowerCase();
   if(tag==='input'||tag==='select'||tag==='textarea') return;
 
