@@ -1451,6 +1451,217 @@ html.focus-mode body::after{display:none!important}
 [data-theme="white"] .wheel-custom-input-box{background:#ffffff;border-color:#e2e8f0}
 [data-theme="white"] .wheel-custom-input-box input{color:#09090b!important}
 
+
+/* ===== Reward Rates Badges ===== */
+.tip-list{display:flex;flex-direction:column;gap:12px}
+.tip{display:flex;align-items:center;gap:12px;font-size:12.5px;color:var(--text-2);line-height:1.5}
+.tip-icon-badge{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  font-size:16px;flex-shrink:0;border:1px solid var(--glass-border);
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+.tip-icon-badge.xp-badge{background:rgba(255,255,255,.08);color:#ffffff;border-color:rgba(255,255,255,.2)}
+.tip-icon-badge.coin-badge{background:rgba(245,197,74,.14);border-color:rgba(245,197,74,.35);color:#f5c84a}
+.tip-icon-badge.token-badge{background:rgba(196,181,253,.14);border-color:rgba(196,181,253,.35);color:#c4b5fd}
+.tip-rate-num{color:#ffffff;font-weight:700}
+
+/* ===== Visible Bars Styling (Dark Theme) ===== */
+.bars{display:flex;align-items:flex-end;gap:8px;height:160px;padding-top:8px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;gap:8px;height:100%;min-width:0}
+.bar-col{flex:1;position:relative;width:100%;min-height:100px}
+.bar{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:36px;min-height:5px;border-radius:8px 8px 4px 4px;
+  background:linear-gradient(180deg,#ffffff,rgba(255,255,255,.65));
+  box-shadow:0 0 14px rgba(255,255,255,.2);
+  transition:height .35s var(--ease);
+}
+.bar.today{
+  background:linear-gradient(180deg,#ffffff,rgba(255,255,255,.85));
+  box-shadow:0 0 20px rgba(255,255,255,.5);
+}
+.bar.empty{background:rgba(255,255,255,.08);min-height:3px}
+.bar-lbl{font-size:10.5px;font-weight:600;color:var(--text-3);text-align:center}
+.bar-lbl.today{color:var(--accent);font-weight:700}
+
+/* ==========================================================================
+   COMPREHENSIVE WHITE / LIGHT THEME TEXT CONTRAST & VISIBLE DATA BARS
+   ========================================================================== */
+[data-theme="white"] .card,
+[data-theme="white"] .stat,
+[data-theme="white"] .profile-stat,
+[data-theme="white"] .test-subject-card,
+[data-theme="white"] .test-item,
+[data-theme="white"] .journal-stat,
+[data-theme="white"] .life-note-card{
+  background:#ffffff!important;
+  border-color:#e2e8f0!important;
+}
+
+/* 1. Visible Bars in White Theme */
+[data-theme="white"] .bar{
+  background:linear-gradient(180deg,#09090b,#334155)!important;
+  box-shadow:0 3px 10px rgba(15,23,42,.22)!important;
+}
+[data-theme="white"] .bar.today{
+  background:linear-gradient(180deg,#000000,#0f172a)!important;
+  box-shadow:0 0 16px rgba(15,23,42,.45)!important;
+}
+[data-theme="white"] .bar.empty{
+  background:#cbd5e1!important;
+  min-height:3px!important;
+}
+[data-theme="white"] .bar-lbl{
+  color:#64748b!important;
+}
+[data-theme="white"] .bar-lbl.today{
+  color:#09090b!important;
+  font-weight:800!important;
+}
+
+/* 2. Planner To-Do Titles Contrast */
+[data-theme="white"] .planner-item-title{
+  color:#09090b!important;
+  font-weight:600!important;
+}
+[data-theme="white"] .planner-item.st-done .planner-item-title{
+  color:#94a3b8!important;
+}
+[data-theme="white"] .planner-item{
+  background:#f8fafc!important;
+  border-color:#e2e8f0!important;
+}
+[data-theme="white"] .planner-item:hover{
+  background:#f1f5f9!important;
+  border-color:#cbd5e1!important;
+}
+
+/* 3. Resources Titles & Links Contrast */
+[data-theme="white"] .res-subject-name,
+[data-theme="white"] .res-name,
+[data-theme="white"] .res-name a,
+[data-theme="white"] .res-link-title{
+  color:#09090b!important;
+  font-weight:700!important;
+}
+[data-theme="white"] .res-name a{
+  border-bottom-color:#cbd5e1!important;
+}
+[data-theme="white"] .res-name a:hover{
+  border-bottom-color:#09090b!important;
+}
+[data-theme="white"] .res-subject-meta,
+[data-theme="white"] .res-url,
+[data-theme="white"] .res-file-meta{
+  color:#64748b!important;
+}
+
+/* 4. Dashboard Recent Sessions & Stats Full History Contrast */
+[data-theme="white"] .session-subject{
+  color:#09090b!important;
+  font-weight:600!important;
+}
+[data-theme="white"] .session-dur{
+  color:#09090b!important;
+  font-weight:700!important;
+}
+[data-theme="white"] .session-time{
+  color:#64748b!important;
+}
+[data-theme="white"] .session-item{
+  background:#f8fafc!important;
+  border-color:#e2e8f0!important;
+}
+[data-theme="white"] .session-emoji{
+  background:#e2e8f0!important;
+  color:#09090b!important;
+}
+
+/* 5. Profile YOUR JOURNEY Metrics Cards Contrast */
+[data-theme="white"] .profile-stat .val{
+  color:#09090b!important;
+  font-weight:800!important;
+}
+[data-theme="white"] .profile-stat .val.accent{
+  color:#09090b!important;
+}
+[data-theme="white"] .profile-stat .lbl{
+  color:#64748b!important;
+  font-weight:700!important;
+}
+[data-theme="white"] .profile-title{
+  color:#64748b!important;
+}
+[data-theme="white"] .profile-quote{
+  color:#334155!important;
+  border-left-color:#cbd5e1!important;
+}
+[data-theme="white"] #profileBioDisplay{
+  color:#334155!important;
+  background:#f8fafc!important;
+  border-color:#e2e8f0!important;
+}
+
+/* 6. Focus Reward Rates Badges Contrast in White Theme */
+[data-theme="white"] .tip-icon-badge.xp-badge{background:#09090b!important;color:#ffffff!important;border-color:#09090b!important}
+[data-theme="white"] .tip-icon-badge.coin-badge{background:#fef9c3!important;border-color:#fde047!important;color:#b45309!important}
+[data-theme="white"] .tip-icon-badge.token-badge{background:#ede9fe!important;border-color:#ddd6fe!important;color:#6d28d9!important}
+[data-theme="white"] .tip b,
+[data-theme="white"] .tip-rate-num{
+  color:#09090b!important;
+  font-weight:700!important;
+}
+[data-theme="white"] .tip{
+  color:#475569!important;
+}
+
+/* 7. Journal Test History & Life Section Contrast in White Theme */
+[data-theme="white"] .test-subject-name{color:#09090b!important}
+[data-theme="white"] .test-item-title{color:#09090b!important}
+[data-theme="white"] .test-mistakes-box{color:#334155!important;background:#f8fafc!important;border-color:#e2e8f0!important}
+[data-theme="white"] .test-mistakes-box b{color:#09090b!important}
+[data-theme="white"] .life-note-title{color:#09090b!important}
+[data-theme="white"] .life-note-snippet{color:#475569!important}
+[data-theme="white"] .journal-stat .val{color:#09090b!important}
+[data-theme="white"] .journal-stat .lbl{color:#64748b!important}
+[data-theme="white"] .test-subject-meta{color:#64748b!important}
+[data-theme="white"] .life-note-date{color:#64748b!important}
+[data-theme="white"] .life-note-footer{color:#64748b!important;border-top-color:#e2e8f0!important}
+
+/* 8. Additional Headers & Labels Contrast in White Theme */
+[data-theme="white"] .stat-value{color:#09090b!important}
+[data-theme="white"] .stat-value small{color:#64748b!important}
+[data-theme="white"] .stat-label{color:#64748b!important}
+[data-theme="white"] .stat-sub{color:#64748b!important}
+[data-theme="white"] .card-title{color:#09090b!important}
+[data-theme="white"] .planner-head h3{color:#09090b!important}
+[data-theme="white"] .ph-sub{color:#64748b!important}
+[data-theme="white"] .wd-name{color:#09090b!important}
+[data-theme="white"] .wd-task-title{color:#09090b!important}
+[data-theme="white"] .wd-count{color:#64748b!important}
+[data-theme="white"] .today-ring-wrap .goal-num{color:#09090b!important}
+[data-theme="white"] .mini-ring .mfg{stroke:#09090b!important}
+[data-theme="white"] .mini-ring .mbg{stroke:#e2e8f0!important}
+[data-theme="white"] .payout-row .val{color:#09090b!important}
+[data-theme="white"] .payout-row .lbl{color:#475569!important}
+[data-theme="white"] .breaks-jar-num{color:#09090b!important}
+[data-theme="white"] .breaks-hero-title{color:#09090b!important}
+[data-theme="white"] .breaks-hero-sub{color:#475569!important}
+[data-theme="white"] .break-stat .val{color:#09090b!important}
+[data-theme="white"] .break-stat .lbl{color:#64748b!important}
+[data-theme="white"] .break-stat .sub{color:#94a3b8!important}
+[data-theme="white"] .break-source .src-name{color:#09090b!important}
+[data-theme="white"] .break-source .src-amt{color:#09090b!important}
+[data-theme="white"] .break-log-item .bl-name{color:#09090b!important}
+[data-theme="white"] .break-log-item .bl-amt{color:#09090b!important}
+[data-theme="white"] .shop-name{color:#09090b!important}
+[data-theme="white"] .shop-price{color:#09090b!important}
+[data-theme="white"] .ach-name{color:#09090b!important}
+[data-theme="white"] .drop-item .di-name{color:#09090b!important}
+[data-theme="white"] .modal h3{color:#09090b!important}
+[data-theme="white"] .field label{color:#475569!important}
+[data-theme="white"] .switch-row span{color:#09090b!important}
+
 </style>
 </head>
 <body>
@@ -1907,10 +2118,23 @@ html.focus-mode body::after{display:none!important}
             </div>
           </div>
           <div class="card"><h3 class="card-title"><span class="dot"></span>Active Boosts</h3><div id="boostList" style="font-size:12.5px;color:var(--text-2)">No active boosts.</div></div>
-          <div class="card">
+                    <div class="card">
             <h3 class="card-title"><span class="dot"></span>Reward Rates</h3>
             <div class="tip-list">
-              <div class="tip"><span class="em">✦</span><div><b>10 XP</b> every 5 minutes of focus</div></div>
+              <div class="tip">
+                <span class="tip-icon-badge xp-badge">✦</span>
+                <div><b class="tip-rate-num">10 XP</b> every 5 minutes of focus</div>
+              </div>
+              <div class="tip">
+                <span class="tip-icon-badge coin-badge">🪙</span>
+                <div><b class="tip-rate-num">1 Coin</b> every 3 minutes of focus</div>
+              </div>
+              <div class="tip">
+                <span class="tip-icon-badge token-badge">🎡</span>
+                <div><b class="tip-rate-num">1 Spin Token</b> every 30 minutes of focus</div>
+              </div>
+            </div>
+          </div>
               <div class="tip"><span class="em">🪙</span><div><b>1 Coin</b> every 3 minutes of focus</div></div>
               <div class="tip"><span class="em">🎡</span><div><b>1 Spin Token</b> every 30 minutes of focus</div></div>
             </div>
@@ -3177,18 +3401,21 @@ function getUnlockedDemoState(){
   const now = Date.now();
   const dayMs = 86400000;
 
-  // Realistic sample study history across 14 days
+  // Realistic sample study history across 14 days in Vietnamese GMT+7 timeline
   const sampleSessions = [];
   const subjects = ['Mathematics', 'Physics', 'English', 'Chemistry', 'Computer Science'];
+  const todaySodVN = startOfDay(now).getTime();
+  const daytimeHoursVN = [9, 14, 19]; // 9am, 2pm, 7pm in Vietnam (GMT+7)
   for(let i = 13; i >= 0; i--){
-    const dayTs = now - (i * dayMs) + (Math.random() * 3600000);
-    const count = 2 + (i % 2);
+    const dayStartTs = todaySodVN - (i * 86400000);
+    const count = 2 + (i % 2); // 2 or 3 sessions per day
     for(let j = 0; j < count; j++){
       const subj = subjects[(i + j) % subjects.length];
-      const secs = (25 + Math.floor(Math.random() * 35)) * 60;
+      const secs = (35 + Math.floor(Math.random() * 30)) * 60; // 35-65 mins
+      const sessionTs = dayStartTs + (daytimeHoursVN[j] * 3600000) + Math.floor(Math.random() * 1800000);
       sampleSessions.push({
         id: 'demo_sess_' + i + '_' + j,
-        ts: dayTs - (j * 7200000),
+        ts: sessionTs,
         seconds: secs,
         subject: subj,
         mode: 'focus'
@@ -3441,14 +3668,95 @@ async function bootstrapAuth(){
   showAuthGate();
 }
 
-function ymd(d){ const x=new Date(d); return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'); }
-function startOfDay(d){ const x=new Date(d); x.setHours(0,0,0,0); return x; }
-function startOfWeek(d){ const x=startOfDay(d); const off=(x.getDay()+6)%7; x.setDate(x.getDate()-off); return x; }
-function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
-function dayDiff(a,b){ return Math.round((startOfDay(a)-startOfDay(b))/86400000); }
-function formatDuration(s){ s=Math.max(0,Math.round(s)); const h=Math.floor(s/3600),m=Math.floor((s%3600)/60); if(h>0) return h+'h '+m+'m'; if(m>0) return m+'m'; return s+'s'; }
-function formatClock(s){ s=Math.max(0,Math.round(s)); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
-function relativeTime(ts){ const d=new Date(ts); const diff=dayDiff(new Date(),d); const time=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); if(diff===0)return 'Today · '+time; if(diff===1)return 'Yesterday · '+time; if(diff<7)return d.toLocaleDateString([],{weekday:'long'})+' · '+time; return d.toLocaleDateString([],{month:'short',day:'numeric'})+' · '+time; }
+/* ============================================================
+   VIETNAMESE (HO CHI MINH CITY / GMT+7) TIMELINE DATE ENGINE
+============================================================ */
+const VN_TIMEZONE_OFFSET_MS = 7 * 60 * 60 * 1000; // GMT+7 constant offset
+
+function getVnTimeParts(d){
+  const ts = (d instanceof Date ? d.getTime() : (typeof d === 'number' ? d : new Date(d).getTime())) || Date.now();
+  const shifted = new Date(ts + VN_TIMEZONE_OFFSET_MS);
+  return {
+    ts,
+    year: shifted.getUTCFullYear(),
+    month: shifted.getUTCMonth() + 1,
+    day: shifted.getUTCDate(),
+    dow: shifted.getUTCDay(), // 0=Sun, 1=Mon, ..., 6=Sat
+    hours: shifted.getUTCHours(),
+    minutes: shifted.getUTCMinutes(),
+    seconds: shifted.getUTCSeconds()
+  };
+}
+
+function ymd(d){
+  const p = getVnTimeParts(d);
+  return p.year + '-' + String(p.month).padStart(2, '0') + '-' + String(p.day).padStart(2, '0');
+}
+
+function startOfDay(d){
+  const p = getVnTimeParts(d);
+  // Returns exact UTC epoch timestamp corresponding to midnight 00:00:00 GMT+7
+  return new Date(Date.UTC(p.year, p.month - 1, p.day, 0, 0, 0) - VN_TIMEZONE_OFFSET_MS);
+}
+
+function startOfWeek(d){
+  const sod = startOfDay(d);
+  const p = getVnTimeParts(sod);
+  const off = (p.dow + 6) % 7; // Monday = 0, Sunday = 6 (Vietnam standard)
+  return new Date(sod.getTime() - (off * 86400000));
+}
+
+function addDays(d, n){
+  const base = (d instanceof Date ? d.getTime() : new Date(d).getTime());
+  return new Date(base + (n * 86400000));
+}
+
+function dayDiff(a, b){
+  const sA = startOfDay(a).getTime();
+  const sB = startOfDay(b).getTime();
+  return Math.round((sA - sB) / 86400000);
+}
+
+function formatDuration(s){
+  s = Math.max(0, Math.round(s));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  if(h > 0) return h + 'h ' + m + 'm';
+  if(m > 0) return m + 'm';
+  return s + 's';
+}
+
+function formatClock(s){
+  s = Math.max(0, Math.round(s));
+  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+
+function getVnTimeString(ts){
+  const p = getVnTimeParts(ts);
+  const h12 = p.hours % 12 || 12;
+  const ampm = p.hours >= 12 ? 'PM' : 'AM';
+  return String(h12).padStart(2, '0') + ':' + String(p.minutes).padStart(2, '0') + ' ' + ampm;
+}
+
+function getVnDateMonthString(ts){
+  const p = getVnTimeParts(ts);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[p.month - 1] + ' ' + p.day;
+}
+
+function getVnWeekdayString(ts){
+  const p = getVnTimeParts(ts);
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  return days[p.dow];
+}
+
+function relativeTime(ts){
+  const diff = dayDiff(Date.now(), ts);
+  const time = getVnTimeString(ts);
+  if(diff === 0) return 'Today · ' + time;
+  if(diff === 1) return 'Yesterday · ' + time;
+  if(diff < 7) return getVnWeekdayString(ts) + ' · ' + time;
+  return getVnDateMonthString(ts) + ' · ' + time;
+}
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
 
 function xpForLevel(n){ return 100 * Math.pow(n, 1.5); }
@@ -5292,15 +5600,24 @@ function renderStreakWarning(streak){
 }
 function renderWeekBars(){
   const container = document.getElementById('weekBars');
-  const today = startOfDay(new Date()); const weekStart = startOfWeek(today);
+  if(!container) return;
+  const today = startOfDay(new Date());
+  const weekStart = startOfWeek(today);
   const days = [];
-  for(let i=0;i<7;i++){ const d = addDays(weekStart,i); days.push({ d, key:ymd(d), secs:secondsOnDate(ymd(d)), isToday:ymd(d)===ymd(today), isFuture:d>today }); }
-  const max = Math.max(...days.map(x=>x.secs), 60);
+  for(let i=0;i<7;i++){
+    const d = addDays(weekStart, i);
+    const key = ymd(d);
+    const secs = secondsOnDate(key);
+    days.push({ d, key, secs, isToday: key === ymd(today), isFuture: d.getTime() > today.getTime() });
+  }
+  const max = Math.max(...days.map(x=>x.secs), 3600);
   const letters = ['M','T','W','T','F','S','S'];
   container.innerHTML = days.map((x,i)=>{
-    const h = x.secs > 0 ? Math.max(5,(x.secs/max)*100) : 3;
-    const cls = x.secs===0?'bar empty':(x.isToday?'bar today':'bar');
-    return '<div class="bar-wrap"><div class="bar-col"><div class="'+cls+'" style="height:'+h+'%" data-val="'+(x.isFuture?'Upcoming':formatDuration(x.secs))+'"></div></div><div class="bar-lbl'+(x.isToday?' today':'')+'">'+letters[i]+'</div></div>';
+    const pct = x.secs > 0 ? Math.max(8, Math.round((x.secs / max) * 100)) : 0;
+    const cls = x.secs === 0 ? 'bar empty' : (x.isToday ? 'bar today' : 'bar');
+    const hStyle = pct > 0 ? 'height:' + pct + '%;min-height:8px' : 'height:3px';
+    const labelTitle = x.isFuture ? 'Upcoming' : (x.secs > 0 ? formatDuration(x.secs) : '0m');
+    return '<div class="bar-wrap" title="' + letters[i] + ' (' + x.key + '): ' + labelTitle + '"><div class="bar-col"><div class="' + cls + '" style="' + hStyle + '" data-val="' + labelTitle + '"></div></div><div class="bar-lbl' + (x.isToday ? ' today' : '') + '">' + letters[i] + '</div></div>';
   }).join('');
 }
 function renderRecentSessions(){
@@ -5355,14 +5672,26 @@ function renderStats(){
   document.getElementById('bestStreakVal').innerHTML = state.bestStreak+'<small>d</small>';
   document.getElementById('achCount').innerHTML = Object.keys(state.achievements).length+'<small>/'+ACHIEVEMENTS.length+'</small>';
   const container = document.getElementById('bars14');
-  const today = startOfDay(new Date()); const days = [];
-  for(let i=13;i>=0;i--){ const d = addDays(today,-i); days.push({ d, secs:secondsOnDate(ymd(d)), isToday:i===0 }); }
-  const max = Math.max(...days.map(x=>x.secs), 60);
-  container.innerHTML = days.map(x=>{
-    const h = x.secs > 0 ? Math.max(5,(x.secs/max)*100) : 3;
-    const cls = x.secs===0?'bar empty':(x.isToday?'bar today':'bar');
-    return '<div class="bar-wrap"><div class="bar-col"><div class="'+cls+'" style="height:'+h+'%" data-val="'+x.d.toLocaleDateString([],{month:'short',day:'numeric'})+': '+formatDuration(x.secs)+'"></div></div><div class="bar-lbl'+(x.isToday?' today':'')+'">'+x.d.getDate()+'</div></div>';
-  }).join('');
+  if(container){
+    const today = startOfDay(new Date());
+    const days = [];
+    for(let i=13;i>=0;i--){
+      const d = addDays(today, -i);
+      const key = ymd(d);
+      const secs = secondsOnDate(key);
+      days.push({ d, key, secs, isToday: i === 0 });
+    }
+    const max = Math.max(...days.map(x=>x.secs), 3600);
+    container.innerHTML = days.map(x=>{
+      const pct = x.secs > 0 ? Math.max(8, Math.round((x.secs / max) * 100)) : 0;
+      const cls = x.secs === 0 ? 'bar empty' : (x.isToday ? 'bar today' : 'bar');
+      const hStyle = pct > 0 ? 'height:' + pct + '%;min-height:8px' : 'height:3px';
+      const p = getVnTimeParts(x.d);
+      const dayNum = p.day;
+      const labelTitle = p.month + '/' + p.day + ': ' + (x.secs > 0 ? formatDuration(x.secs) : '0m');
+      return '<div class="bar-wrap" title="' + labelTitle + '"><div class="bar-col"><div class="' + cls + '" style="' + hStyle + '" data-val="' + labelTitle + '"></div></div><div class="bar-lbl' + (x.isToday ? ' today' : '') + '">' + dayNum + '</div></div>';
+    }).join('');
+  }
   const bySubject = {};
   state.sessions.forEach(s=>{ const k = s.subject || 'General'; bySubject[k] = (bySubject[k]||0) + s.seconds; });
   const entries = Object.entries(bySubject).sort((a,b)=>b[1]-a[1]);
