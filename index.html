@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="StudyFlow — Cloud-synced study timer with gamification.">
+<meta name="description" content="In Pursuit Of Greatness — Mastery through disciplined focus.">
 <meta name="theme-color" content="#08080a">
-<title>StudyFlow — Liquid Focus</title>
+<title>In Pursuit Of Greatness</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,20 +13,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --bg:#08080a;
-  --glass-border:rgba(255,255,255,.10);
-  --glass-border-2:rgba(255,255,255,.18);
-  --text:#f8f8fb;--text-2:rgba(255,255,255,.72);--text-3:rgba(255,255,255,.45);
-  --accent:#ffffff;--accent-ink:#08080a;--accent-soft:rgba(255,255,255,.09);
-  --accent-glow:rgba(255,255,255,.28);
-  --win:#5cd68a;--lose:#ff6b7d;
-  --over:#ff9b5c;--under:#5cc8ff;
-  --shadow-glass:0 8px 32px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3);
-  --shadow-lift:0 16px 48px rgba(0,0,0,.6), 0 4px 14px rgba(0,0,0,.35);
+  --bg:#09090b;
+  --glass-border:rgba(255,255,255,.08);
+  --glass-border-2:rgba(255,255,255,.15);
+  --text:#f8fafc;--text-2:#a1a1aa;--text-3:#71717a;
+  --accent:#ffffff;--accent-ink:#09090b;--accent-soft:rgba(255,255,255,.08);
+  --accent-glow:rgba(255,255,255,.22);
+  --win:#34d399;--lose:#f87171;
+  --over:#fb923c;--under:#38bdf8;
+  --shadow-glass:0 8px 32px rgba(0,0,0,.5), 0 0 1px 1px rgba(255,255,255,.05);
+  --shadow-lift:0 16px 48px rgba(0,0,0,.6), 0 0 1px 1px rgba(255,255,255,.08);
   --inner-hi:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px rgba(255,255,255,.02);
-  --radius-lg:26px;--radius:20px;
+  --radius-lg:22px;--radius:16px;
   --font:'Inter',system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono',monospace;
-  --ease:cubic-bezier(.4,0,.2,1);
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -34,10 +34,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 ::selection{background:rgba(255,255,255,.9);color:#000}
 .bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .bg-orbs::before,.bg-orbs::after,.orb{content:'';position:absolute;border-radius:50%;filter:blur(120px);opacity:.5}
-.bg-orbs::before{width:700px;height:700px;background:radial-gradient(circle,rgba(80,60,140,.55),transparent 65%);top:-260px;left:-200px;animation:orbFloat1 24s ease-in-out infinite}
-.bg-orbs::after{width:620px;height:620px;background:radial-gradient(circle,rgba(40,50,120,.5),transparent 65%);bottom:-220px;right:-180px;animation:orbFloat2 28s ease-in-out infinite}
-.orb.o1{width:560px;height:560px;background:radial-gradient(circle,rgba(70,90,150,.35),transparent 65%);top:42%;left:58%;animation:orbFloat3 32s ease-in-out infinite}
-.orb.o2{width:500px;height:500px;background:radial-gradient(circle,rgba(120,90,180,.3),transparent 65%);bottom:8%;left:8%;animation:orbFloat1 30s ease-in-out infinite reverse}
+.bg-orbs::before{width:650px;height:650px;background:radial-gradient(circle,rgba(255,255,255,.035),transparent 70%);top:-240px;left:-180px;animation:orbFloat1 28s ease-in-out infinite}
+.bg-orbs::after{width:600px;height:600px;background:radial-gradient(circle,rgba(200,215,235,.03),transparent 70%);bottom:-200px;right:-160px;animation:orbFloat2 32s ease-in-out infinite}
+.orb.o1{width:520px;height:520px;background:radial-gradient(circle,rgba(255,255,255,.025),transparent 70%);top:42%;left:56%;animation:orbFloat3 34s ease-in-out infinite}
+.orb.o2{width:480px;height:480px;background:radial-gradient(circle,rgba(190,205,225,.025),transparent 70%);bottom:10%;left:10%;animation:orbFloat1 30s ease-in-out infinite reverse}
 @keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.08)}66%{transform:translate(-40px,50px) scale(.95)}}
 @keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-70px,-50px) scale(1.12)}}
 @keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%) scale(1)}33%{transform:translate(-40%,-60%) scale(1.1)}66%{transform:translate(-60%,-40%) scale(.92)}}
@@ -1317,6 +1317,113 @@ html.focus-mode body::after{display:none!important}
   color:#ffffff;
 }
 }
+
+/* ===== Subtabs Navigation (Minigames, Extra, Journal) ===== */
+.view-header-strip{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.view-subtabs{display:inline-flex;align-items:center;gap:4px;padding:5px;border-radius:99px;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);flex-wrap:wrap}
+.subtab-btn{padding:9px 18px;border-radius:99px;border:none;background:transparent;color:var(--text-2);font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .2s var(--ease);white-space:nowrap}
+.subtab-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
+.subtab-btn.active{background:#ffffff;color:#09090b;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+[data-theme="white"] .subtab-btn{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+[data-theme="white"] .subtab-btn:hover{background:#e2e8f0;color:#09090b}
+[data-theme="white"] .subtab-btn.active{background:#09090b;color:#ffffff;border-color:#09090b}
+
+/* ===== Journal Layout & Components ===== */
+.journal-stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.journal-stat{padding:16px 18px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--glass-border)}
+.journal-stat .lbl{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:5px}
+.journal-stat .val{font-size:26px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;line-height:1.1}
+.journal-stat .val.accent{color:var(--accent)}
+
+/* Test History Section */
+.test-subjects-grid{display:flex;flex-direction:column;gap:18px}
+.test-subject-card{border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:22px;background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.015));transition:border-color .2s var(--ease)}
+.test-subject-card:hover{border-color:var(--glass-border-2)}
+.test-subject-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.test-subject-title-wrap{display:flex;align-items:center;gap:12px}
+.test-subject-icon{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);display:grid;place-items:center;font-size:18px}
+.test-subject-name{font-size:17px;font-weight:700;color:#fff}
+.test-subject-meta{font-size:12px;color:var(--text-3);margin-top:2px;display:flex;gap:8px;align-items:center}
+.test-subject-actions{display:flex;align-items:center;gap:8px}
+
+.test-list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.test-item{padding:16px 18px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;gap:10px;transition:all .2s var(--ease)}
+.test-item:hover{background:rgba(255,255,255,.045);border-color:var(--glass-border-2)}
+.test-item-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.test-item-title-box{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+
+/* Mark Measure Badge - Shown prominently right next to test title */
+.test-mark-badge{display:inline-flex;align-items:center;gap:3px;padding:4px 10px;border-radius:8px;font-family:var(--mono);font-size:13px;font-weight:800;letter-spacing:.02em;white-space:nowrap;flex-shrink:0}
+.test-mark-badge.mark-high{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.4);color:#6ee7b7}
+.test-mark-badge.mark-good{background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.4);color:#7dd3fc}
+.test-mark-badge.mark-mid{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);color:#fde047}
+.test-mark-badge.mark-low{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.4);color:#fca5a5}
+.test-item-title{font-size:14.5px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.test-item-date{font-size:11px;color:var(--text-3);white-space:nowrap;margin-left:auto}
+
+.test-mistakes-box{padding:10px 14px;border-radius:10px;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.1);font-size:12.5px;color:var(--text-2);line-height:1.55}
+.test-mistakes-box b{color:#fff;font-weight:600}
+.test-links-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.test-attachment-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:var(--text-2);font-size:11.5px;font-weight:600;text-decoration:none;cursor:pointer;transition:all .2s var(--ease)}
+.test-attachment-pill:hover{background:rgba(255,255,255,.1);color:#fff;border-color:var(--glass-border-2)}
+.test-item-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+
+/* Mark Measure Feature in Modal */
+.mark-measure-wrapper{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:14px;background:rgba(0,0,0,.35);border:1px solid var(--glass-border)}
+.mark-measure-top{display:flex;align-items:baseline;justify-content:space-between}
+.mark-measure-lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.mark-measure-score-display{display:flex;align-items:baseline;gap:4px}
+.mark-measure-score-val{font-family:var(--mono);font-size:32px;font-weight:800;color:#fff;line-height:1}
+.mark-measure-score-max{font-size:14px;font-weight:600;color:var(--text-3)}
+.mark-picker-grid{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+@media (max-width:600px){.mark-picker-grid{grid-template-columns:repeat(6,1fr)}}
+.mark-pill-btn{padding:9px 0;border-radius:9px;border:1px solid var(--glass-border);background:rgba(255,255,255,.04);color:var(--text-2);font-family:var(--mono);font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .18s var(--ease)}
+.mark-pill-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.mark-pill-btn.active{background:#ffffff;color:#000000;border-color:#ffffff;box-shadow:0 0 14px rgba(255,255,255,.35)}
+.mark-half-step-row{display:flex;align-items:center;justify-content:space-between;margin-top:4px;font-size:12px;color:var(--text-3)}
+.mark-slider{width:100%;-webkit-appearance:none;height:6px;border-radius:99px;background:rgba(255,255,255,.1);outline:none;cursor:pointer}
+.mark-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#ffffff;box-shadow:0 0 10px rgba(0,0,0,.5);cursor:pointer}
+
+/* Life Section */
+.life-folders-strip{display:flex;align-items:center;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;scrollbar-width:none}
+.life-folders-strip::-webkit-scrollbar{display:none}
+.life-folder-chip{padding:7px 15px;border-radius:99px;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);color:var(--text-2);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:all .2s var(--ease)}
+.life-folder-chip:hover{background:rgba(255,255,255,.08);color:#fff}
+.life-folder-chip.active{background:#ffffff;color:#09090b;font-weight:700}
+[data-theme="white"] .life-folder-chip.active{background:#09090b;color:#ffffff}
+.life-notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.life-note-card{border:1px solid var(--glass-border);border-radius:var(--radius);padding:18px;background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01));display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:all .2s var(--ease);position:relative}
+.life-note-card:hover{border-color:var(--glass-border-2);transform:translateY(-1px);background:rgba(255,255,255,.05)}
+.life-note-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.life-note-badge{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:var(--text-2)}
+.life-note-date{font-size:11px;color:var(--text-3)}
+.life-note-title{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.life-note-snippet{font-size:12.5px;color:var(--text-2);line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;min-height:54px}
+.life-note-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);font-size:11.5px;color:var(--text-3)}
+
+/* Life Reader Modal */
+.life-reader-modal{max-width:560px}
+.life-reader-content{font-size:14px;color:var(--text);line-height:1.75;white-space:pre-wrap;max-height:55vh;overflow-y:auto;padding:16px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--glass-border)}
+
+/* White theme overrides */
+[data-theme="white"] .test-subject-card,
+[data-theme="white"] .journal-stat,
+[data-theme="white"] .life-note-card{background:#ffffff;border-color:#e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+[data-theme="white"] .test-item{background:#f8fafc;border-color:#e2e8f0}
+[data-theme="white"] .test-item:hover{background:#f1f5f9;border-color:#cbd5e1}
+[data-theme="white"] .test-subject-name,
+[data-theme="white"] .test-item-title,
+[data-theme="white"] .life-note-title,
+[data-theme="white"] .journal-stat .val{color:#09090b!important}
+[data-theme="white"] .mark-measure-wrapper{background:#f8fafc;border-color:#e2e8f0}
+[data-theme="white"] .mark-pill-btn{background:#ffffff;border-color:#cbd5e1;color:#1e293b}
+[data-theme="white"] .mark-pill-btn.active{background:#09090b;color:#ffffff;border-color:#09090b}
+[data-theme="white"] .life-reader-content{background:#f8fafc;border-color:#e2e8f0;color:#09090b}
+[data-theme="white"] .test-mistakes-box{background:#f8fafc;border-color:#e2e8f0;color:#334155}
+[data-theme="white"] .test-mistakes-box b{color:#09090b}
+[data-theme="white"] .life-folder-chip{background:#f1f5f9;border-color:#e2e8f0;color:#475569}
+[data-theme="white"] .life-folder-chip.active{background:#09090b;color:#ffffff}
+
 </style>
 </head>
 <body>
@@ -1333,8 +1440,8 @@ html.focus-mode body::after{display:none!important}
     <div class="auth-brand">
       <div class="auth-brand-logo">◉</div>
       <div>
-        <div class="auth-brand-name">StudyFlow</div>
-        <div class="auth-brand-sub">Cloud-synced focus tracking</div>
+        <div class="auth-brand-name">In Pursuit Of Greatness</div>
+        <div class="auth-brand-sub">The Journey to Mastery</div>
       </div>
     </div>
     <div class="auth-tabs">
@@ -1378,29 +1485,21 @@ html.focus-mode body::after{display:none!important}
     <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h6M9 11h4"/></svg>
     <span>Resources</span>
   </button>
+  <button class="dock-btn" data-view="journal" title="Journal">
+    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+    <span>Journal</span>
+  </button>
   <button class="dock-btn" data-view="timer" title="Focus">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
     <span>Focus</span>
   </button>
-  <button class="dock-btn" data-view="gamble" title="Gamble">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.2"/><circle cx="15.5" cy="8.5" r="1.2"/><circle cx="8.5" cy="15.5" r="1.2"/><circle cx="15.5" cy="15.5" r="1.2"/><circle cx="12" cy="12" r="1.2"/></svg>
-    <span>Gamble</span>
+  <button class="dock-btn" data-view="minigames" title="Minigames">
+    <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
+    <span>Minigames</span>
   </button>
-  <button class="dock-btn" data-view="wheel" title="Wheel">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v6M21 12h-6M12 21v-6M3 12h6"/></svg>
-    <span>Wheel</span>
-  </button>
-  <button class="dock-btn" data-view="shop" title="Shop">
-    <svg viewBox="0 0 24 24"><path d="M3 9l1.5-6h15L21 9M3 9h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9zM9 13h6"/></svg>
-    <span>Shop</span>
-  </button>
-  <button class="dock-btn" data-view="breaks" title="Breaks">
-    <svg viewBox="0 0 24 24"><path d="M6 3h12v3l-3 3v2l3 3v7H6v-7l3-3V6z"/><path d="M10 3v3M14 3v3"/><path d="M9 12h6"/></svg>
-    <span>Breaks</span>
-  </button>
-  <button class="dock-btn" data-view="achievements" title="Awards">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5L7 21l5-2.5L17 21l-1.5-7.5"/></svg>
-    <span>Awards</span>
+  <button class="dock-btn" data-view="extra" title="Extra">
+    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span>Extra</span>
   </button>
   <button class="dock-btn" data-view="stats" title="Stats">
     <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l3.5-4 3 2.5L20 7"/></svg>
@@ -1638,6 +1737,73 @@ html.focus-mode body::after{display:none!important}
       </div>
     </section>
 
+    <section class="view" id="view-journal">
+      <div class="view-header-strip">
+        <div class="view-subtabs" id="journalSubtabs">
+          <button type="button" class="subtab-btn active" data-journal-tab="tests">📊 Test History</button>
+          <button type="button" class="subtab-btn" data-journal-tab="life">📖 Life &amp; Thoughts</button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: TEST HISTORY -->
+      <div id="journal-section-tests">
+        <div class="journal-stat-row">
+          <div class="journal-stat"><div class="lbl">Total Tests</div><div class="val" id="journalTotalTests">0</div></div>
+          <div class="journal-stat"><div class="lbl">Average Mark</div><div class="val accent" id="journalAvgMark">0.0<small style="font-size:14px;color:var(--text-3)">/10</small></div></div>
+          <div class="journal-stat"><div class="lbl">Subjects Active</div><div class="val" id="journalSubjectCount">0</div></div>
+          <div class="journal-stat"><div class="lbl">Highest Mark</div><div class="val" id="journalBestMark">—</div></div>
+        </div>
+
+        <div class="card planner-card" style="margin-bottom:20px">
+          <div class="planner-head">
+            <div>
+              <h3>Test History Subjects</h3>
+              <div class="ph-sub">Manage subject folders to archive test papers, mark scores from 0 to 10, and review mistakes.</div>
+            </div>
+          </div>
+          <div class="planner-form">
+            <div class="planner-input-wrap">
+              <input type="text" id="newJournalSubjectInput" maxlength="40" placeholder="Add subject (e.g. Mathematics, Physics, Chemistry, English…)" autocomplete="off">
+            </div>
+            <button type="button" class="btn primary planner-add" id="addJournalSubjectBtn">+ Add Subject</button>
+          </div>
+        </div>
+
+        <div class="test-subjects-grid" id="testSubjectsList"></div>
+      </div>
+
+      <!-- SECTION 2: LIFE JOURNAL -->
+      <div id="journal-section-life" style="display:none">
+        <div class="card planner-card" style="margin-bottom:20px">
+          <div class="planner-head">
+            <div>
+              <h3>Life Journal &amp; Notes</h3>
+              <div class="ph-sub">Organize your thoughts, reflections, dreams and daily diary into personal folders.</div>
+            </div>
+            <div class="planner-head-actions">
+              <button type="button" class="btn primary" id="openNewLifeNoteBtn">✍️ Write Note</button>
+            </div>
+          </div>
+
+          <!-- Life Folder Chips -->
+          <div class="life-folders-strip" id="lifeFoldersStrip"></div>
+
+          <!-- Search & Add Folder Row -->
+          <div class="planner-form">
+            <div class="planner-input-wrap" style="flex:1.5">
+              <input type="text" id="lifeSearchInput" placeholder="🔍 Search your life entries…" autocomplete="off">
+            </div>
+            <div class="planner-input-wrap" style="flex:1">
+              <input type="text" id="newLifeFolderInput" maxlength="30" placeholder="New folder name…" autocomplete="off">
+            </div>
+            <button type="button" class="btn ghost planner-add" id="addLifeFolderBtn">+ Folder</button>
+          </div>
+        </div>
+
+        <div class="life-notes-grid" id="lifeNotesGrid"></div>
+      </div>
+    </section>
+
     <section class="view" id="view-timer">
       <div class="timer-layout">
         <div class="card timer-card">
@@ -1715,8 +1881,17 @@ html.focus-mode body::after{display:none!important}
       </div>
     </section>
 
-    <section class="view" id="view-gamble">
-      <div class="gamble-layout">
+        <section class="view" id="view-minigames">
+      <div class="view-header-strip">
+        <div class="view-subtabs" id="minigamesSubtabs">
+          <button type="button" class="subtab-btn active" data-minigame-tab="gamble">🎲 Dice Arena (Gamble)</button>
+          <button type="button" class="subtab-btn" data-minigame-tab="wheel">🎡 Lucky Wheel</button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: GAMBLE -->
+      <div id="minigames-section-gamble">
+        <div class="gamble-layout">
         <div class="gamble-stage" id="gambleStage">
           <div class="gamble-header">
             <div class="phase-chip" id="phaseChip">
@@ -1823,10 +1998,11 @@ html.focus-mode body::after{display:none!important}
           </div>
         </div>
       </div>
-    </section>
+      </div>
 
-    <section class="view" id="view-wheel">
-      <div class="wheel-layout">
+      <!-- SECTION 2: WHEEL -->
+      <div id="minigames-section-wheel" style="display:none">
+        <div class="wheel-layout">
         <div class="wheel-stage" id="wheelStage">
           <div class="wheel-tokens-bar">
             <span class="lbl">Spin Tokens</span>
@@ -1867,10 +2043,21 @@ html.focus-mode body::after{display:none!important}
           </div>
         </div>
       </div>
+      </div>
     </section>
 
-    <section class="view" id="view-shop">
-      <div class="shop-header">
+        <section class="view" id="view-extra">
+      <div class="view-header-strip">
+        <div class="view-subtabs" id="extraSubtabs">
+          <button type="button" class="subtab-btn active" data-extra-tab="shop">🛍️ Reward Shop</button>
+          <button type="button" class="subtab-btn" data-extra-tab="breaks">⏱️ Break Vault</button>
+          <button type="button" class="subtab-btn" data-extra-tab="achievements">🏆 Trophy Cabinet (Awards)</button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: REWARD SHOP -->
+      <div id="extra-section-shop">
+        <div class="shop-header">
         <div><div class="page-title" style="font-size:18px">Reward Shop</div><div class="page-sub">Spend Study Coins on companions, boosts, themes and cosmetics.</div></div>
         <div class="shop-balance"><span class="ico">🪙</span><span id="shopCoins">0</span><small>coins</small></div>
       </div>
@@ -1880,10 +2067,11 @@ html.focus-mode body::after{display:none!important}
       <div class="shop-grid" id="shopGrid"></div>
       <div class="shop-section-title">Profile Themes &amp; Borders</div>
       <div class="shop-grid" id="profileCosmeticsGrid"></div>
-    </section>
+      </div>
 
-    <section class="view" id="view-breaks">
-      <div class="breaks-hero">
+      <!-- SECTION 2: BREAK VAULT -->
+      <div id="extra-section-breaks" style="display:none">
+        <div class="breaks-hero">
         <div class="breaks-jar" id="breaksJar">
           <div class="breaks-jar-content">
             <div class="breaks-jar-num" id="jarMinutes">0</div>
@@ -1920,15 +2108,17 @@ html.focus-mode body::after{display:none!important}
           <div class="break-log" id="breakLog"></div>
         </div>
       </div>
-    </section>
+      </div>
 
-    <section class="view" id="view-achievements">
-      <div class="card" style="margin-bottom:16px">
+      <!-- SECTION 3: TROPHY CABINET (AWARDS) -->
+      <div id="extra-section-achievements" style="display:none">
+        <div class="card" style="margin-bottom:16px">
         <h3 class="card-title"><span class="dot"></span>Trophy Cabinet</h3>
         <div class="progress" style="margin-top:0"><i id="achProgressBar" style="width:0%"></i></div>
         <div style="font-size:11.5px;color:var(--text-3);margin-top:9px;text-align:right;font-weight:600" id="achProgressTxt">0 of 70 unlocked</div>
       </div>
       <div class="ach-grid" id="achGrid"></div>
+      </div>
     </section>
 
     <section class="view" id="view-stats">
@@ -2242,6 +2432,151 @@ html.focus-mode body::after{display:none!important}
   </div>
 </div>
 
+
+<!-- JOURNAL · TEST ENTRY MODAL -->
+<div class="modal-backdrop" id="testModalBackdrop">
+  <div class="modal" style="max-width:520px">
+    <h3 id="testModalTitle">Log Test Result</h3>
+    <p class="modal-sub">Record test score from 0 to 10, review your mistakes, and link exam files.</p>
+
+    <div class="field">
+      <label for="testSubjectSelect">Subject</label>
+      <select id="testSubjectSelect" class="planner-select" style="width:100%"></select>
+    </div>
+
+    <div class="field">
+      <label for="testTitleInput">Test / Exam Title</label>
+      <input type="text" id="testTitleInput" maxlength="120" placeholder="e.g. Midterm Exam, Unit 4 Quiz, Mock Test 2">
+    </div>
+
+    <!-- MARK MEASURE (0 -> 10) -->
+    <div class="field">
+      <label>Mark Measure (Select 0 → 10)</label>
+      <div class="mark-measure-wrapper">
+        <div class="mark-measure-top">
+          <span class="mark-measure-lbl">Selected Mark</span>
+          <div class="mark-measure-score-display">
+            <span class="mark-measure-score-val" id="testMarkDisplayVal">8.5</span>
+            <span class="mark-measure-score-max">/ 10</span>
+          </div>
+        </div>
+
+        <!-- 0 to 10 Quick Number Selection Pills -->
+        <div class="mark-picker-grid" id="markPillsGrid">
+          <button type="button" class="mark-pill-btn" data-mark="0">0</button>
+          <button type="button" class="mark-pill-btn" data-mark="1">1</button>
+          <button type="button" class="mark-pill-btn" data-mark="2">2</button>
+          <button type="button" class="mark-pill-btn" data-mark="3">3</button>
+          <button type="button" class="mark-pill-btn" data-mark="4">4</button>
+          <button type="button" class="mark-pill-btn" data-mark="5">5</button>
+          <button type="button" class="mark-pill-btn" data-mark="6">6</button>
+          <button type="button" class="mark-pill-btn" data-mark="7">7</button>
+          <button type="button" class="mark-pill-btn" data-mark="8">8</button>
+          <button type="button" class="mark-pill-btn active" data-mark="8.5">8.5</button>
+          <button type="button" class="mark-pill-btn" data-mark="9">9</button>
+          <button type="button" class="mark-pill-btn" data-mark="10">10</button>
+        </div>
+
+        <!-- Precision slider / adjustment -->
+        <div style="margin-top:6px">
+          <input type="range" class="mark-slider" id="testMarkSlider" min="0" max="10" step="0.5" value="8.5">
+          <div class="mark-half-step-row">
+            <span>0 (Lowest)</span>
+            <span>Slide or click buttons above</span>
+            <span>10 (Perfect)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="testMistakesInput">Mistakes &amp; What to Review</label>
+      <textarea id="testMistakesInput" placeholder="Note mistakes you made, formulas forgotten, or questions to revisit..."></textarea>
+    </div>
+
+    <!-- Links / Files attachment -->
+    <div class="field">
+      <label>Link Test Papers or Online Test</label>
+      <div class="auth-tabs" style="margin-bottom:12px">
+        <button type="button" class="auth-tab active" id="testAttachTabUrl">🔗 Website Link</button>
+        <button type="button" class="auth-tab" id="testAttachTabFile">📎 Upload PDF / File</button>
+      </div>
+
+      <div id="testAttachUrlWrap">
+        <input type="text" id="testUrlInput" placeholder="Paste test link or Google Drive URL (https://…)">
+      </div>
+
+      <div id="testAttachFileWrap" style="display:none">
+        <input type="file" id="testFileInput">
+        <div id="testFileMetaDisplay" class="res-file-meta" style="margin-top:6px"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="testModalCancel">Cancel</button>
+      <button type="button" class="btn primary" id="testModalSave">Save Test Result</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNAL · LIFE NOTE MODAL -->
+<div class="modal-backdrop" id="lifeModalBackdrop">
+  <div class="modal" style="max-width:540px">
+    <h3 id="lifeModalTitle">Write Life Journal Entry</h3>
+    <p class="modal-sub">Express thoughts, reflect on your journey, or brainstorm ideas.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="lifeNoteFolderSelect">Folder</label>
+        <select id="lifeNoteFolderSelect" class="planner-select" style="width:100%"></select>
+      </div>
+      <div class="field">
+        <label for="lifeNoteTagSelect">Mood / Tag</label>
+        <select id="lifeNoteTagSelect" class="planner-select" style="width:100%">
+          <option value="💭 Thought">💭 Thought</option>
+          <option value="🌟 Reflection">🌟 Reflection</option>
+          <option value="🌿 Personal">🌿 Personal</option>
+          <option value="⚡ Motivated">⚡ Motivated</option>
+          <option value="🎯 Goal">🎯 Goal</option>
+          <option value="💡 Idea">💡 Idea</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="lifeNoteTitleInput">Title</label>
+      <input type="text" id="lifeNoteTitleInput" maxlength="140" placeholder="Title of this reflection or note...">
+    </div>
+
+    <div class="field">
+      <label for="lifeNoteContentInput">Content</label>
+      <textarea id="lifeNoteContentInput" style="min-height:160px" placeholder="Write freely anything you want..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="lifeModalCancel">Cancel</button>
+      <button type="button" class="btn primary" id="lifeModalSave">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNAL · LIFE READER MODAL -->
+<div class="modal-backdrop" id="lifeReaderBackdrop">
+  <div class="modal life-reader-modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
+      <span class="life-note-badge" id="lifeReaderFolder">General</span>
+      <span style="font-size:12px;color:var(--text-3)" id="lifeReaderDate">Today</span>
+    </div>
+    <h3 id="lifeReaderTitle" style="font-size:20px;font-weight:700;margin-bottom:14px;color:#fff">Entry Title</h3>
+    <div class="life-reader-content" id="lifeReaderContent"></div>
+    <div class="modal-actions" style="margin-top:18px">
+      <button type="button" class="btn danger" id="lifeReaderDeleteBtn">Delete</button>
+      <button type="button" class="btn ghost" id="lifeReaderCloseBtn" style="flex:1;justify-content:center">Close</button>
+    </div>
+  </div>
+</div>
+
+
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
@@ -2321,7 +2656,17 @@ const DEFAULTS = {
   todoFilter: 'all',
   bonusTokens: 0,
   plannerRewards: 0,
-  plannerEarned: { coins:0, tokens:0, xp:0 }
+  plannerEarned: { coins:0, tokens:0, xp:0 },
+  minigamesTab: 'gamble',
+  extraTab: 'shop',
+  journal: {
+    testSubjects: ['Mathematics', 'Physics', 'English', 'Chemistry'],
+    tests: [],
+    lifeFolders: ['General', 'Personal', 'Reflections', 'Ideas'],
+    lifeEntries: [],
+    activeSection: 'tests',
+    activeLifeFolder: 'all'
+  }
 };
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
@@ -2408,6 +2753,59 @@ function normalizeState(raw){
   m.bonusTokens = Math.max(0, Math.floor(Number(m.bonusTokens) || 0));
   m.plannerRewards = Math.max(0, Math.floor(Number(m.plannerRewards) || 0));
   m.plannerEarned = Object.assign({ coins:0, tokens:0, xp:0 }, m.plannerEarned || {});
+
+  // ===== Minigames & Extra tabs =====
+  m.minigamesTab = ['gamble','wheel'].includes(raw.minigamesTab) ? raw.minigamesTab : 'gamble';
+  m.extraTab = ['shop','breaks','achievements'].includes(raw.extraTab) ? raw.extraTab : 'shop';
+
+  // ===== Journal normalization =====
+  const rawJ = (raw && raw.journal && typeof raw.journal === 'object') ? raw.journal : {};
+  const defSubs = ['Mathematics', 'Physics', 'English', 'Chemistry'];
+  const tSubs = (Array.isArray(rawJ.testSubjects) ? rawJ.testSubjects : defSubs)
+    .map(s => cleanText(s, 40)).filter(Boolean);
+  if(!tSubs.length) tSubs.push('General');
+
+  const tests = (Array.isArray(rawJ.tests) ? rawJ.tests : []).map((t, i) => {
+    const rawMark = typeof t.mark === 'number' ? t.mark : parseFloat(t.mark);
+    const markVal = !isNaN(rawMark) ? Math.max(0, Math.min(10, Math.round(rawMark * 10) / 10)) : 8.5;
+    return {
+      id: cleanId(t.id, 'tst_' + i + '_' + Math.random().toString(36).slice(2, 8)),
+      subject: cleanText(t.subject, 40) || tSubs[0],
+      title: cleanText(t.title, 120) || 'Test Result',
+      mark: markVal,
+      mistakes: cleanText(t.mistakes, 3000),
+      url: normUrl(t.url || t.linkUrl || ''),
+      fileName: cleanText(t.fileName, 160),
+      fileSize: Number(t.fileSize) || 0,
+      fileType: cleanText(t.fileType, 120),
+      data: typeof t.data === 'string' ? t.data.slice(0, 15000000) : '',
+      date: Number(t.date) || Date.now()
+    };
+  });
+
+  const defLifeF = ['General', 'Personal', 'Reflections', 'Ideas'];
+  const lifeF = (Array.isArray(rawJ.lifeFolders) ? rawJ.lifeFolders : defLifeF)
+    .map(f => cleanText(f, 40)).filter(Boolean);
+  if(!lifeF.length) lifeF.push('General');
+
+  const lifeEntries = (Array.isArray(rawJ.lifeEntries) ? rawJ.lifeEntries : []).map((e, i) => ({
+    id: cleanId(e.id, 'life_' + i + '_' + Math.random().toString(36).slice(2, 8)),
+    folder: cleanText(e.folder, 40) || lifeF[0],
+    title: cleanText(e.title, 140) || 'Journal Entry',
+    content: cleanText(e.content, 30000),
+    tag: cleanText(e.tag, 30) || '💭 Thought',
+    date: Number(e.date) || Date.now()
+  }));
+
+  m.journal = {
+    testSubjects: Array.from(new Set(tSubs)),
+    tests: tests,
+    lifeFolders: Array.from(new Set(lifeF)),
+    lifeEntries: lifeEntries,
+    activeSection: ['tests', 'life'].includes(rawJ.activeSection) ? rawJ.activeSection : 'tests',
+    activeLifeFolder: (rawJ.activeLifeFolder === 'all' || lifeF.includes(rawJ.activeLifeFolder)) ? rawJ.activeLifeFolder : 'all'
+  };
+
   return m;
 }
 
@@ -2995,7 +3393,7 @@ function updateTimerUI(){
       if(el.timerCycle){
         el.timerCycle.textContent = timer.running ? '☕ Break in progress…' : (timer.elapsed > 0 ? '☕ Break paused' : '☕ Break ready');
       }
-      document.title = timer.running ? formatClock(timer.elapsed) + ' · Break — StudyFlow' : 'StudyFlow — Liquid Focus';
+      document.title = timer.running ? formatClock(timer.elapsed) + ' · Break — In Pursuit Of Greatness' : 'In Pursuit Of Greatness';
     } else {
       const tokensSoFar = Math.floor(timer.elapsed / 1800);
       if(el.sessionXpVal) el.sessionXpVal.textContent = '+' + timer.sessionXp;
@@ -3005,7 +3403,7 @@ function updateTimerUI(){
       if(el.timerCycle){
         el.timerCycle.textContent = timer.running ? 'Studying…' : (timer.elapsed > 0 ? 'Paused' : 'Ready to study');
       }
-      document.title = timer.running ? formatClock(timer.elapsed) + ' · Focus — StudyFlow' : 'StudyFlow — Liquid Focus';
+      document.title = timer.running ? formatClock(timer.elapsed) + ' · Focus — In Pursuit Of Greatness' : 'In Pursuit Of Greatness';
     }
   }catch(err){
     console.error('[StudyFlow] updateTimerUI error:', err);
@@ -5625,23 +6023,22 @@ function renderAll(){
   renderTimerSide(); renderShop(); renderCompanionShop();
   renderWheel(); renderProfile(); renderBreaks(); renderPlanner();
   renderResourcesPage();
+  renderJournal();
   updateGambleBalances(); renderGambleHistory();
   updateGoalDisplayFromState();
   updateAuthUI();
 }
 
 const PAGE_META = {
-  dashboard:{title:'Dashboard', sub:"Welcome back — let's get focused."},
+  dashboard:{title:'Dashboard', sub:"Welcome back — In Pursuit Of Greatness."},
   planner:{title:'Planner', sub:'To-do list and weekly schedule in one place.'},
   resources:{title:'Study Resources', sub:'Organize web links and PDF documents into subject folders.'},
+  journal:{title:'Journal', sub:'Track your test history with marks & mistakes, and write life reflections.'},
   timer:{title:'Focus Timer', sub:'Deep work, one session at a time.'},
-  gamble:{title:'Gamble', sub:'Roll 3 dice. Bet Over, Under, Even, Odd, or Any Triple.'},
-  wheel:{title:'Lucky Wheel', sub:'Spin tokens, win rewards, redeem breaks.'},
-  shop:{title:'Reward Shop', sub:'Companions, boosts, themes and cosmetics.'},
-  breaks:{title:'Break Vault', sub:'Every minute of rest you\'ve earned.'},
-  achievements:{title:'Achievements', sub:'Your collection of hard-earned badges.'},
-  stats:{title:'Statistics', sub:'Track how far you\'ve come.'},
-  profile:{title:'Profile', sub:'Your identity as a learner.'}
+  minigames:{title:'Minigames', sub:'Test your fortune in the Dice Arena or spin the Lucky Wheel.'},
+  extra:{title:'Extra', sub:'Reward Shop, Break Vault, and your Trophy Cabinet.'},
+  stats:{title:'Statistics', sub:'Track your growth in pursuit of greatness.'},
+  profile:{title:'Profile', sub:'Your identity as a scholar.'}
 };
 document.querySelectorAll('.dock-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
@@ -5654,14 +6051,19 @@ document.querySelectorAll('.dock-btn').forEach(btn=>{
     }
     window.scrollTo({top:0, behavior:'smooth'});
     if(v==='stats') renderStats();
-    if(v==='achievements') renderAchievements();
-    if(v==='shop'){ renderShop(); renderCompanionShop(); }
-    if(v==='wheel'){ drawWheel(); renderWheel(); }
     if(v==='profile') renderProfile();
-    if(v==='gamble') initGamble();
-    if(v==='breaks') renderBreaks();
     if(v==='planner') renderPlanner();
     if(v==='resources') renderResourcesPage();
+    if(v==='journal') renderJournal();
+    if(v==='minigames'){
+      if(state.minigamesTab === 'wheel'){ drawWheel(); renderWheel(); }
+      else { initGamble(); }
+    }
+    if(v==='extra'){
+      if(state.extraTab === 'breaks') renderBreaks();
+      else if(state.extraTab === 'achievements') renderAchievements();
+      else { renderShop(); renderCompanionShop(); }
+    }
   });
 });
 document.getElementById('bannerStart').addEventListener('click',()=>{
@@ -5813,19 +6215,767 @@ document.getElementById('accountSyncBtn').addEventListener('click', async ()=>{
   toast('☁','Synced','Progress pushed to cloud');
 });
 
+
+/* ============================================================
+   JOURNAL & TEST HISTORY & LIFE LOG
+============================================================ */
+let activeTestMark = 8.5;
+let currentEditingTestId = null;
+let currentTestFileObj = null;
+let testAttachKind = 'url';
+let currentReadingLifeId = null;
+
+function getMarkBadgeClass(m){
+  m = Number(m) || 0;
+  if(m >= 8.5) return 'mark-high';
+  if(m >= 7.0) return 'mark-good';
+  if(m >= 5.0) return 'mark-mid';
+  return 'mark-low';
+}
+
+function setTestMarkVal(val){
+  val = Math.max(0, Math.min(10, Math.round(parseFloat(val) * 10) / 10));
+  activeTestMark = val;
+  const disp = document.getElementById('testMarkDisplayVal');
+  if(disp) disp.textContent = val.toFixed(1);
+  const slider = document.getElementById('testMarkSlider');
+  if(slider && parseFloat(slider.value) !== val) slider.value = val;
+  document.querySelectorAll('.mark-pill-btn').forEach(btn => {
+    const bVal = parseFloat(btn.dataset.mark);
+    btn.classList.toggle('active', Math.abs(bVal - val) < 0.1);
+  });
+}
+
+function renderJournal(){
+  const sec = (state.journal && state.journal.activeSection) || 'tests';
+  document.querySelectorAll('#journalSubtabs [data-journal-tab]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.journalTab === sec);
+  });
+  const testSec = document.getElementById('journal-section-tests');
+  const lifeSec = document.getElementById('journal-section-life');
+  if(testSec) testSec.style.display = sec === 'tests' ? 'block' : 'none';
+  if(lifeSec) lifeSec.style.display = sec === 'life' ? 'block' : 'none';
+
+  if(sec === 'tests') renderTestHistory();
+  else renderLifeSection();
+}
+
+function renderTestHistory(){
+  const j = state.journal || { testSubjects:['Mathematics','Physics','English','Chemistry'], tests:[] };
+  const subjects = j.testSubjects || ['General'];
+  const tests = j.tests || [];
+
+  // Top stats
+  const total = tests.length;
+  const avg = total > 0 ? (tests.reduce((acc, t) => acc + (Number(t.mark) || 0), 0) / total).toFixed(1) : '0.0';
+  let best = '—';
+  if(total > 0){
+    const maxMark = Math.max(...tests.map(t => Number(t.mark) || 0));
+    best = maxMark.toFixed(1) + ' / 10';
+  }
+  const totEl = document.getElementById('journalTotalTests');
+  if(totEl) totEl.textContent = total;
+  const avgEl = document.getElementById('journalAvgMark');
+  if(avgEl) avgEl.innerHTML = avg + '<small style="font-size:14px;color:var(--text-3)">/10</small>';
+  const cntEl = document.getElementById('journalSubjectCount');
+  if(cntEl) cntEl.textContent = subjects.length;
+  const bestEl = document.getElementById('journalBestMark');
+  if(bestEl) bestEl.textContent = best;
+
+  const container = document.getElementById('testSubjectsList');
+  if(!container) return;
+
+  if(subjects.length === 0){
+    container.innerHTML = '<div class="empty-state"><span class="big">📁</span>No subjects yet. Type a subject name above and press "+ Add Subject"!</div>';
+    return;
+  }
+
+  container.innerHTML = subjects.map(sub => {
+    // Tests for this subject, sorted NEWEST TO OLDEST
+    const subTests = tests.filter(t => t.subject === sub).sort((a, b) => (b.date || 0) - (a.date || 0));
+    const count = subTests.length;
+    const subAvg = count > 0 ? (subTests.reduce((a, b) => a + (Number(b.mark) || 0), 0) / count).toFixed(1) : null;
+    const metaTxt = count + ' test' + (count === 1 ? '' : 's') + (subAvg !== null ? ' · Avg: ' + subAvg + '/10' : '');
+
+    let testsHtml = '';
+    if(subTests.length === 0){
+      testsHtml = '<div class="wd-empty" style="padding:16px 4px;color:var(--text-3)">No test history recorded for ' + escapeHtml(sub) + ' yet. Click "+ Log Test" to record marks, mistakes, and papers!</div>';
+    } else {
+      testsHtml = subTests.map(t => {
+        const markVal = Number(t.mark) || 0;
+        const badgeCls = getMarkBadgeClass(markVal);
+        const dateStr = relativeTime(t.date);
+
+        let attachmentHtml = '';
+        if(t.url){
+          attachmentHtml += '<a href="' + escapeHtml(t.url) + '" target="_blank" rel="noopener noreferrer" class="test-attachment-pill">🔗 Test Link ↗</a>';
+        }
+        if(t.data || t.fileName){
+          const fMeta = (t.fileName || 'Test File') + (t.fileSize ? ' (' + fileSizeText(t.fileSize) + ')' : '');
+          attachmentHtml += '<button type="button" class="test-attachment-pill" data-open-test-file="' + t.id + '">📕 ' + escapeHtml(fMeta) + '</button>';
+        }
+
+        const mistakesHtml = t.mistakes && t.mistakes.trim()
+          ? '<div class="test-mistakes-box"><b>Mistakes &amp; Key Learnings:</b> ' + escapeHtml(t.mistakes) + '</div>'
+          : '';
+
+        return '<div class="test-item" data-test-id="' + t.id + '">'
+          + '<div class="test-item-top">'
+          + '<div class="test-item-title-box">'
+          + '<span class="test-mark-badge ' + badgeCls + '">' + markVal.toFixed(1) + ' / 10</span>'
+          + '<span class="test-item-title" title="' + escapeHtml(t.title) + '">' + escapeHtml(t.title) + '</span>'
+          + '</div>'
+          + '<span class="test-item-date">' + dateStr + '</span>'
+          + '<div class="test-item-actions">'
+          + '<button type="button" class="pdel" data-edit-test="' + t.id + '" title="Edit test">✎</button>'
+          + '<button type="button" class="pdel" data-del-test="' + t.id + '" title="Delete test">✕</button>'
+          + '</div>'
+          + '</div>'
+          + mistakesHtml
+          + (attachmentHtml ? '<div class="test-links-row">' + attachmentHtml + '</div>' : '')
+          + '</div>';
+      }).join('');
+    }
+
+    return '<div class="test-subject-card">'
+      + '<div class="test-subject-head">'
+      + '<div class="test-subject-title-wrap">'
+      + '<div class="test-subject-icon">📁</div>'
+      + '<div>'
+      + '<div class="test-subject-name">' + escapeHtml(sub) + '</div>'
+      + '<div class="test-subject-meta">' + metaTxt + '</div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="test-subject-actions">'
+      + '<button type="button" class="btn primary planner-add" data-log-test="' + escapeHtml(sub) + '" style="height:36px;padding:0 14px;font-size:12px">+ Log Test</button>'
+      + '<button type="button" class="pdel" data-del-subject="' + escapeHtml(sub) + '" title="Delete subject folder">✕</button>'
+      + '</div>'
+      + '</div>'
+      + '<div class="test-list">' + testsHtml + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function openTestModal(subject, testId){
+  currentEditingTestId = testId || null;
+  currentTestFileObj = null;
+
+  const titleEl = document.getElementById('testModalTitle');
+  if(titleEl) titleEl.textContent = testId ? 'Edit Test Result' : 'Log Test Result';
+
+  // Populate subject options
+  const subSel = document.getElementById('testSubjectSelect');
+  const subs = (state.journal && state.journal.testSubjects) || ['General'];
+  subSel.innerHTML = subs.map(s => '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>').join('');
+  if(subject && subs.includes(subject)) subSel.value = subject;
+
+  const tTitle = document.getElementById('testTitleInput');
+  const tMistakes = document.getElementById('testMistakesInput');
+  const tUrl = document.getElementById('testUrlInput');
+  const fMeta = document.getElementById('testFileMetaDisplay');
+  const fInput = document.getElementById('testFileInput');
+  if(fInput) fInput.value = '';
+  if(fMeta) fMeta.textContent = '';
+
+  if(testId){
+    const t = (state.journal && state.journal.tests || []).find(x => x.id === testId);
+    if(t){
+      if(subSel) subSel.value = t.subject;
+      if(tTitle) tTitle.value = t.title || '';
+      if(tMistakes) tMistakes.value = t.mistakes || '';
+      if(tUrl) tUrl.value = t.url || '';
+      setTestMarkVal(t.mark != null ? t.mark : 8.5);
+      if(t.data || t.fileName){
+        currentTestFileObj = { name: t.fileName, size: t.fileSize, type: t.fileType, data: t.data };
+        if(fMeta) fMeta.textContent = 'Attached file: ' + t.fileName + ' (' + fileSizeText(t.fileSize) + ')';
+        setTestAttachKind('file');
+      } else if(t.url){
+        setTestAttachKind('url');
+      }
+    }
+  } else {
+    if(tTitle) tTitle.value = '';
+    if(tMistakes) tMistakes.value = '';
+    if(tUrl) tUrl.value = '';
+    setTestMarkVal(8.5);
+    setTestAttachKind('url');
+  }
+
+  const bd = document.getElementById('testModalBackdrop');
+  if(bd) bd.classList.add('open');
+  setTimeout(() => { if(tTitle) tTitle.focus(); }, 80);
+}
+
+function closeTestModal(){
+  const bd = document.getElementById('testModalBackdrop');
+  if(bd) bd.classList.remove('open');
+  currentEditingTestId = null;
+  currentTestFileObj = null;
+}
+
+function setTestAttachKind(kind){
+  testAttachKind = kind;
+  const tabUrl = document.getElementById('testAttachTabUrl');
+  const tabFile = document.getElementById('testAttachTabFile');
+  if(tabUrl) tabUrl.classList.toggle('active', kind === 'url');
+  if(tabFile) tabFile.classList.toggle('active', kind === 'file');
+  const wUrl = document.getElementById('testAttachUrlWrap');
+  const wFile = document.getElementById('testAttachFileWrap');
+  if(wUrl) wUrl.style.display = kind === 'url' ? 'block' : 'none';
+  if(wFile) wFile.style.display = kind === 'file' ? 'block' : 'none';
+}
+
+async function saveTestModal(){
+  const subSel = document.getElementById('testSubjectSelect');
+  const subject = subSel ? subSel.value : 'General';
+  const title = (document.getElementById('testTitleInput').value || '').trim() || 'Test ' + new Date().toLocaleDateString();
+  const mistakes = (document.getElementById('testMistakesInput').value || '').trim();
+  const mark = activeTestMark;
+
+  let url = '';
+  if(testAttachKind === 'url'){
+    const rawUrl = (document.getElementById('testUrlInput').value || '').trim();
+    url = normUrl(rawUrl);
+  }
+
+  let fileData = currentTestFileObj ? currentTestFileObj.data : '';
+  let fileName = currentTestFileObj ? currentTestFileObj.name : '';
+  let fileSize = currentTestFileObj ? currentTestFileObj.size : 0;
+  let fileType = currentTestFileObj ? currentTestFileObj.type : '';
+
+  state.journal = state.journal || { testSubjects:['General'], tests:[] };
+  state.journal.tests = state.journal.tests || [];
+
+  if(currentEditingTestId){
+    const idx = state.journal.tests.findIndex(x => x.id === currentEditingTestId);
+    if(idx !== -1){
+      const prev = state.journal.tests[idx];
+      state.journal.tests[idx] = {
+        ...prev,
+        subject,
+        title,
+        mark,
+        mistakes,
+        url,
+        data: fileData || (testAttachKind === 'file' ? prev.data : ''),
+        fileName: fileName || (testAttachKind === 'file' ? prev.fileName : ''),
+        fileSize: fileSize || (testAttachKind === 'file' ? prev.fileSize : 0),
+        fileType: fileType || (testAttachKind === 'file' ? prev.fileType : '')
+      };
+      toast('✓', 'Test updated', title + ' · ' + mark + '/10');
+    }
+  } else {
+    state.journal.tests.unshift({
+      id: uid('tst'),
+      subject,
+      title,
+      mark,
+      mistakes,
+      url,
+      data: fileData,
+      fileName,
+      fileSize,
+      fileType,
+      date: Date.now()
+    });
+    toast('✓', 'Test recorded', title + ' · ' + mark + '/10');
+  }
+
+  saveState();
+  closeTestModal();
+  renderTestHistory();
+}
+
+function renderLifeSection(){
+  const j = state.journal || { lifeFolders:['General'], lifeEntries:[] };
+  const folders = j.lifeFolders || ['General'];
+  const entries = j.lifeEntries || [];
+  const activeF = j.activeLifeFolder || 'all';
+
+  // Render folder chips
+  const strip = document.getElementById('lifeFoldersStrip');
+  if(strip){
+    const allCount = entries.length;
+    let html = '<button type="button" class="life-folder-chip ' + (activeF === 'all' ? 'active' : '') + '" data-life-folder-filter="all">All (' + allCount + ')</button>';
+    folders.forEach(f => {
+      const fCount = entries.filter(e => e.folder === f).length;
+      html += '<button type="button" class="life-folder-chip ' + (activeF === f ? 'active' : '') + '" data-life-folder-filter="' + escapeHtml(f) + '">'
+        + escapeHtml(f) + ' (' + fCount + ')'
+        + (f !== 'General' ? ' <span class="pdel" data-del-life-folder="' + escapeHtml(f) + '" style="width:16px;height:16px;font-size:11px;display:inline-grid;margin-left:4px" title="Delete folder">✕</span>' : '')
+        + '</button>';
+    });
+    strip.innerHTML = html;
+  }
+
+  // Filter entries
+  const query = (document.getElementById('lifeSearchInput') ? document.getElementById('lifeSearchInput').value : '').toLowerCase().trim();
+  let filtered = entries.filter(e => {
+    if(activeF !== 'all' && e.folder !== activeF) return false;
+    if(query){
+      const matchTitle = (e.title || '').toLowerCase().includes(query);
+      const matchContent = (e.content || '').toLowerCase().includes(query);
+      return matchTitle || matchContent;
+    }
+    return true;
+  });
+  filtered.sort((a, b) => (b.date || 0) - (a.date || 0));
+
+  const grid = document.getElementById('lifeNotesGrid');
+  if(!grid) return;
+
+  if(filtered.length === 0){
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px 12px"><span class="big">📖</span>No journal notes found.<br>Click "✍️ Write Note" to capture your reflections.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(e => {
+    const snippet = e.content ? escapeHtml(e.content.slice(0, 180)) : 'No content...';
+    return '<div class="life-note-card" data-open-life-note="' + e.id + '">'
+      + '<div class="life-note-top">'
+      + '<span class="life-note-badge">' + (e.tag || '🌿') + ' ' + escapeHtml(e.folder) + '</span>'
+      + '<span class="life-note-date">' + relativeTime(e.date) + '</span>'
+      + '</div>'
+      + '<div class="life-note-title">' + escapeHtml(e.title) + '</div>'
+      + '<div class="life-note-snippet">' + snippet + '</div>'
+      + '<div class="life-note-footer">'
+      + '<span>Read &amp; reflect →</span>'
+      + '<div style="display:flex;gap:4px">'
+      + '<button type="button" class="pdel" data-edit-life-note="' + e.id + '" title="Edit note" onclick="event.stopPropagation()">✎</button>'
+      + '<button type="button" class="pdel" data-del-life-note="' + e.id + '" title="Delete note" onclick="event.stopPropagation()">✕</button>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+let currentEditingLifeNoteId = null;
+
+function openLifeNoteModal(noteId){
+  currentEditingLifeNoteId = noteId || null;
+  const folders = (state.journal && state.journal.lifeFolders) || ['General', 'Personal', 'Reflections'];
+  const fSel = document.getElementById('lifeNoteFolderSelect');
+  if(fSel){
+    fSel.innerHTML = folders.map(f => '<option value="' + escapeHtml(f) + '">' + escapeHtml(f) + '</option>').join('');
+  }
+
+  const tTitle = document.getElementById('lifeNoteTitleInput');
+  const tContent = document.getElementById('lifeNoteContentInput');
+  const tTag = document.getElementById('lifeNoteTagSelect');
+
+  if(noteId){
+    const entry = (state.journal && state.journal.lifeEntries || []).find(x => x.id === noteId);
+    if(entry){
+      if(fSel) fSel.value = entry.folder;
+      if(tTitle) tTitle.value = entry.title || '';
+      if(tContent) tContent.value = entry.content || '';
+      if(tTag && entry.tag) tTag.value = entry.tag;
+    }
+  } else {
+    const curF = (state.journal && state.journal.activeLifeFolder !== 'all') ? state.journal.activeLifeFolder : 'General';
+    if(fSel) fSel.value = curF;
+    if(tTitle) tTitle.value = '';
+    if(tContent) tContent.value = '';
+  }
+
+  const bd = document.getElementById('lifeModalBackdrop');
+  if(bd) bd.classList.add('open');
+  setTimeout(() => { if(tTitle) tTitle.focus(); }, 80);
+}
+
+function closeLifeNoteModal(){
+  const bd = document.getElementById('lifeModalBackdrop');
+  if(bd) bd.classList.remove('open');
+  currentEditingLifeNoteId = null;
+}
+
+function saveLifeNoteModal(){
+  const fSel = document.getElementById('lifeNoteFolderSelect');
+  const folder = fSel ? fSel.value : 'General';
+  const title = (document.getElementById('lifeNoteTitleInput').value || '').trim() || 'Journal Entry';
+  const content = (document.getElementById('lifeNoteContentInput').value || '').trim();
+  const tag = document.getElementById('lifeNoteTagSelect') ? document.getElementById('lifeNoteTagSelect').value : '💭 Thought';
+
+  state.journal = state.journal || { lifeFolders:['General'], lifeEntries:[] };
+  state.journal.lifeEntries = state.journal.lifeEntries || [];
+
+  if(currentEditingLifeNoteId){
+    const idx = state.journal.lifeEntries.findIndex(x => x.id === currentEditingLifeNoteId);
+    if(idx !== -1){
+      state.journal.lifeEntries[idx] = {
+        ...state.journal.lifeEntries[idx],
+        folder,
+        title,
+        content,
+        tag
+      };
+      toast('✓', 'Entry updated', title);
+    }
+  } else {
+    state.journal.lifeEntries.unshift({
+      id: uid('life'),
+      folder,
+      title,
+      content,
+      tag,
+      date: Date.now()
+    });
+    toast('✓', 'Entry saved', title);
+  }
+
+  saveState();
+  closeLifeNoteModal();
+  renderLifeSection();
+}
+
+function openLifeReader(noteId){
+  currentReadingLifeId = noteId;
+  const entry = (state.journal && state.journal.lifeEntries || []).find(x => x.id === noteId);
+  if(!entry) return;
+
+  const tTitle = document.getElementById('lifeReaderTitle');
+  const tFolder = document.getElementById('lifeReaderFolder');
+  const tDate = document.getElementById('lifeReaderDate');
+  const tContent = document.getElementById('lifeReaderContent');
+
+  if(tTitle) tTitle.textContent = entry.title;
+  if(tFolder) tFolder.textContent = (entry.tag || '') + ' ' + entry.folder;
+  if(tDate) tDate.textContent = relativeTime(entry.date);
+  if(tContent) tContent.textContent = entry.content || '(Empty entry)';
+
+  const bd = document.getElementById('lifeReaderBackdrop');
+  if(bd) bd.classList.add('open');
+}
+
+function closeLifeReader(){
+  const bd = document.getElementById('lifeReaderBackdrop');
+  if(bd) bd.classList.remove('open');
+  currentReadingLifeId = null;
+}
+
+function setMinigamesTab(tab){
+  state.minigamesTab = tab === 'wheel' ? 'wheel' : 'gamble';
+  document.querySelectorAll('#minigamesSubtabs [data-minigame-tab]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.minigameTab === state.minigamesTab);
+  });
+  const gSec = document.getElementById('minigames-section-gamble');
+  const wSec = document.getElementById('minigames-section-wheel');
+  if(gSec) gSec.style.display = state.minigamesTab === 'gamble' ? 'block' : 'none';
+  if(wSec) wSec.style.display = state.minigamesTab === 'wheel' ? 'block' : 'none';
+  if(state.minigamesTab === 'wheel'){
+    drawWheel();
+    renderWheel();
+  } else {
+    initGamble();
+  }
+  saveState();
+}
+
+function setExtraTab(tab){
+  state.extraTab = ['shop', 'breaks', 'achievements'].includes(tab) ? tab : 'shop';
+  document.querySelectorAll('#extraSubtabs [data-extra-tab]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.extraTab === state.extraTab);
+  });
+  const sSec = document.getElementById('extra-section-shop');
+  const bSec = document.getElementById('extra-section-breaks');
+  const aSec = document.getElementById('extra-section-achievements');
+  if(sSec) sSec.style.display = state.extraTab === 'shop' ? 'block' : 'none';
+  if(bSec) bSec.style.display = state.extraTab === 'breaks' ? 'block' : 'none';
+  if(aSec) aSec.style.display = state.extraTab === 'achievements' ? 'block' : 'none';
+
+  if(state.extraTab === 'shop'){ renderShop(); renderCompanionShop(); }
+  else if(state.extraTab === 'breaks'){ renderBreaks(); }
+  else if(state.extraTab === 'achievements'){ renderAchievements(); }
+  saveState();
+}
+
+function initJournalEventListeners(){
+  // Minigames subtabs
+  document.querySelectorAll('#minigamesSubtabs [data-minigame-tab]').forEach(btn => {
+    btn.addEventListener('click', () => setMinigamesTab(btn.dataset.minigameTab));
+  });
+
+  // Extra subtabs
+  document.querySelectorAll('#extraSubtabs [data-extra-tab]').forEach(btn => {
+    btn.addEventListener('click', () => setExtraTab(btn.dataset.extraTab));
+  });
+
+  // Journal subtabs
+  document.querySelectorAll('#journalSubtabs [data-journal-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.journal = state.journal || {};
+      state.journal.activeSection = btn.dataset.journalTab;
+      renderJournal();
+      saveState();
+    });
+  });
+
+  // Add Subject in Test History
+  const addSubBtn = document.getElementById('addJournalSubjectBtn');
+  const addSubInp = document.getElementById('newJournalSubjectInput');
+  const handleAddSubject = () => {
+    if(!addSubInp) return;
+    const name = addSubInp.value.trim().slice(0, 40);
+    if(!name){ toast('⚠', 'Enter subject name', 'Subject name cannot be empty'); addSubInp.focus(); return; }
+    state.journal = state.journal || { testSubjects:[] };
+    state.journal.testSubjects = state.journal.testSubjects || [];
+    if(state.journal.testSubjects.some(s => s.toLowerCase() === name.toLowerCase())){
+      toast('⚠', 'Subject already exists', name);
+      return;
+    }
+    state.journal.testSubjects.push(name);
+    addSubInp.value = '';
+    saveState();
+    renderTestHistory();
+    toast('📁', 'Subject folder added', name);
+  };
+  if(addSubBtn) addSubBtn.addEventListener('click', handleAddSubject);
+  if(addSubInp) addSubInp.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); handleAddSubject(); } });
+
+  // Mark Measure selection events
+  document.querySelectorAll('.mark-pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => setTestMarkVal(btn.dataset.mark));
+  });
+  const markSlider = document.getElementById('testMarkSlider');
+  if(markSlider) markSlider.addEventListener('input', () => setTestMarkVal(markSlider.value));
+
+  // Attachment tabs in Test Modal
+  const tabUrl = document.getElementById('testAttachTabUrl');
+  if(tabUrl) tabUrl.addEventListener('click', () => setTestAttachKind('url'));
+  const tabFile = document.getElementById('testAttachTabFile');
+  if(tabFile) tabFile.addEventListener('click', () => setTestAttachKind('file'));
+
+  // File picker in Test Modal
+  const testFileInput = document.getElementById('testFileInput');
+  if(testFileInput){
+    testFileInput.addEventListener('change', () => {
+      const f = testFileInput.files && testFileInput.files[0];
+      const fMeta = document.getElementById('testFileMetaDisplay');
+      if(!f){ currentTestFileObj = null; if(fMeta) fMeta.textContent = ''; return; }
+      if(f.size > 10 * 1024 * 1024){
+        toast('⚠', 'File too large', 'Max file size is 10 MB');
+        testFileInput.value = '';
+        currentTestFileObj = null;
+        if(fMeta) fMeta.textContent = 'File exceeds 10 MB limit';
+        return;
+      }
+      if(fMeta) fMeta.textContent = f.name + ' (' + fileSizeText(f.size) + ') · reading…';
+      const rd = new FileReader();
+      rd.onload = () => {
+        currentTestFileObj = { name: f.name, size: f.size, type: f.type, data: String(rd.result || '') };
+        if(fMeta) fMeta.textContent = f.name + ' (' + fileSizeText(f.size) + ') · ready';
+      };
+      rd.onerror = () => {
+        currentTestFileObj = null;
+        if(fMeta) fMeta.textContent = 'Could not read file';
+      };
+      try{ rd.readAsDataURL(f); }catch(e){}
+    });
+  }
+
+  // Test Modal save & cancel
+  const testSaveBtn = document.getElementById('testModalSave');
+  if(testSaveBtn) testSaveBtn.addEventListener('click', saveTestModal);
+  const testCancelBtn = document.getElementById('testModalCancel');
+  if(testCancelBtn) testCancelBtn.addEventListener('click', closeTestModal);
+  const testModalBackdrop = document.getElementById('testModalBackdrop');
+  if(testModalBackdrop) testModalBackdrop.addEventListener('click', e => { if(e.target === testModalBackdrop) closeTestModal(); });
+
+  // Life Section events
+  const openWriteBtn = document.getElementById('openNewLifeNoteBtn');
+  if(openWriteBtn) openWriteBtn.addEventListener('click', () => openLifeNoteModal());
+
+  const lifeSaveBtn = document.getElementById('lifeModalSave');
+  if(lifeSaveBtn) lifeSaveBtn.addEventListener('click', saveLifeNoteModal);
+  const lifeCancelBtn = document.getElementById('lifeModalCancel');
+  if(lifeCancelBtn) lifeCancelBtn.addEventListener('click', closeLifeNoteModal);
+  const lifeModalBackdrop = document.getElementById('lifeModalBackdrop');
+  if(lifeModalBackdrop) lifeModalBackdrop.addEventListener('click', e => { if(e.target === lifeModalBackdrop) closeLifeNoteModal(); });
+
+  // Add Life Folder
+  const addFolderBtn = document.getElementById('addLifeFolderBtn');
+  const addFolderInp = document.getElementById('newLifeFolderInput');
+  const handleAddFolder = () => {
+    if(!addFolderInp) return;
+    const name = addFolderInp.value.trim().slice(0, 30);
+    if(!name){ toast('⚠', 'Enter folder name', ''); addFolderInp.focus(); return; }
+    state.journal = state.journal || { lifeFolders:['General'] };
+    state.journal.lifeFolders = state.journal.lifeFolders || ['General'];
+    if(state.journal.lifeFolders.some(f => f.toLowerCase() === name.toLowerCase())){
+      toast('⚠', 'Folder exists', name);
+      return;
+    }
+    state.journal.lifeFolders.push(name);
+    state.journal.activeLifeFolder = name;
+    addFolderInp.value = '';
+    saveState();
+    renderLifeSection();
+    toast('📁', 'Folder created', name);
+  };
+  if(addFolderBtn) addFolderBtn.addEventListener('click', handleAddFolder);
+  if(addFolderInp) addFolderInp.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); handleAddFolder(); } });
+
+  // Search input
+  const searchInp = document.getElementById('lifeSearchInput');
+  if(searchInp) searchInp.addEventListener('input', () => renderLifeSection());
+
+  // Life Reader Modal buttons
+  const rdrClose = document.getElementById('lifeReaderCloseBtn');
+  if(rdrClose) rdrClose.addEventListener('click', closeLifeReader);
+  const rdrBackdrop = document.getElementById('lifeReaderBackdrop');
+  if(rdrBackdrop) rdrBackdrop.addEventListener('click', e => { if(e.target === rdrBackdrop) closeLifeReader(); });
+  const rdrDel = document.getElementById('lifeReaderDeleteBtn');
+  if(rdrDel) rdrDel.addEventListener('click', () => {
+    if(!currentReadingLifeId) return;
+    if(confirm('Delete this journal entry?')){
+      state.journal = state.journal || {};
+      state.journal.lifeEntries = (state.journal.lifeEntries || []).filter(x => x.id !== currentReadingLifeId);
+      saveState();
+      closeLifeReader();
+      renderLifeSection();
+      toast('✕', 'Entry deleted', '');
+    }
+  });
+
+  // Delegated events for Test History and Life sections
+  const journalView = document.getElementById('view-journal');
+  if(journalView){
+    journalView.addEventListener('click', e => {
+      const t = e.target;
+      if(!t) return;
+
+      // Log Test button on subject card
+      const logBtn = t.closest('[data-log-test]');
+      if(logBtn){
+        openTestModal(logBtn.dataset.logTest);
+        return;
+      }
+
+      // Delete subject button
+      const delSubBtn = t.closest('[data-del-subject]');
+      if(delSubBtn){
+        const sub = delSubBtn.dataset.delSubject;
+        const testCount = (state.journal && state.journal.tests || []).filter(x => x.subject === sub).length;
+        if(confirm('Delete subject "' + sub + '"' + (testCount > 0 ? ' and its ' + testCount + ' test history entries?' : '?'))){
+          state.journal.testSubjects = (state.journal.testSubjects || []).filter(s => s !== sub);
+          state.journal.tests = (state.journal.tests || []).filter(x => x.subject !== sub);
+          saveState();
+          renderTestHistory();
+          toast('✕', 'Subject folder deleted', sub);
+        }
+        return;
+      }
+
+      // Edit test button
+      const editTestBtn = t.closest('[data-edit-test]');
+      if(editTestBtn){
+        const id = editTestBtn.dataset.editTest;
+        const test = (state.journal && state.journal.tests || []).find(x => x.id === id);
+        if(test) openTestModal(test.subject, id);
+        return;
+      }
+
+      // Delete test button
+      const delTestBtn = t.closest('[data-del-test]');
+      if(delTestBtn){
+        const id = delTestBtn.dataset.delTest;
+        if(confirm('Delete this test history entry?')){
+          state.journal.tests = (state.journal.tests || []).filter(x => x.id !== id);
+          saveState();
+          renderTestHistory();
+          toast('✕', 'Test entry deleted', '');
+        }
+        return;
+      }
+
+      // Open test file
+      const openFileBtn = t.closest('[data-open-test-file]');
+      if(openFileBtn){
+        const id = openFileBtn.dataset.openTestFile;
+        const test = (state.journal && state.journal.tests || []).find(x => x.id === id);
+        if(test && (test.data || test.fileName)){
+          readResourceOnline({
+            kind: 'file',
+            data: test.data,
+            fileName: test.fileName,
+            fileType: test.fileType || 'application/pdf',
+            name: test.title + ' (' + test.subject + ')'
+          });
+        }
+        return;
+      }
+
+      // Filter life notes by folder
+      const fChip = t.closest('[data-life-folder-filter]');
+      if(fChip && !t.closest('[data-del-life-folder]')){
+        state.journal.activeLifeFolder = fChip.dataset.lifeFolderFilter;
+        renderLifeSection();
+        saveState();
+        return;
+      }
+
+      // Delete life folder
+      const delFolderBtn = t.closest('[data-del-life-folder]');
+      if(delFolderBtn){
+        const f = delFolderBtn.dataset.delLifeFolder;
+        if(confirm('Delete folder "' + f + '"? Notes in it will be moved to General.')){
+          state.journal.lifeFolders = (state.journal.lifeFolders || []).filter(x => x !== f);
+          (state.journal.lifeEntries || []).forEach(e => { if(e.folder === f) e.folder = 'General'; });
+          if(state.journal.activeLifeFolder === f) state.journal.activeLifeFolder = 'all';
+          saveState();
+          renderLifeSection();
+          toast('✕', 'Folder deleted', f);
+        }
+        return;
+      }
+
+      // Open life note reader
+      const openNoteCard = t.closest('[data-open-life-note]');
+      if(openNoteCard && !t.closest('[data-del-life-note]') && !t.closest('[data-edit-life-note]')){
+        openLifeReader(openNoteCard.dataset.openLifeNote);
+        return;
+      }
+
+      // Edit life note
+      const editNoteBtn = t.closest('[data-edit-life-note]');
+      if(editNoteBtn){
+        openLifeNoteModal(editNoteBtn.dataset.editLifeNote);
+        return;
+      }
+
+      // Delete life note
+      const delNoteBtn = t.closest('[data-del-life-note]');
+      if(delNoteBtn){
+        const id = delNoteBtn.dataset.delLifeNote;
+        if(confirm('Delete this journal note?')){
+          state.journal.lifeEntries = (state.journal.lifeEntries || []).filter(x => x.id !== id);
+          saveState();
+          renderLifeSection();
+          toast('✕', 'Note deleted', '');
+        }
+        return;
+      }
+    });
+  }
+}
+
+
 (async function init(){
   populateSubjects();
   syncTimerTotal();
   updateTimerUI();
   drawWheel();
   plannerStaticInit();
+  initJournalEventListeners();
+  setMinigamesTab(state.minigamesTab || 'gamble');
+  setExtraTab(state.extraTab || 'shop');
+
   renderAll();
   applyTheme('default');
   await bootstrapAuth();
   let resizeT;
   window.addEventListener('resize', ()=>{ clearTimeout(resizeT); resizeT = setTimeout(drawWheel, 200); });
   setInterval(()=>{ if(!document.hidden && !timer.running && currentUser) renderAll(); }, 60000);
-  console.log('%c◉ StudyFlow · Focus Mode + Fullscreen + Session Summary ready', 'color:#fff;font-weight:bold;font-size:14px');
+  console.log('%c◉ In Pursuit Of Greatness · Focus + Journal + Minigames ready', 'color:#fff;font-weight:bold;font-size:14px');
 })();
 </script>
 </body>
