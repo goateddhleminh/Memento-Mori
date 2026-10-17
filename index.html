@@ -1424,6 +1424,33 @@ html.focus-mode body::after{display:none!important}
 [data-theme="white"] .life-folder-chip{background:#f1f5f9;border-color:#e2e8f0;color:#475569}
 [data-theme="white"] .life-folder-chip.active{background:#09090b;color:#ffffff}
 
+
+/* ===== Wheel Bulk Spin & Multiplier Controls ===== */
+.wheel-bulk-controls{display:flex;flex-direction:column;gap:10px;width:100%;max-width:440px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--glass-border);margin:0 auto}
+.wheel-bulk-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.wbh-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.wbh-sub{font-size:11.5px;color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+.wheel-bulk-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wheel-bulk-pills{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.bulk-pill{padding:7px 13px;border-radius:99px;border:1px solid var(--glass-border);background:rgba(255,255,255,.05);color:var(--text-2);font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;transition:all .18s var(--ease)}
+.bulk-pill:hover{background:rgba(255,255,255,.12);color:#fff}
+.bulk-pill.active{background:#ffffff;color:#09090b;border-color:#ffffff;box-shadow:0 0 14px rgba(255,255,255,.35)}
+.wheel-custom-input-box{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--glass-border);margin-left:auto}
+.wci-prefix{font-size:11px;color:var(--text-3);font-weight:600}
+.wheel-custom-input-box input{width:56px;padding:4px;border:none!important;background:transparent!important;font-family:var(--mono);font-size:14px;font-weight:700;color:#fff!important;text-align:center;outline:none!important;box-shadow:none!important}
+.wci-suffix{font-size:11px;color:var(--text-3);font-weight:600}
+
+/* Exit Test Mode Badges & Buttons */
+.exit-test-btn{display:none;align-items:center;gap:6px;padding:7px 14px;border-radius:99px;background:linear-gradient(135deg,#f87171,#ef4444);color:#ffffff;font-size:12px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(239,68,68,.3);transition:all .2s var(--ease)}
+.exit-test-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(239,68,68,.45)}
+
+[data-theme="white"] .wheel-bulk-controls{background:#f8fafc;border-color:#e2e8f0}
+[data-theme="white"] .bulk-pill{background:#ffffff;border-color:#e2e8f0;color:#334155}
+[data-theme="white"] .bulk-pill:hover{background:#e2e8f0;color:#09090b}
+[data-theme="white"] .bulk-pill.active{background:#09090b;color:#ffffff;border-color:#09090b}
+[data-theme="white"] .wheel-custom-input-box{background:#ffffff;border-color:#e2e8f0}
+[data-theme="white"] .wheel-custom-input-box input{color:#09090b!important}
+
 </style>
 </head>
 <body>
@@ -1468,6 +1495,16 @@ html.focus-mode body::after{display:none!important}
         <button type="submit" class="auth-submit" id="signupBtn">Create Account</button>
       </form>
     </div>
+    
+    <div style="margin: 20px 0 12px; display: flex; align-items: center; gap: 10px">
+      <div style="flex:1; height:1px; background: rgba(255,255,255,.12)"></div>
+      <span style="font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); font-weight:700">Instant Testing</span>
+      <div style="flex:1; height:1px; background: rgba(255,255,255,.12)"></div>
+    </div>
+    <button type="button" class="btn primary" id="launchDemoAccountBtn" style="width:100%; justify-content:center; padding:14px; font-weight:800; font-size:13.5px; background:linear-gradient(135deg, #ffffff, #e4e4e7); color:#09090b; box-shadow:0 4px 20px rgba(255,255,255,.2)">
+      ⚡ Enter Test Mode (All Features Unlocked)
+    </button>
+
     <div class="auth-note">Your progress is stored securely in your account and synced across every device.</div>
   </div>
 </div>
@@ -1517,6 +1554,7 @@ html.focus-mode body::after{display:none!important}
     <header class="topbar">
       <div><h1 class="page-title" id="pageTitle">Dashboard</h1><p class="page-sub" id="pageSub">Welcome back — let's get focused.</p></div>
       <div class="topbar-right">
+        <button type="button" class="exit-test-btn" id="exitDemoTopBtn" title="Exit test mode and sign in with your main account">🚪 Switch to Main Account</button>
         <div class="user-chip" id="userChip" title="Account">
           <div class="user-chip-avatar" id="userChipAvatar">◉</div>
           <span class="user-chip-email" id="userChipEmail">Account</span>
@@ -2015,6 +2053,28 @@ html.focus-mode body::after{display:none!important}
             <canvas id="wheelCanvas" width="620" height="620"></canvas>
             <div class="wheel-hub"><span class="wheel-hub-txt">Study<br>Wheel</span></div>
           </div>
+                    <!-- BULK SPIN & MULTIPLIER CONTROLS -->
+          <div class="wheel-bulk-controls">
+            <div class="wheel-bulk-head">
+              <span class="wbh-label">Spin Multiplier</span>
+              <span class="wbh-sub" id="wheelMultiplierNote">1× Multiplier (1 Token)</span>
+            </div>
+            <div class="wheel-bulk-row">
+              <div class="wheel-bulk-pills" id="wheelMultiplierPills">
+                <button type="button" class="bulk-pill active" data-wheel-mult="1">1×</button>
+                <button type="button" class="bulk-pill" data-wheel-mult="5">5×</button>
+                <button type="button" class="bulk-pill" data-wheel-mult="10">10×</button>
+                <button type="button" class="bulk-pill" data-wheel-mult="25">25×</button>
+                <button type="button" class="bulk-pill" data-wheel-mult="max">MAX</button>
+              </div>
+              <div class="wheel-custom-input-box">
+                <span class="wci-prefix">Custom:</span>
+                <input type="number" id="wheelCustomMultInput" min="1" max="1000" placeholder="1" value="1">
+                <span class="wci-suffix">spins</span>
+              </div>
+            </div>
+          </div>
+
           <button type="button" class="spin-btn" id="spinBtn" disabled>SPIN</button>
           <div class="wheel-note">Earn <b>1 spin token</b> every <b>30 minutes</b> of focus time. Each of the 30 slots is a real reward.</div>
         </div>
@@ -2171,6 +2231,8 @@ html.focus-mode body::after{display:none!important}
           </div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn danger" id="profileExitDemoBtn" style="display:none">🚪 Exit Test Mode</button>
+          <button type="button" class="btn soft" id="accountLoadTestBtn">⚡ Reload Test Account</button>
           <button type="button" class="btn soft" id="accountSyncBtn">⟳ Sync Now</button>
           <button type="button" class="btn danger" id="accountSignOutBtn">Sign Out</button>
         </div>
@@ -2220,8 +2282,16 @@ html.focus-mode body::after{display:none!important}
     <p class="modal-sub">Customize your focus session.</p>
     <div class="switch-row"><span>Sound alerts</span><label class="switch"><input type="checkbox" id="setSound" checked><span class="slider"></span></label></div>
     <div class="switch-row"><span>Browser notifications</span><label class="switch"><input type="checkbox" id="setNotify"><span class="slider"></span></label></div>
+    <div style="margin: 16px 0 10px; display:flex; flex-direction:column; gap:8px">
+      <button type="button" class="btn danger" id="settingsExitDemoBtn" style="width:100%; justify-content:center; font-weight:700; display:none">
+        🚪 Exit Test Mode &amp; Sign In
+      </button>
+      <button type="button" class="btn soft" id="settingsTestAccountBtn" style="width:100%; justify-content:center; font-weight:700">
+        ⚡ Reload Test Account (All Unlocked)
+      </button>
+    </div>
     <div class="modal-actions">
-      <button type="button" class="btn danger" id="resetDataBtn">Reset Data</button>
+      <button type="button" class="btn danger" id="resetDataBtn" style="transition:all .2s ease">Reset Data</button>
       <button type="button" class="btn primary" id="saveSettingsBtn">Save</button>
     </div>
   </div>
@@ -2246,6 +2316,7 @@ html.focus-mode body::after{display:none!important}
   <div class="modal reward-modal" id="rewardModal">
     <div class="reward-pop-icon" id="rewardPopIcon">⏱</div>
     <div class="reward-pop-rarity" id="rewardPopRarity">Common</div>
+    <div id="rewardPopMultiplier" style="display:none; font-family:var(--mono); font-size:12px; font-weight:800; color:var(--accent); letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px">1× Multiplier Applied</div>
     <div class="reward-pop-name" id="rewardPopName">+10 Mins Break Time</div>
     <div class="reward-pop-desc" id="rewardPopDesc">Added to your inventory.</div>
     <button type="button" class="btn primary" id="rewardCollectBtn">Collect</button>
@@ -2659,6 +2730,7 @@ const DEFAULTS = {
   plannerEarned: { coins:0, tokens:0, xp:0 },
   minigamesTab: 'gamble',
   extraTab: 'shop',
+  wheelMultiplier: 1,
   journal: {
     testSubjects: ['Mathematics', 'Physics', 'English', 'Chemistry'],
     tests: [],
@@ -2757,6 +2829,7 @@ function normalizeState(raw){
   // ===== Minigames & Extra tabs =====
   m.minigamesTab = ['gamble','wheel'].includes(raw.minigamesTab) ? raw.minigamesTab : 'gamble';
   m.extraTab = ['shop','breaks','achievements'].includes(raw.extraTab) ? raw.extraTab : 'shop';
+  m.wheelMultiplier = Math.max(1, parseInt(raw.wheelMultiplier, 10) || 1);
 
   // ===== Journal normalization =====
   const rawJ = (raw && raw.journal && typeof raw.journal === 'object') ? raw.journal : {};
@@ -2832,7 +2905,16 @@ function setSyncDot(mode){
 }
 
 async function pushStateToCloud(){
-  if(!currentUser || !supabaseClient || !stateLoadedFromCloud) return;
+  if(!currentUser) return;
+  if(currentUser.isDemo){
+    try {
+      localStorage.setItem('studyflow.demo_state', JSON.stringify(state));
+      setSyncDot('idle');
+      updateAccountStatus('Saved locally (Test Mode)');
+    } catch(e) {}
+    return;
+  }
+  if(!supabaseClient || !stateLoadedFromCloud) return;
   setSyncDot('saving');
   try{
     const payload = { user_id: currentUser.id, data: state, updated_at: new Date().toISOString() };
@@ -2853,14 +2935,27 @@ async function pullStateFromCloud(){
 }
 
 function saveState(){
-  if(!currentUser || !supabaseClient || !stateLoadedFromCloud) return;
+  if(!currentUser) return;
+  if(currentUser.isDemo){
+    setSyncDot('saving');
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(() => {
+      try {
+        localStorage.setItem('studyflow.demo_state', JSON.stringify(state));
+        setSyncDot('idle');
+        updateAccountStatus('Saved locally (Test Mode)');
+      } catch(e) {}
+    }, 400);
+    return;
+  }
+  if(!supabaseClient || !stateLoadedFromCloud) return;
   setSyncDot('saving');
   clearTimeout(syncTimer);
   syncTimer = setTimeout(() => { pushStateToCloud(); }, 800);
 }
 
 window.addEventListener('beforeunload', () => {
-  if(currentUser && stateLoadedFromCloud){
+  if(currentUser && (currentUser.isDemo || stateLoadedFromCloud)){
     if(timer.running && timer.direction === 'up'){
       state.inProgressTimer.elapsed = timer.elapsed;
       state.inProgressTimer.sessionXp = timer.sessionXp;
@@ -2907,11 +3002,26 @@ function switchAuthTab(which){
   showAuthError('');
 }
 function updateAuthUI(){
-  if(!currentUser) return;
-  const initials = (state.profile?.name || currentUser.email || 'U').trim().charAt(0).toUpperCase();
+  const isDemo = !!(currentUser && currentUser.isDemo);
+
+  const topExitBtn = document.getElementById('exitDemoTopBtn');
+  if(topExitBtn) topExitBtn.style.display = isDemo ? 'inline-flex' : 'none';
+
+  const setExitBtn = document.getElementById('settingsExitDemoBtn');
+  if(setExitBtn) setExitBtn.style.display = isDemo ? 'block' : 'none';
+
+  const profExitBtn = document.getElementById('profileExitDemoBtn');
+  if(profExitBtn) profExitBtn.style.display = isDemo ? 'inline-flex' : 'none';
+
+  if(!currentUser){
+    document.getElementById('userChipEmail').textContent = 'Sign In';
+    return;
+  }
+
+  const initials = isDemo ? '👑' : ((state.profile?.name || currentUser.email || 'U').trim().charAt(0).toUpperCase());
   document.getElementById('userChipAvatar').textContent = initials || '◉';
-  document.getElementById('userChipEmail').textContent = currentUser.email || 'Signed in';
-  document.getElementById('accountEmail').textContent = currentUser.email || '';
+  document.getElementById('userChipEmail').textContent = isDemo ? 'Test Account (Unlocked)' : (currentUser.email || 'Signed in');
+  document.getElementById('accountEmail').textContent = isDemo ? 'tester@in-pursuit-of-greatness.dev (Test Mode)' : (currentUser.email || '');
   document.getElementById('accountAvatar').textContent = initials || '◉';
 }
 function updateAccountStatus(txt){ const el = document.getElementById('accountStatus'); if(el) el.textContent = txt; }
@@ -3016,15 +3126,306 @@ async function handleSignIn(e){
   finally{ btn.disabled = false; btn.textContent = 'Sign In'; }
 }
 
-async function handleSignOut(){
-  if(!confirm('Sign out? Your progress is saved in your account.')) return;
+
+async function exitTestModeAndSignIn(){
+  localStorage.removeItem('studyflow.is_demo_session');
   clearTimeout(syncTimer);
-  try{ await pushStateToCloud(); }catch(e){}
-  if(supabaseClient){ try{ await supabaseClient.auth.signOut(); }catch(e){} }
+  currentUser = null;
+  stateLoadedFromCloud = false;
+  state = normalizeState({});
+
+  if(supabaseClient){
+    try { await supabaseClient.auth.signOut(); } catch(e) {}
+  }
+
+  // Close modals
+  document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('open'));
+
+  // Switch to dashboard view
+  const dashBtn = document.querySelector('.dock-btn[data-view="dashboard"]');
+  if(dashBtn) dashBtn.click();
+
+  renderAll();
+  updateAuthUI();
+  updateAccountStatus('Signed out');
+  setSyncDot('idle');
+
+  showAuthGate();
+  switchAuthTab('signin');
+  toast('🚪', 'Exited Test Mode', 'Sign in to your main account.');
+}
+
+async function handleSignOut(){
+  if(currentUser && currentUser.isDemo){
+    await exitTestModeAndSignIn();
+    return;
+  }
+  localStorage.removeItem('studyflow.is_demo_session');
+  clearTimeout(syncTimer);
+  if(currentUser){
+    try{ await pushStateToCloud(); }catch(e){}
+    if(supabaseClient){ try{ await supabaseClient.auth.signOut(); }catch(e){} }
+  }
   onSignedOut();
 }
 
+
+/* ============================================================
+   TEMPORARY DEMO / TEST ACCOUNT WITH ALL FEATURES UNLOCKED
+============================================================ */
+function getUnlockedDemoState(){
+  const now = Date.now();
+  const dayMs = 86400000;
+
+  // Realistic sample study history across 14 days
+  const sampleSessions = [];
+  const subjects = ['Mathematics', 'Physics', 'English', 'Chemistry', 'Computer Science'];
+  for(let i = 13; i >= 0; i--){
+    const dayTs = now - (i * dayMs) + (Math.random() * 3600000);
+    const count = 2 + (i % 2);
+    for(let j = 0; j < count; j++){
+      const subj = subjects[(i + j) % subjects.length];
+      const secs = (25 + Math.floor(Math.random() * 35)) * 60;
+      sampleSessions.push({
+        id: 'demo_sess_' + i + '_' + j,
+        ts: dayTs - (j * 7200000),
+        seconds: secs,
+        subject: subj,
+        mode: 'focus'
+      });
+    }
+  }
+
+  // Pre-unlock all achievements
+  const allAchievements = {};
+  if(typeof ACHIEVEMENTS !== 'undefined'){
+    ACHIEVEMENTS.forEach(a => {
+      allAchievements[a.id] = now - Math.floor(Math.random() * 86400000 * 7);
+    });
+  }
+
+  return normalizeState({
+    sessions: sampleSessions,
+    xp: 28500,
+    coins: 50000, // 50k coins ready for shop & gamble
+    totalXpEarned: 28500,
+    coinsEarned: 55000,
+    bestStreak: 14,
+    achievements: allAchievements,
+    freezeCards: 3,
+    frozenDays: [],
+    boosterExpiresAt: now + (48 * 3600 * 1000), // XP Booster 2x
+    ownedThemes: ['default', 'white', 'cyberpunk', 'forest', 'arcade'],
+    currentTheme: 'default',
+    ownedFrames: ['none', 'gold', 'silver', 'neon'],
+    currentFrame: 'neon',
+    petFedUntil: now + (48 * 3600 * 1000), // Pet fed & energized
+    spinTokensSpent: 0,
+    bonusTokens: 50, // 50 spin tokens ready to spin
+    breakMinutes: 180, // 3 hours available in break jar
+    breakMinutesUsed: 60,
+    breakEarnedTotal: 240,
+    breakFromWheel: 150,
+    breakSessions: 4,
+    consumables: { soda: 5, snack: 5 },
+    inventoryLog: [
+      { id: 'inv_1', type: 'break60', name: '+1h Break Time', icon: '⏱', rarity: 'rare', ts: now - 3600000, value: 60 },
+      { id: 'inv_2', type: 'soda', name: '+1 Can of Soda', icon: '🥤', rarity: 'rare', ts: now - 7200000, value: 1 },
+      { id: 'inv_3', type: 'break120', name: '+2h Break Time', icon: '⏱', rarity: 'legendary', ts: now - 14400000, value: 120 }
+    ],
+    wheelSpins: 14,
+    customSubjects: ['Computer Science', 'Philosophy'],
+    currentCompanion: 'dragon',
+    ownedCompanions: ['orb', 'fox', 'owl', 'deer', 'wolf', 'penguin', 'bear', 'tiger', 'dragon'], // ALL companions unlocked
+    gambleHistory: [
+      { id: 1, ts: now - 600000, dice: [4, 5, 6], sum: 15, isTriple: false, bet: { type: 'over', amount: 100, currency: 'coins', won: true, payout: 200 } },
+      { id: 2, ts: now - 1200000, dice: [5, 5, 5], sum: 15, isTriple: true, bet: { type: 'triple', amount: 50, currency: 'coins', won: true, payout: 1550 } }
+    ],
+    gambleStats: { wins: 8, losses: 3, wageredCoins: 2500, wageredTokens: 5, wageredBreak: 30, netCoins: 4200, netTokens: 2, netBreak: 15 },
+    gambleRolls: 11,
+    gambleWins: 8,
+    gambleStreak: 4,
+    gambleMaxBet: 500,
+    gambleMaxPayout: 1550,
+    gambleWonTriple: true,
+    profile: {
+      name: 'Grandmaster Tester',
+      bio: 'Testing all features: Focus Timer, Planner, Resources, Test History Journal, Life Reflections, Dice Arena, Lucky Wheel, and Reward Vault.',
+      quote: 'Greatness is not a destiny, it is a daily pursuit.',
+      avatar: '👑'
+    },
+    settings: { focus: 25, short: 5, long: 15, dailyGoal: 120, sound: true, notify: false },
+    titles: ['Centurion', 'Flow Titan', 'Unbroken', 'Specialist', 'Beastmaster', 'Tycoon', 'Risk Taker', 'Grandmaster'],
+    currentTitle: 'Grandmaster',
+    profileTheme: 'sunset',
+    ownedProfileThemes: ['default', 'sunset', 'ocean', 'forest', 'lavender', 'mono'], // ALL profile themes unlocked
+    profileBorder: 'rainbow',
+    ownedProfileBorders: ['default', 'minimal', 'glow', 'gold', 'silver', 'neon', 'rainbow', 'double'], // ALL borders unlocked
+    todos: [
+      { id: 'td_demo_1', text: 'Review Calculus chapter 4 integration techniques', priority: 'high', status: 'progress', createdAt: now - 3600000, completedAt: null },
+      { id: 'td_demo_2', text: 'Practice Physics kinematics problems', priority: 'medium', status: 'todo', createdAt: now - 7200000, completedAt: null },
+      { id: 'td_demo_3', text: 'Memorize 30 advanced SAT vocabulary words', priority: 'low', status: 'done', createdAt: now - 10800000, completedAt: now - 1800000 }
+    ],
+    weekPlan: {
+      0: { note: 'Math focus day', tasks: [{ id: 'w1', text: 'Calculus problem set 1-15', done: true, createdAt: now - 86400000 }] },
+      1: { note: 'Physics lab & report', tasks: [{ id: 'w2', text: 'Optics simulation lab', done: true, createdAt: now }] },
+      2: { note: 'Midweek review', tasks: [{ id: 'w3', text: 'Literature essay draft', done: false, createdAt: now }] },
+      3: { note: 'Deep focus', tasks: [{ id: 'w4', text: 'Chemistry stoichiometry practice', done: false, createdAt: now }] },
+      4: { note: 'Quiz prep', tasks: [{ id: 'w5', text: 'Mock test review', done: false, createdAt: now }] },
+      5: { note: 'Weekend consolidation', tasks: [{ id: 'w6', text: 'Review weak topics from journal', done: false, createdAt: now }] },
+      6: { note: 'Planning next week', tasks: [{ id: 'w7', text: 'Organize study schedule', done: false, createdAt: now }] }
+    },
+    resources: [
+      { id: 'rs_demo_1', subject: 'Mathematics', name: 'Khan Academy — AP Calculus BC', kind: 'link', url: 'https://www.khanacademy.org/math/ap-calculus-bc', fileName: '', fileSize: 0, fileType: '', data: '', createdAt: now - 86400000 },
+      { id: 'rs_demo_2', subject: 'Physics', name: 'MIT OpenCourseWare — Classical Mechanics', kind: 'link', url: 'https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/', fileName: '', fileSize: 0, fileType: '', data: '', createdAt: now - 172800000 }
+    ],
+    resourceSubjects: ['Computer Science', 'Philosophy'],
+    minigamesTab: 'gamble',
+    extraTab: 'shop',
+    journal: {
+      testSubjects: ['Mathematics', 'Physics', 'English', 'Chemistry', 'Computer Science'],
+      tests: [
+        {
+          id: 'tst_demo_1',
+          subject: 'Mathematics',
+          title: 'Advanced Calculus Midterm Exam',
+          mark: 9.5,
+          mistakes: 'Lost 0.5 points on integration by parts sign error in problem 4b. Review polar coordinates transformation.',
+          url: 'https://example.com/calculus-midterm-solutions',
+          fileName: 'Calculus_Midterm_Graded.pdf',
+          fileSize: 1048576,
+          fileType: 'application/pdf',
+          data: '',
+          date: now - 86400000
+        },
+        {
+          id: 'tst_demo_2',
+          subject: 'Physics',
+          title: 'Mechanics & Thermodynamics Unit Test',
+          mark: 8.5,
+          mistakes: 'Misapplied conservation of momentum in elastic collision section. Be careful with vector directions next time.',
+          url: '',
+          fileName: '',
+          fileSize: 0,
+          fileType: '',
+          data: '',
+          date: now - (86400000 * 3)
+        },
+        {
+          id: 'tst_demo_3',
+          subject: 'English',
+          title: 'IELTS Academic Full Mock Examination',
+          mark: 9.0,
+          mistakes: 'Writing Task 2 could have had better paragraph transitions. Reading and Listening scored 9.0.',
+          url: 'https://ielts.org',
+          fileName: '',
+          fileSize: 0,
+          fileType: '',
+          data: '',
+          date: now - (86400000 * 5)
+        },
+        {
+          id: 'tst_demo_4',
+          subject: 'Chemistry',
+          title: 'Organic Chemistry Reactions Quiz',
+          mark: 10.0,
+          mistakes: 'Flawless score! All reaction mechanisms and catalysts identified accurately.',
+          url: '',
+          fileName: '',
+          fileSize: 0,
+          fileType: '',
+          data: '',
+          date: now - (86400000 * 7)
+        }
+      ],
+      lifeFolders: ['General', 'Personal', 'Reflections', 'Ideas', 'Mindset'],
+      lifeEntries: [
+        {
+          id: 'life_demo_1',
+          folder: 'Reflections',
+          title: 'The compounding power of daily focus',
+          content: 'True mastery is not born from rare bursts of superhuman effort, but from quiet, consistent focus practiced day after day. When you sit down, eliminate all distractions, and immerse yourself completely in learning, you tap into something extraordinary.\n\nIn Pursuit Of Greatness is about becoming 1% better every single day.',
+          tag: '🌟 Reflection',
+          date: now - 3600000
+        },
+        {
+          id: 'life_demo_2',
+          folder: 'Mindset',
+          title: 'Embracing mistakes as data, not failure',
+          content: 'Every mistake recorded in the Test History is a treasure map showing exactly where knowledge needs to be fortified. Once you stop fearing errors and start cataloging them systematically, growth accelerates exponentially.',
+          tag: '💡 Idea',
+          date: now - (86400000 * 2)
+        },
+        {
+          id: 'life_demo_3',
+          folder: 'Personal',
+          title: 'Semester goals and long-term vision',
+          content: 'Goal 1: Maintain average test score above 9.0/10 across all STEM subjects.\nGoal 2: Build a disciplined 3-hour daily deep work habit without burnout.\nGoal 3: Always honor break times to keep mental clarity razor sharp.',
+          tag: '🎯 Goal',
+          date: now - (86400000 * 4)
+        }
+      ],
+      activeSection: 'tests',
+      activeLifeFolder: 'all'
+    }
+  });
+}
+
+async function launchDemoAccount(isNew = false){
+  const demoUser = {
+    id: 'demo_user_test',
+    email: 'tester@in-pursuit-of-greatness.dev',
+    user_metadata: { full_name: 'Grandmaster Tester' },
+    isDemo: true
+  };
+  currentUser = demoUser;
+  localStorage.setItem('studyflow.is_demo_session', 'true');
+
+  let saved = null;
+  if(!isNew){
+    try {
+      const raw = localStorage.getItem('studyflow.demo_state');
+      if(raw) saved = JSON.parse(raw);
+    } catch(e) {}
+  }
+
+  if(saved){
+    state = normalizeState(saved);
+  } else {
+    state = getUnlockedDemoState();
+    try {
+      localStorage.setItem('studyflow.demo_state', JSON.stringify(state));
+    } catch(e) {}
+  }
+
+  stateLoadedFromCloud = true;
+  updateAuthUI();
+  hideLoading();
+  hideAuthGate();
+  updateAccountStatus('⚡ Test Account (All Unlocked · Local)');
+  setSyncDot('idle');
+
+  populateSubjects();
+  timer.elapsed = 0; timer.sessionXp = 0; timer.sessionCoins = 0;
+  timer.direction = 'up'; timer.mode = 'focus';
+  updateTimerUI();
+  drawWheel();
+  checkAchievements();
+  renderAll();
+  initGamble();
+
+  toast('⚡', 'Test Account Ready', '50k coins, 50 tokens, Level 50, all companions & themes unlocked!');
+}
+
+
 async function bootstrapAuth(){
+  // Check if previously in test / demo mode
+  const isDemoSession = localStorage.getItem('studyflow.is_demo_session');
+  if(isDemoSession === 'true'){
+    await launchDemoAccount(false);
+    return;
+  }
+
   const cfg = loadSupaConfig();
   if(cfg) initSupabase(cfg.url, cfg.key);
   if(!supabaseClient){ showAuthGate(); showAuthError('Could not connect. Refresh the page.'); return; }
@@ -4259,9 +4660,12 @@ function drawWheel(){
 }
 function spinWheel(){
   if(wheelSpinning) return;
-  if(availableSpinTokens() <= 0){ toast('🎡','No spin tokens','Earn 1 token per 30 minutes of focus, or finish planner tasks.'); return; }
-  state.spinTokensSpent = (state.spinTokensSpent||0) + 1;
-  state.wheelSpins = (state.wheelSpins||0) + 1; saveState();
+  const mult = Math.max(1, parseInt(state.wheelMultiplier, 10) || 1);
+  const count = availableSpinTokens();
+  if(count <= 0){ toast('🎡','No spin tokens','Earn 1 token per 30 minutes of focus, or finish planner tasks.'); return; }
+  if(count < mult){ toast('🎡','Not enough tokens','You need ' + mult + ' tokens for this spin (you have ' + count + ').'); return; }
+  state.spinTokensSpent = (state.spinTokensSpent||0) + mult;
+  state.wheelSpins = (state.wheelSpins||0) + mult; saveState();
   const targetIdx = Math.floor(Math.random()*30);
   const targetMod = ((354 - targetIdx*12) % 360 + 360) % 360;
   const startRot = wheelRotation; const startMod = ((startRot%360)+360)%360;
@@ -4292,37 +4696,116 @@ function finishSpin(idx){
   stage.classList.remove('spinning'); spinBtn.classList.remove('spinning');
   spinBtn.textContent = 'SPIN'; updateSpinButton();
   const type = WHEEL_LAYOUT[idx]; const cfg = getRewardConfig(type);
+  const mult = Math.max(1, parseInt(state.wheelMultiplier, 10) || 1);
   let descText = '';
+  let popLabel = cfg.label;
+
   if(cfg.type === 'break'){
-    state.breakMinutes = (state.breakMinutes||0) + cfg.value;
-    state.breakEarnedTotal = (state.breakEarnedTotal||0) + cfg.value;
-    state.breakFromWheel = (state.breakFromWheel||0) + cfg.value;
-    descText = 'Added to your break vault.';
+    const addedMin = cfg.value * mult;
+    state.breakMinutes = (state.breakMinutes||0) + addedMin;
+    state.breakEarnedTotal = (state.breakEarnedTotal||0) + addedMin;
+    state.breakFromWheel = (state.breakFromWheel||0) + addedMin;
+    descText = mult > 1 ? '+' + addedMin + ' mins added to break vault (' + mult + '× multiplier applied)!' : 'Added to your break vault.';
+    popLabel = '+' + addedMin + ' Mins Break Time';
   } else if(cfg.type === 'consumable'){
+    const addedCount = mult;
     state.consumables = state.consumables || {soda:0,snack:0};
-    state.consumables[cfg.key] = (state.consumables[cfg.key]||0) + 1;
-    descText = 'Added to your snack & drink stash.';
+    state.consumables[cfg.key] = (state.consumables[cfg.key]||0) + addedCount;
+    const itemNoun = cfg.key === 'soda' ? 'Cans of Soda' : 'Snacks';
+    descText = mult > 1 ? '+' + addedCount + ' ' + itemNoun + ' added (' + mult + '× multiplier applied)!' : 'Added to your snack & drink stash.';
+    popLabel = '+' + addedCount + ' ' + itemNoun;
   }
+
   state.inventoryLog = state.inventoryLog || [];
-  state.inventoryLog.unshift({ id:Date.now()+'-'+Math.random().toString(36).slice(2,7), type, name:cfg.label, icon:cfg.icon, rarity:cfg.rarity, ts:Date.now(), value: cfg.value || 0 });
+  state.inventoryLog.unshift({
+    id: Date.now()+'-'+Math.random().toString(36).slice(2,7),
+    type,
+    name: popLabel + (mult > 1 ? ' (' + mult + '×)' : ''),
+    icon: cfg.icon,
+    rarity: cfg.rarity,
+    ts: Date.now(),
+    value: (cfg.value || 0) * mult,
+    multiplier: mult
+  });
   if(state.inventoryLog.length > 200) state.inventoryLog = state.inventoryLog.slice(0,200);
   saveState(); beepReward(cfg.rarity); checkAchievements(); renderAll();
-  setTimeout(()=>showRewardPopup(cfg, descText), 280);
+  setTimeout(()=>showRewardPopup({...cfg, label: popLabel}, descText, mult), 280);
 }
-function showRewardPopup(cfg, desc){
+function showRewardPopup(cfg, desc, mult){
   const modal = document.getElementById('rewardModal');
   document.getElementById('rewardPopIcon').textContent = cfg.icon;
   document.getElementById('rewardPopRarity').textContent = RARITY_LABEL[cfg.rarity] || cfg.rarity;
   document.getElementById('rewardPopName').textContent = cfg.label;
   document.getElementById('rewardPopDesc').textContent = desc || 'Added to your inventory.';
+
+  const multBadge = document.getElementById('rewardPopMultiplier');
+  if(multBadge){
+    if(mult && mult > 1){
+      multBadge.style.display = 'block';
+      multBadge.textContent = mult + '× Multiplier Applied!';
+    } else {
+      multBadge.style.display = 'none';
+    }
+  }
+
   modal.classList.toggle('legendary', cfg.rarity === 'legendary');
   document.getElementById('rewardBackdrop').classList.add('open');
 }
+function setWheelMultiplier(val){
+  const avail = availableSpinTokens();
+  let mult = 1;
+  if(val === 'max'){
+    mult = Math.max(1, avail);
+  } else {
+    mult = Math.max(1, parseInt(val, 10) || 1);
+  }
+  state.wheelMultiplier = mult;
+
+  // Update pill active classes
+  document.querySelectorAll('#wheelMultiplierPills [data-wheel-mult]').forEach(pill => {
+    const pVal = pill.dataset.wheelMult;
+    if(pVal === 'max') pill.classList.toggle('active', val === 'max');
+    else pill.classList.toggle('active', parseInt(pVal, 10) === mult && val !== 'max');
+  });
+
+  const customInp = document.getElementById('wheelCustomMultInput');
+  if(customInp && parseInt(customInp.value, 10) !== mult) customInp.value = mult;
+
+  const note = document.getElementById('wheelMultiplierNote');
+  if(note){
+    note.textContent = mult > 1 ? mult + '× Multiplier (' + mult + ' Tokens)' : '1× Multiplier (1 Token)';
+  }
+
+  updateSpinButton();
+  saveState();
+}
+
 function updateSpinButton(){
-  const btn = document.getElementById('spinBtn'); const count = availableSpinTokens();
-  if(wheelSpinning){ btn.disabled = true; return; }
-  btn.disabled = count <= 0;
-  btn.textContent = count > 0 ? 'SPIN · '+count+' token'+(count>1?'s':'') : 'NO TOKENS';
+  const btn = document.getElementById('spinBtn');
+  if(!btn) return;
+  const count = availableSpinTokens();
+  const mult = Math.max(1, parseInt(state.wheelMultiplier, 10) || 1);
+
+  if(wheelSpinning){
+    btn.disabled = true;
+    btn.textContent = 'SPINNING (' + mult + '×)…';
+    return;
+  }
+
+  if(count <= 0){
+    btn.disabled = true;
+    btn.textContent = 'NO TOKENS (0)';
+    return;
+  }
+
+  if(count < mult){
+    btn.disabled = true;
+    btn.textContent = 'NEED ' + mult + ' TOKENS (Have ' + count + ')';
+    return;
+  }
+
+  btn.disabled = false;
+  btn.textContent = mult > 1 ? 'SPIN ' + mult + '× · ' + mult + ' Tokens' : 'SPIN · 1 Token';
 }
 function renderWheel(){
   document.getElementById('spinTokenCount').textContent = availableSpinTokens();
@@ -4336,6 +4819,14 @@ function renderWheel(){
   const dropEl = document.getElementById('recentDrops');
   if(drops.length === 0){ dropEl.innerHTML = '<div class="empty-state" style="padding:16px 8px"><span class="big">◎</span>No drops yet.</div>'; }
   else { dropEl.innerHTML = drops.map(d => '<div class="drop-item '+(d.rarity==='legendary'?'legendary':'')+'"><span class="di-icon">'+d.icon+'</span><span class="di-name">'+escapeHtml(d.name)+'</span><span class="di-time">'+relativeTime(d.ts).replace(' · ',' ')+'</span></div>').join(''); }
+  const curMult = Math.max(1, parseInt(state.wheelMultiplier, 10) || 1);
+  const note = document.getElementById('wheelMultiplierNote');
+  if(note) note.textContent = curMult > 1 ? curMult + '× Multiplier (' + curMult + ' Tokens)' : '1× Multiplier (1 Token)';
+  const customInp = document.getElementById('wheelCustomMultInput');
+  if(customInp && parseInt(customInp.value, 10) !== curMult) customInp.value = curMult;
+  document.querySelectorAll('#wheelMultiplierPills [data-wheel-mult]').forEach(pill => {
+    pill.classList.toggle('active', parseInt(pill.dataset.wheelMult, 10) === curMult);
+  });
   updateSpinButton(); if(!wheelSpinning) drawWheel();
 }
 function renderInventoryModal(){
@@ -6187,27 +6678,60 @@ document.getElementById('saveSettingsBtn').addEventListener('click',()=>{
   saveState();
   backdrop.classList.remove('open'); renderAll(); toast('◉','Settings saved','');
 });
-document.getElementById('resetDataBtn').addEventListener('click',()=>{
-  if(!confirm('This permanently deletes all your cloud data. This cannot be undone. Continue?')) return;
-  state = normalizeState({});
-  applyTheme('default');
-  pauseTimer(); timer.elapsed = 0; timer.sessionXp = 0; timer.sessionCoins = 0;
-  timer.direction = 'up'; timer.mode = 'focus';
-  populateSubjects();
-  syncTimerTotal(); updateTimerUI();
-  exitFocusMode();
-  exitFullscreen();
-  backdrop.classList.remove('open'); renderAll();
-  saveState(); pushStateToCloud();
-  toast('◌','Data reset','Your cloud account is now empty');
-});
+let resetConfirmTimer = null;
+let resetConfirmState = false;
+const resetDataBtnEl = document.getElementById('resetDataBtn');
+if(resetDataBtnEl){
+  resetDataBtnEl.addEventListener('click', () => {
+    if(!resetConfirmState){
+      resetConfirmState = true;
+      resetDataBtnEl.textContent = 'Confirm Reset?';
+      resetDataBtnEl.style.background = '#dc2626';
+      clearTimeout(resetConfirmTimer);
+      resetConfirmTimer = setTimeout(() => {
+        resetConfirmState = false;
+        resetDataBtnEl.textContent = 'Reset Data';
+        resetDataBtnEl.style.background = '';
+      }, 3500);
+      return;
+    }
+    resetConfirmState = false;
+    resetDataBtnEl.textContent = 'Reset Data';
+    resetDataBtnEl.style.background = '';
+    state = normalizeState({});
+    if(currentUser && currentUser.isDemo){
+      try { localStorage.removeItem('studyflow.demo_state'); } catch(e){}
+    }
+    applyTheme('default');
+    pauseTimer();
+    timer.elapsed = 0; timer.sessionXp = 0; timer.sessionCoins = 0;
+    timer.direction = 'up'; timer.mode = 'focus';
+    populateSubjects();
+    syncTimerTotal();
+    updateTimerUI();
+    exitFocusMode();
+    exitFullscreen();
+    document.getElementById('modalBackdrop').classList.remove('open');
+    renderAll();
+    saveState();
+    if(currentUser && !currentUser.isDemo) pushStateToCloud();
+    toast('◌', 'Data Reset', 'All progress reset to clean defaults.');
+  });
+}
 
 document.getElementById('authTabSignin').addEventListener('click',()=>switchAuthTab('signin'));
 document.getElementById('authTabSignup').addEventListener('click',()=>switchAuthTab('signup'));
 document.getElementById('signinForm').addEventListener('submit', handleSignIn);
 document.getElementById('signupForm').addEventListener('submit', handleSignUp);
 document.getElementById('userChip').addEventListener('click',()=>{
-  if(currentUser) document.querySelector('.dock-btn[data-view="profile"]').click();
+  if(currentUser && currentUser.isDemo){
+    // When in test mode, clicking user chip takes them to profile to view or switch account
+    document.querySelector('.dock-btn[data-view="profile"]').click();
+  } else if(currentUser){
+    document.querySelector('.dock-btn[data-view="profile"]').click();
+  } else {
+    showAuthGate();
+  }
 });
 document.getElementById('accountSignOutBtn').addEventListener('click', handleSignOut);
 document.getElementById('accountSyncBtn').addEventListener('click', async ()=>{
@@ -6959,12 +7483,58 @@ function initJournalEventListeners(){
 }
 
 
+
+  // Launch Test Mode from Auth Gate
+  const demoBtn = document.getElementById('launchDemoAccountBtn');
+  if(demoBtn) demoBtn.addEventListener('click', () => launchDemoAccount(true));
+
+  // Reload Test Account from Settings
+  const setTestBtn = document.getElementById('settingsTestAccountBtn');
+  if(setTestBtn) setTestBtn.addEventListener('click', () => {
+    document.getElementById('modalBackdrop').classList.remove('open');
+    launchDemoAccount(true);
+  });
+
+  // Exit Test Mode from Topbar
+  const topExitBtn = document.getElementById('exitDemoTopBtn');
+  if(topExitBtn) topExitBtn.addEventListener('click', exitTestModeAndSignIn);
+
+  // Exit Test Mode from Settings
+  const setExitBtn = document.getElementById('settingsExitDemoBtn');
+  if(setExitBtn) setExitBtn.addEventListener('click', exitTestModeAndSignIn);
+
+  // Exit Test Mode from Profile
+  const profExitBtn = document.getElementById('profileExitDemoBtn');
+  if(profExitBtn) profExitBtn.addEventListener('click', exitTestModeAndSignIn);
+
+  // Load Test Mode from Profile
+  const profTestBtn = document.getElementById('accountLoadTestBtn');
+  if(profTestBtn) profTestBtn.addEventListener('click', () => {
+    if(confirm('Switch to test mode with all features unlocked?')){
+      launchDemoAccount(true);
+    }
+  });
+
+
 (async function init(){
   populateSubjects();
   syncTimerTotal();
   updateTimerUI();
   drawWheel();
   plannerStaticInit();
+  
+  // Wheel Multiplier Pills & Custom Input
+  document.querySelectorAll('#wheelMultiplierPills [data-wheel-mult]').forEach(pill => {
+    pill.addEventListener('click', () => setWheelMultiplier(pill.dataset.wheelMult));
+  });
+  const customMultInp = document.getElementById('wheelCustomMultInput');
+  if(customMultInp){
+    customMultInp.addEventListener('input', () => {
+      const val = parseInt(customMultInp.value, 10);
+      if(!isNaN(val) && val >= 1) setWheelMultiplier(val);
+    });
+  }
+
   initJournalEventListeners();
   setMinigamesTab(state.minigamesTab || 'gamble');
   setExtraTab(state.extraTab || 'shop');
