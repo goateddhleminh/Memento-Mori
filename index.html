@@ -23,7 +23,12 @@
 .mark-direct-input{width:105px;font-family:var(--mono);font-size:26px;font-weight:800;color:#fff;background:rgba(255,255,255,.08);border:1.5px solid var(--glass-border-2);border-radius:10px;padding:3px 10px;text-align:right;outline:none;transition:border-color .18s,box-shadow .18s;line-height:1.1}
 .mark-direct-input:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.2);background:rgba(255,255,255,.14);color:#fff}
 [data-theme="white"] .mark-direct-input{background:#f1f5f9!important;color:#09090b!important;border-color:#cbd5e1!important}
-[data-theme="white"] .mark-direct-input:focus{border-color:#0284c7!important;box-shadow:0 0 0 3px rgba(2,132,199,.2)!important;background:#fff!important}</style>
+[data-theme="white"] .mark-direct-input:focus{border-color:#0284c7!important;box-shadow:0 0 0 3px rgba(2,132,199,.2)!important;background:#fff!important}
+.reorder-btn{width:26px;height:26px;border-radius:8px;border:1px solid var(--glass-border);background:rgba(255,255,255,.05);color:var(--text-2);font-size:10.5px;line-height:1;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;transition:all .18s var(--ease);flex-shrink:0;padding:0}
+.reorder-btn:hover:not(:disabled){background:rgba(255,255,255,.14);color:#fff;border-color:var(--glass-border-2);transform:scale(1.06)}
+.reorder-btn:disabled{opacity:.2;cursor:not-allowed;pointer-events:none}
+[data-theme="white"] .reorder-btn{background:#f1f5f9!important;color:#475569!important;border-color:#cbd5e1!important}
+[data-theme="white"] .reorder-btn:hover:not(:disabled){background:#e2e8f0!important;color:#09090b!important;border-color:#94a3b8!important}</style>
 </head>
 <body>
 <div class="bg-orbs" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div></div>
@@ -4073,6 +4078,31 @@ function renderSchedulePage(){
   restoreScheduleDrafts(_drafts.week);
 }
 let focusedResourceSubject = null;
+function moveResourceOrder(resId, direction){
+  if(!state.resources || !Array.isArray(state.resources)) return;
+  const resources = state.resources;
+  const currentRes = resources.find(r => r.id === resId);
+  if(!currentRes) return;
+  const subject = currentRes.subject;
+  const subResources = resources.filter(r => r.subject === subject);
+  const currentSubIdx = subResources.findIndex(r => r.id === resId);
+  if(currentSubIdx === -1) return;
+
+  const targetSubIdx = direction === 'up' ? currentSubIdx - 1 : currentSubIdx + 1;
+  if(targetSubIdx < 0 || targetSubIdx >= subResources.length) return;
+
+  const targetRes = subResources[targetSubIdx];
+  const idxA = resources.findIndex(r => r.id === currentRes.id);
+  const idxB = resources.findIndex(r => r.id === targetRes.id);
+  if(idxA !== -1 && idxB !== -1){
+    const tmp = resources[idxA];
+    resources[idxA] = resources[idxB];
+    resources[idxB] = tmp;
+    saveState();
+    renderResourcesPage();
+    toast('↕', 'Link reordered', currentRes.name);
+  }
+}
 function renderResourcesPage(){
   const topCard = document.getElementById('resTopManageCard');
   const linksSec = document.getElementById('resLinksSection');
@@ -4086,15 +4116,17 @@ function renderResourcesPage(){
     if(detailSec){
       detailSec.style.display = 'block';
       const sub = focusedResourceSubject;
-      const subLinks = allRes.filter(r => r.subject === sub).sort((a,b) => b.createdAt - a.createdAt);
+      const subLinks = allRes.filter(r => r.subject === sub);
       const custom = !DEFAULT_SUBJECTS.includes(sub);
       let linksContent = '';
       if(subLinks.length === 0){
         linksContent = '<div class="wd-empty" style="padding:24px 8px;color:var(--text-3)">No study resources saved for ' + escapeHtml(sub) + ' yet. Click "＋ Add Resource Link" above to add a Google Drive, Terabox, Notion, or web link!</div>';
       } else {
-        linksContent = subLinks.map(r => {
+        linksContent = subLinks.map((r, idx) => {
           const prov = getLinkProvider(r.url);
           const host = shortHost(r.url) || r.url;
+          const isFirst = idx === 0;
+          const isLast = idx === subLinks.length - 1;
           return '<div class="res-full-item-card">'
             + '<div class="rf-top">'
             + '<span class="rf-icon link" style="font-size:22px">' + prov.icon + '</span>'
@@ -4107,6 +4139,8 @@ function renderResourcesPage(){
             + '</div>'
             + '</div>'
             + '<div class="rf-actions">'
+            + '<button type="button" class="reorder-btn" data-res-move="up" data-res-id="' + r.id + '" title="Move link up"' + (isFirst ? ' disabled' : '') + '>▲</button>'
+            + '<button type="button" class="reorder-btn" data-res-move="down" data-res-id="' + r.id + '" title="Move link down"' + (isLast ? ' disabled' : '') + '>▼</button>'
             + '<a href="' + escapeHtml(r.url) + '" target="_blank" rel="noopener noreferrer" class="btn primary" style="padding:8px 14px;font-size:12px">↗ Open Link</a>'
             + '<button type="button" class="btn soft" data-copy-url="' + escapeHtml(r.url) + '" style="padding:8px 12px;font-size:12px" title="Copy link">📋 Copy Link</button>'
             + '<button type="button" class="pdel" data-res-del="' + r.id + '" title="Remove link">✕</button>'
@@ -4155,16 +4189,18 @@ function renderResourcesPage(){
     linkSubSel.innerHTML = subjects.map(s => '<option value="' + escapeHtml(s) + '">' + (icons[s] || '◆') + ' ' + escapeHtml(s) + '</option>').join('');
     if(curVal && subjects.includes(curVal)) linkSubSel.value = curVal;
   }
-  const links = allRes.sort((a, b) => b.createdAt - a.createdAt);
+  const links = allRes;
   if(linksBadge) linksBadge.textContent = links.length + ' link' + (links.length === 1 ? '' : 's');
   if(linksTotalBadge) linksTotalBadge.textContent = links.length;
   if(linksHost){
     linksHost.innerHTML = '<div class="res-grid">' + subjects.map(sub => {
       const subLinks = links.filter(r => r.subject === sub);
       const custom = !DEFAULT_SUBJECTS.includes(sub);
-      const body = subLinks.length ? subLinks.map(r => {
+      const body = subLinks.length ? subLinks.map((r, idx) => {
         const prov = getLinkProvider(r.url);
         const host = shortHost(r.url) || r.url;
+        const isFirst = idx === 0;
+        const isLast = idx === subLinks.length - 1;
         return '<div class="res-item" data-res-link-url="' + escapeHtml(r.url) + '" style="cursor:pointer" title="Click to open link · Or click subject folder header to view full title">'
           + '<div class="res-icon link">' + prov.icon + '</div>'
           + '<div class="res-info">'
@@ -4172,6 +4208,8 @@ function renderResourcesPage(){
           + '<div class="res-url"><span class="rf-provider-badge ' + prov.badgeCls + '" style="margin-right:6px;font-size:9px;padding:1px 5px">' + escapeHtml(prov.name) + '</span>' + escapeHtml(host) + '</div>'
           + '</div>'
           + '<div class="res-actions">'
+          + '<button type="button" class="reorder-btn" data-res-move="up" data-res-id="' + r.id + '" title="Move link up"' + (isFirst ? ' disabled' : '') + '>▲</button>'
+          + '<button type="button" class="reorder-btn" data-res-move="down" data-res-id="' + r.id + '" title="Move link down"' + (isLast ? ' disabled' : '') + '>▼</button>'
           + '<a class="res-open" href="' + escapeHtml(r.url) + '" target="_blank" rel="noopener noreferrer" title="Open in new tab">↗</a>'
           + '<button type="button" class="res-del" data-res-del="' + r.id + '" title="Remove link">✕</button>'
           + '</div>'
@@ -4208,7 +4246,7 @@ function addWebLinkFromInput(){
   const name = (nameInp && nameInp.value ? nameInp.value.trim() : '') || prov.name || shortHost(url) || 'Study Resource';
   const subject = (subSel && subSel.value) ? subSel.value : 'General';
   state.resources = state.resources || [];
-  state.resources.push({
+  state.resources.unshift({
     id: uid('rs'),
     subject: subject,
     name: name.slice(0, 120),
@@ -4301,7 +4339,7 @@ function saveResourceFromModal(){
   const prov = getLinkProvider(url);
   const finalName = (nameRaw || prov.name || shortHost(url) || 'Resource').slice(0, 120);
   state.resources = state.resources || [];
-  state.resources.push({
+  state.resources.unshift({
     id: uid('rs'),
     subject: subject,
     name: finalName,
@@ -4610,6 +4648,13 @@ function plannerStaticInit(){
       }
       return;
     }
+    const resMove = t.closest('[data-res-move]');
+    if(resMove){
+      const id = resMove.dataset.resId;
+      const dir = resMove.dataset.resMove;
+      moveResourceOrder(id, dir);
+      return;
+    }
     const resDirect = t.closest('[data-res-direct]');
     if(resDirect){
       const act = resDirect.dataset.resDirect;
@@ -4622,7 +4667,7 @@ function plannerStaticInit(){
       return;
     }
     const linkCard = t.closest('[data-res-link-url]');
-    if(linkCard && !t.closest('[data-res-del]') && !t.closest('.res-open')){
+    if(linkCard && !t.closest('[data-res-del]') && !t.closest('.res-open') && !t.closest('[data-res-move]') && !t.closest('.reorder-btn')){
       window.open(linkCard.dataset.resLinkUrl, '_blank', 'noopener,noreferrer');
       return;
     }
@@ -5047,6 +5092,31 @@ function renderJournal(){
   if(sec === 'tests') renderTestHistory();
   else renderLifeSection();
 }
+function moveTestOrder(testId, direction){
+  if(!state.journal || !Array.isArray(state.journal.tests)) return;
+  const tests = state.journal.tests;
+  const currentTest = tests.find(t => t.id === testId);
+  if(!currentTest) return;
+  const subject = currentTest.subject;
+  const subTests = tests.filter(t => t.subject === subject);
+  const currentSubIdx = subTests.findIndex(t => t.id === testId);
+  if(currentSubIdx === -1) return;
+
+  const targetSubIdx = direction === 'up' ? currentSubIdx - 1 : currentSubIdx + 1;
+  if(targetSubIdx < 0 || targetSubIdx >= subTests.length) return;
+
+  const targetTest = subTests[targetSubIdx];
+  const idxA = tests.findIndex(t => t.id === currentTest.id);
+  const idxB = tests.findIndex(t => t.id === targetTest.id);
+  if(idxA !== -1 && idxB !== -1){
+    const tmp = tests[idxA];
+    tests[idxA] = tests[idxB];
+    tests[idxB] = tmp;
+    saveState();
+    renderTestHistory();
+    toast('↕', 'Test reordered', currentTest.title);
+  }
+}
 function renderTestHistory(){
   const j = state.journal || { testSubjects:['Mathematics','Physics','English','Chemistry'], tests:[] };
   const subjects = j.testSubjects || ['General'];
@@ -5073,7 +5143,7 @@ function renderTestHistory(){
     return;
   }
   container.innerHTML = subjects.map(sub => {
-    const subTests = tests.filter(t => t.subject === sub).sort((a, b) => (b.date || 0) - (a.date || 0));
+    const subTests = tests.filter(t => t.subject === sub);
     const count = subTests.length;
     const subAvg = count > 0 ? (subTests.reduce((a, b) => a + (Number(b.mark) || 0), 0) / count).toFixed(1) : null;
     const metaTxt = count + ' test' + (count === 1 ? '' : 's') + (subAvg !== null ? ' · Avg: ' + subAvg + '/10' : '');
@@ -5081,7 +5151,7 @@ function renderTestHistory(){
     if(subTests.length === 0){
       testsHtml = '<div class="wd-empty" style="padding:16px 4px;color:var(--text-3)">No test history recorded for ' + escapeHtml(sub) + ' yet. Click "+ Log Test" to record marks, mistakes, and papers!</div>';
     } else {
-      testsHtml = subTests.map(t => {
+      testsHtml = subTests.map((t, idx) => {
         const markVal = Number(t.mark) || 0;
         const badgeCls = getMarkBadgeClass(markVal);
         const formattedMark = (Math.round(markVal * 100) / 100).toString();
@@ -5094,6 +5164,8 @@ function renderTestHistory(){
         const mistakesHtml = t.mistakes && t.mistakes.trim()
           ? '<div class="test-mistakes-box"><b>Mistakes &amp; Key Learnings:</b> ' + escapeHtml(t.mistakes) + '</div>'
           : '';
+        const isFirst = idx === 0;
+        const isLast = idx === subTests.length - 1;
         return '<div class="test-item" data-test-id="' + t.id + '">'
           + '<div class="test-item-top">'
           + '<div class="test-item-title-box">'
@@ -5102,6 +5174,8 @@ function renderTestHistory(){
           + '</div>'
           + '<span class="test-item-date">' + dateStr + '</span>'
           + '<div class="test-item-actions">'
+          + '<button type="button" class="reorder-btn" data-move-test="up" data-test-id="' + t.id + '" title="Move test up"' + (isFirst ? ' disabled' : '') + '>▲</button>'
+          + '<button type="button" class="reorder-btn" data-move-test="down" data-test-id="' + t.id + '" title="Move test down"' + (isLast ? ' disabled' : '') + '>▼</button>'
           + '<button type="button" class="pdel" data-edit-test="' + t.id + '" title="Edit test">✎</button>'
           + '<button type="button" class="pdel" data-del-test="' + t.id + '" title="Delete test">✕</button>'
           + '</div>'
@@ -5565,6 +5639,13 @@ function initJournalEventListeners(){
           renderTestHistory();
           toast('✕', 'Test entry deleted', '');
         }
+        return;
+      }
+      const moveTestBtn = t.closest('[data-move-test]');
+      if(moveTestBtn){
+        const id = moveTestBtn.dataset.testId;
+        const dir = moveTestBtn.dataset.moveTest;
+        moveTestOrder(id, dir);
         return;
       }
 
