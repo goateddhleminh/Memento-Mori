@@ -19,7 +19,11 @@
 .rf-provider-badge.drive{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
 .rf-provider-badge.terabox{background:rgba(56,189,248,.15);color:#38bdf8;border:1px solid rgba(56,189,248,.3)}
 .rf-provider-badge.notion{background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.3)}
-.rf-provider-badge.web{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}</style>
+.rf-provider-badge.web{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.mark-direct-input{width:105px;font-family:var(--mono);font-size:26px;font-weight:800;color:#fff;background:rgba(255,255,255,.08);border:1.5px solid var(--glass-border-2);border-radius:10px;padding:3px 10px;text-align:right;outline:none;transition:border-color .18s,box-shadow .18s;line-height:1.1}
+.mark-direct-input:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.2);background:rgba(255,255,255,.14);color:#fff}
+[data-theme="white"] .mark-direct-input{background:#f1f5f9!important;color:#09090b!important;border-color:#cbd5e1!important}
+[data-theme="white"] .mark-direct-input:focus{border-color:#0284c7!important;box-shadow:0 0 0 3px rgba(2,132,199,.2)!important;background:#fff!important}</style>
 </head>
 <body>
 <div class="bg-orbs" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div></div>
@@ -973,12 +977,12 @@
       <input type="text" id="testTitleInput" maxlength="120" placeholder="e.g. Midterm Exam, Unit 4 Quiz, Mock Test 2">
     </div>
     <div class="field">
-      <label>Mark Measure (Select 0 → 10)</label>
+      <label>Mark Measure (Type score or select 0 → 10)</label>
       <div class="mark-measure-wrapper">
         <div class="mark-measure-top">
-          <span class="mark-measure-lbl">Selected Mark</span>
+          <span class="mark-measure-lbl">Score (Type directly or choose)</span>
           <div class="mark-measure-score-display">
-            <span class="mark-measure-score-val" id="testMarkDisplayVal">8.5</span>
+            <input type="text" id="testMarkInput" class="mark-direct-input" maxlength="5" value="8.5" placeholder="8.5" autocomplete="off" spellcheck="false" title="Enter score directly (e.g. 7.8, 0.8, 0,3)">
             <span class="mark-measure-score-max">/ 10</span>
           </div>
         </div>
@@ -997,12 +1001,13 @@
           <button type="button" class="mark-pill-btn" data-mark="10">10</button>
         </div>
         <div style="margin-top:6px">
-          <input type="range" class="mark-slider" id="testMarkSlider" min="0" max="10" step="0.5" value="8.5">
+          <input type="range" class="mark-slider" id="testMarkSlider" min="0" max="10" step="0.1" value="8.5">
           <div class="mark-half-step-row">
             <span>0 (Lowest)</span>
-            <span>Slide or click buttons above</span>
+            <span>Type score above, slide bar, or click presets</span>
             <span>10 (Perfect)</span>
           </div>
+          <div class="res-upload-hint" style="margin-top:6px">Tip: You can type any custom point value directly (e.g. <b>7.8</b>, <b>0.8</b>, <b>0.3</b> or comma <b>0,8</b>).</div>
         </div>
       </div>
     </div>
@@ -1250,8 +1255,8 @@ function normalizeState(raw){
     .map(s => cleanText(s, 40)).filter(Boolean);
   if(!tSubs.length) tSubs.push('General');
   const tests = (Array.isArray(rawJ.tests) ? rawJ.tests : []).map((t, i) => {
-    const rawMark = typeof t.mark === 'number' ? t.mark : parseFloat(t.mark);
-    const markVal = !isNaN(rawMark) ? Math.max(0, Math.min(10, Math.round(rawMark * 10) / 10)) : 8.5;
+    const rawMark = typeof t.mark === 'number' ? t.mark : parseFloat(typeof t.mark === 'string' ? t.mark.replace(',', '.') : t.mark);
+    const markVal = !isNaN(rawMark) ? Math.max(0, Math.min(10, Math.round(rawMark * 100) / 100)) : 8.5;
     return {
       id: cleanId(t.id, 'tst_' + i + '_' + Math.random().toString(36).slice(2, 8)),
       subject: cleanText(t.subject, 40) || tSubs[0],
@@ -5001,16 +5006,33 @@ function getMarkBadgeClass(m){
   if(m >= 5.0) return 'mark-mid';
   return 'mark-low';
 }
-function setTestMarkVal(val){
-  val = Math.max(0, Math.min(10, Math.round(parseFloat(val) * 10) / 10));
-  activeTestMark = val;
+function parseMarkString(raw){
+  if(raw == null) return null;
+  const s = String(raw).trim().replace(',', '.');
+  if(!s) return null;
+  const num = parseFloat(s);
+  if(isNaN(num)) return null;
+  return Math.max(0, Math.min(10, Math.round(num * 100) / 100));
+}
+function setTestMarkVal(val, fromInput = false){
+  const parsed = parseMarkString(val);
+  if(parsed !== null){
+    activeTestMark = parsed;
+  }
+  const currentVal = activeTestMark != null ? activeTestMark : 8.5;
   const disp = document.getElementById('testMarkDisplayVal');
-  if(disp) disp.textContent = val.toFixed(1);
+  if(disp) disp.textContent = (Math.round(currentVal * 100) / 100).toString();
+  const inp = document.getElementById('testMarkInput');
+  if(inp && !fromInput){
+    inp.value = (Math.round(currentVal * 100) / 100).toString();
+  }
   const slider = document.getElementById('testMarkSlider');
-  if(slider && parseFloat(slider.value) !== val) slider.value = val;
+  if(slider && Math.abs(parseFloat(slider.value) - currentVal) > 0.01){
+    slider.value = currentVal;
+  }
   document.querySelectorAll('.mark-pill-btn').forEach(btn => {
     const bVal = parseFloat(btn.dataset.mark);
-    btn.classList.toggle('active', Math.abs(bVal - val) < 0.1);
+    btn.classList.toggle('active', Math.abs(bVal - currentVal) < 0.05);
   });
 }
 function renderJournal(){
@@ -5034,7 +5056,7 @@ function renderTestHistory(){
   let best = '—';
   if(total > 0){
     const maxMark = Math.max(...tests.map(t => Number(t.mark) || 0));
-    best = maxMark.toFixed(1) + ' / 10';
+    best = (Math.round(maxMark * 100) / 100) + ' / 10';
   }
   const totEl = document.getElementById('journalTotalTests');
   if(totEl) totEl.textContent = total;
@@ -5062,6 +5084,7 @@ function renderTestHistory(){
       testsHtml = subTests.map(t => {
         const markVal = Number(t.mark) || 0;
         const badgeCls = getMarkBadgeClass(markVal);
+        const formattedMark = (Math.round(markVal * 100) / 100).toString();
         const dateStr = relativeTime(t.date);
         let attachmentHtml = '';
         if(t.url){
@@ -5074,7 +5097,7 @@ function renderTestHistory(){
         return '<div class="test-item" data-test-id="' + t.id + '">'
           + '<div class="test-item-top">'
           + '<div class="test-item-title-box">'
-          + '<span class="test-mark-badge ' + badgeCls + '">' + markVal.toFixed(1) + ' / 10</span>'
+          + '<span class="test-mark-badge ' + badgeCls + '">' + formattedMark + ' / 10</span>'
           + '<span class="test-item-title" title="' + escapeHtml(t.title) + '">' + escapeHtml(t.title) + '</span>'
           + '</div>'
           + '<span class="test-item-date">' + dateStr + '</span>'
@@ -5147,7 +5170,10 @@ function saveTestModal(){
   const subject = subSel ? subSel.value : 'General';
   const title = (document.getElementById('testTitleInput').value || '').trim() || 'Test ' + new Date().toLocaleDateString();
   const mistakes = (document.getElementById('testMistakesInput').value || '').trim();
-  const mark = activeTestMark;
+  const rawInputMark = document.getElementById('testMarkInput') ? document.getElementById('testMarkInput').value : '';
+  const parsedInputMark = parseMarkString(rawInputMark);
+  const mark = parsedInputMark !== null ? parsedInputMark : (activeTestMark != null ? activeTestMark : 8.5);
+  activeTestMark = mark;
   const rawUrl = (document.getElementById('testUrlInput') ? document.getElementById('testUrlInput').value : '').trim();
   const url = normUrl(rawUrl);
   state.journal = state.journal || { testSubjects:['General'], tests:[] };
@@ -5429,6 +5455,23 @@ function initJournalEventListeners(){
   });
   const markSlider = document.getElementById('testMarkSlider');
   if(markSlider) markSlider.addEventListener('input', () => setTestMarkVal(markSlider.value));
+  const markInput = document.getElementById('testMarkInput');
+  if(markInput){
+    markInput.addEventListener('input', () => {
+      const p = parseMarkString(markInput.value);
+      if(p !== null) setTestMarkVal(p, true);
+    });
+    markInput.addEventListener('blur', () => {
+      const p = parseMarkString(markInput.value);
+      setTestMarkVal(p !== null ? p : activeTestMark, false);
+    });
+    markInput.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        markInput.blur();
+      }
+    });
+  }
 
   const testSaveBtn = document.getElementById('testModalSave');
   if(testSaveBtn) testSaveBtn.addEventListener('click', saveTestModal);
