@@ -1,4 +1,4 @@
-# ⚡ In Pursuit Of Greatness — Mastery Through Disciplined Focus
+# ⚡ Memento Mori — Mastery Through Disciplined Focus
 
 A modern, self-contained single-file study tracking and gamified productivity web application. Featuring deep-work focus timers, a comprehensive planner, document & link resources, a dual-section academic and life journal, reward vault, minigames, and cloud synchronization — all contained in a single `index.html` with zero build steps or package dependencies.
 
