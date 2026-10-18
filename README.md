@@ -27,14 +27,15 @@ The dock at the top of the interface provides quick access to 9 dedicated sectio
 ## ✨ Feature Deep Dive
 
 ### ⏱ Focus Timer & Study Goals
-- **Adaptive Timer Engine** — Supports count-up (stopwatch) and countdown (Pomodoro) study sessions with visual circular progress ring.
+- **Drift-Free Wall-Clock Engine** — Uses timestamp delta calculations to guarantee exact, continuous time tracking even when browser tabs are throttled in the background or mobile screens sleep.
+- **Adaptive Timer Modes** — Supports count-up (stopwatch) and countdown (Pomodoro / rest) study sessions with visual circular progress ring.
 - **Daily Target Goal** — Set custom daily targets (e.g., 2h 00m) with automatic progress percentage tracking on both the timer and dashboard.
 - **Fullscreen Immersive Mode** — Distraction-free full-viewport overlay optimized for low compositor overhead on mobile and desktop.
 - **Vietnamese GMT+7 Timeline** — Day roll-overs, streaks, and calendar-based progress consistently compute against the Ho Chi Minh City timezone (GMT+7).
 
 ### 🗂 Planner & Milestone Rewards
-- **To-Do List** — Create, prioritize (High, Medium, Low), filter, and manage tasks across 5 distinct states: *To Do*, *In Progress*, *Later*, *Blocked*, and *Done*.
-- **Weekly Schedule** — 7-day calendar (Monday through Sunday) with per-day task checklists and auto-saving free-text notes.
+- **To-Do List** — Create, prioritize (High, Medium, Low), filter, and manage tasks across 5 distinct states: *To Do*, *In Progress*, *Later*, *Blocked*, and *Done*. Includes 1-click **Clear Completed** archiving.
+- **Weekly Schedule** — 7-day calendar (Monday through Sunday) with automatic Monday rollover, per-day task checklists, and auto-saving free-text notes.
 - **Instant Stacking Rewards**:
   | Action | Study Coins | Spin Tokens | Focus XP |
   | :--- | :---: | :---: | :---: |
@@ -43,10 +44,10 @@ The dock at the top of the interface provides quick access to 9 dedicated sectio
   | Finish 100% of a day's tasks | — | +2 🎡 | +500 ✦ |
   | Finish 100% of the entire week | +1,000 🪙 | +5 🎡 | +1,000 ✦ |
 
-### 📁 Study Resources & Full Detail View
+### 📁 Study Resources & Cloud Drives
 - **Subject Organization** — Create custom academic subjects (e.g., Mathematics, Computer Science, Physics).
-- **Links & Files** — Attach external web resources (with automatic protocol normalization) and local PDF documents.
-- **Full Subject Detail View** — Click into any subject folder to open an untruncated view displaying complete resource titles, full URLs, file size metadata, and direct in-browser reader or download actions.
+- **Cloud Links & Drives** — Attach Google Drive files/folders, Terabox links, Notion pages, and study websites with intelligent cloud provider badges (`📂 Google Drive`, `📦 Terabox`, `📝 Notion`, `📦 Dropbox`, `🔗 Web Link`).
+- **Full Subject Detail View** — Click into any subject folder to open an untruncated view displaying complete resource titles, full URLs, 1-click open link `↗`, and copy link `📋` actions.
 
 ### 📖 Journal: Test History & Life Notes
 The **Journal** tab consolidates academic performance analysis and personal reflection into two clean sub-sections:
@@ -55,13 +56,14 @@ The **Journal** tab consolidates academic performance analysis and personal refl
 - **Subject Organization** — Group past exams, quizzes, and mock tests by subject.
 - **0–10 Mark Measure** — Assign test scores using a dedicated 0.0 to 10.0 numeric measure slider with quick-select pill presets (`5.0`, `7.0`, `8.0`, `9.0`, `10.0`). The test score is displayed prominently next to the title in folder listings.
 - **Mistake & Review Tracking** — Record errors, missed steps, and lessons learned for systematic exam reviews.
-- **File / Web Attachment** — Attach test papers, online solutions, or PDF rubrics.
+- **Cloud Exam Link** — Connect test papers, online solutions, Google Drive folders, or Terabox scoring rubrics with quick-open pills.
 - **Chronological Sorting** — Tests within each subject are sorted from newest to oldest.
 
 #### 2. 📝 Life & Thoughts
 - **Folder Organization** — Categorize entries into custom folders (e.g., *Reflections*, *Mindset*, *Personal*, *Ideas*).
+- **External Note Links** — Link external Notion pages, Google Docs, or Terabox documents directly to your reflections.
 - **Categorical Tags** — Tag notes with visual markers (🌟 Reflection, 💡 Idea, 🎯 Goal, 🧠 Mindset, 🌿 Personal, ⚡ Productivity).
-- **Search & Reader Modal** — Instant keyword search and distraction-free modal reader with delete options.
+- **Search & Reader Modal** — Instant keyword search and distraction-free modal reader with direct external link launcher and delete options.
 
 ### 🎲 Minigames
 Consolidates all chance and token entertainment into one tab:
@@ -78,7 +80,7 @@ Consolidates progression features into three sub-sections:
 ### 👤 Profile & Analytics
 - **Balanced 2-Column Layout** — Left sidebar holds Theme Swatches, Avatar Border selector, and Account cloud management; right column displays the "Your Journey" metrics cards and editable biography.
 - **Customizable Identity** — Choose from 40+ emoji avatars, custom display names, personal motto quotes, and unlockable titles.
-- **Full History & Stats** — 14-day study duration bars, subject time breakdown, and comprehensive chronological session logs.
+- **Full History & Stats** — 14-day study duration bars, subject time breakdown, and paginated chronological session logs optimized for multi-year usage without DOM lag.
 
 ### ⚡ Test Mode (Instant Full Unlock)
 For rapid evaluation and UI testing, the website includes a built-in demo environment:
@@ -99,7 +101,7 @@ For rapid evaluation and UI testing, the website includes a built-in demo enviro
 ## 🛠 Tech Stack
 
 - **Zero Build Tools** — Pure HTML5, CSS3, and modern ES6+ JavaScript in a single self-contained `index.html`.
-- **Supabase Cloud Sync** — Optional cloud persistence for accounts using `supabase-js` via CDN.
+- **Supabase Cloud Sync** — Optional cloud persistence with multi-device conflict detection, 60s session auto-sync, and automatic token refresh.
 - **Canvas API** — Smooth 60 FPS animation for the Lucky Wheel.
 - **Web Audio API** — Synthesized audio chimes for session completion and minigame rolls.
 
