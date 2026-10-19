@@ -28,7 +28,30 @@
 .reorder-btn:hover:not(:disabled){background:rgba(255,255,255,.14);color:#fff;border-color:var(--glass-border-2);transform:scale(1.06)}
 .reorder-btn:disabled{opacity:.2;cursor:not-allowed;pointer-events:none}
 [data-theme="white"] .reorder-btn{background:#f1f5f9!important;color:#475569!important;border-color:#cbd5e1!important}
-[data-theme="white"] .reorder-btn:hover:not(:disabled){background:#e2e8f0!important;color:#09090b!important;border-color:#94a3b8!important}</style>
+[data-theme="white"] .reorder-btn:hover:not(:disabled){background:#e2e8f0!important;color:#09090b!important;border-color:#94a3b8!important}
+.planner-date-wrap{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:var(--text-2);font-size:12px;font-weight:600}
+.pdate-label{font-size:11px;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.planner-date-input{font-family:inherit;font-size:12px;font-weight:600;padding:6px 8px;border-radius:8px;background:rgba(0,0,0,.35);border:1px solid var(--glass-border);color:#fff;outline:none;cursor:pointer;color-scheme:dark}
+.planner-date-input:focus{border-color:var(--glass-border-2);background:rgba(0,0,0,.55)}
+.todo-dl-badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;letter-spacing:.02em;line-height:1.4}
+.todo-dl-badge.dl-overdue{background:rgba(248,113,113,.16);color:#fca5a5;border:1px solid rgba(248,113,113,.38)}
+.todo-dl-badge.dl-today{background:rgba(251,146,60,.18);color:#fdba74;border:1px solid rgba(251,146,60,.42)}
+.todo-dl-badge.dl-soon{background:rgba(56,189,248,.15);color:#7dd3fc;border:1px solid rgba(56,189,248,.32)}
+.todo-dl-badge.dl-future{background:rgba(255,255,255,.07);color:var(--text-2);border:1px solid var(--glass-border)}
+.todo-dl-badge.dl-done{background:rgba(255,255,255,.04);color:var(--text-3);border:1px solid rgba(255,255,255,.06)}
+.pst-date{font-family:inherit;font-size:11.5px;font-weight:600;padding:5px 8px;border-radius:9px;border:1px solid var(--glass-border);background:rgba(255,255,255,.05);color:var(--text-2);outline:none;cursor:pointer;color-scheme:dark;transition:all .18s var(--ease);height:29px;box-sizing:border-box}
+.pst-date:hover{background:rgba(255,255,255,.1);color:#fff;border-color:var(--glass-border-2)}
+.pst-date:focus{border-color:#38bdf8;box-shadow:0 0 0 2px rgba(56,189,248,.2);background:rgba(255,255,255,.12);color:#fff}
+[data-theme="white"] .planner-date-wrap{background:#f1f5f9!important;border-color:#cbd5e1!important;color:#475569!important}
+[data-theme="white"] .planner-date-input{background:#fff!important;border-color:#cbd5e1!important;color:#09090b!important;color-scheme:light}
+[data-theme="white"] .todo-dl-badge.dl-overdue{background:#fee2e2!important;color:#b91c1c!important;border-color:#fca5a5!important}
+[data-theme="white"] .todo-dl-badge.dl-today{background:#ffedd5!important;color:#c2410c!important;border-color:#fdba74!important}
+[data-theme="white"] .todo-dl-badge.dl-soon{background:#e0f2fe!important;color:#0369a1!important;border-color:#7dd3fc!important}
+[data-theme="white"] .todo-dl-badge.dl-future{background:#f1f5f9!important;color:#475569!important;border-color:#cbd5e1!important}
+[data-theme="white"] .todo-dl-badge.dl-done{background:#f8fafc!important;color:#94a3b8!important;border-color:#e2e8f0!important}
+[data-theme="white"] .pst-date{background:#f8fafc!important;border-color:#cbd5e1!important;color:#334155!important;color-scheme:light}
+[data-theme="white"] .pst-date:hover{background:#f1f5f9!important;color:#09090b!important}
+[data-theme="white"] .pst-date:focus{border-color:#0284c7!important;background:#fff!important}</style>
 </head>
 <body>
 <div class="bg-orbs" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div></div>
@@ -201,8 +224,8 @@
             <div class="card planner-card">
               <div class="planner-head">
                 <div>
-                  <h3>Today's To-Do List</h3>
-                  <div class="ph-sub" id="todoDateLabel">Plan your day and tick tasks off as you go.</div>
+                  <h3>To-Do List</h3>
+                  <div class="ph-sub" id="todoDateLabel">Track your overall tasks, set deadlines, and achieve your goals.</div>
                 </div>
                 <div class="planner-head-actions">
                   <div class="planner-filter">
@@ -215,7 +238,11 @@
                 </div>
               </div>
               <div class="planner-form">
-                <div class="planner-input-wrap"><input type="text" id="todoInput" maxlength="160" placeholder="What do you need to get done today?" autocomplete="off"></div>
+                <div class="planner-input-wrap"><input type="text" id="todoInput" maxlength="160" placeholder="What do you need to get done?" autocomplete="off"></div>
+                <div class="planner-date-wrap" title="Task deadline (optional)">
+                  <span class="pdate-label">📅 Deadline:</span>
+                  <input type="date" class="planner-date-input" id="todoDeadlineInput" title="Deadline / Due Date">
+                </div>
                 <select class="planner-select" id="todoPriorityInput" title="Priority">
                   <option value="high">🔴 High</option>
                   <option value="medium" selected>🟠 Medium</option>
@@ -1213,6 +1240,7 @@ function normalizeState(raw){
     text: cleanText(t.text, 160),
     priority: P_PRI.includes(t.priority) ? t.priority : 'medium',
     status: P_ST.includes(t.status) ? t.status : 'todo',
+    deadline: cleanText(t.deadline, 40),
     createdAt: Number(t.createdAt) || Date.now(),
     completedAt: t.status === 'done' ? (Number(t.completedAt) || Date.now()) : null
   }));
@@ -1681,9 +1709,9 @@ function getUnlockedDemoState(){
     profileBorder: 'rainbow',
     ownedProfileBorders: ['default', 'minimal', 'glow', 'gold', 'silver', 'neon', 'rainbow', 'double'], // ALL borders unlocked
     todos: [
-      { id: 'td_demo_1', text: 'Review Calculus chapter 4 integration techniques', priority: 'high', status: 'progress', createdAt: now - 3600000, completedAt: null },
-      { id: 'td_demo_2', text: 'Practice Physics kinematics problems', priority: 'medium', status: 'todo', createdAt: now - 7200000, completedAt: null },
-      { id: 'td_demo_3', text: 'Memorize 30 advanced SAT vocabulary words', priority: 'low', status: 'done', createdAt: now - 10800000, completedAt: now - 1800000 }
+      { id: 'td_demo_1', text: 'Review Calculus chapter 4 integration techniques', priority: 'high', status: 'progress', deadline: new Date(now + 86400000).toISOString().slice(0, 10), createdAt: now - 3600000, completedAt: null },
+      { id: 'td_demo_2', text: 'Practice Physics kinematics problems', priority: 'medium', status: 'todo', deadline: new Date(now + 259200000).toISOString().slice(0, 10), createdAt: now - 7200000, completedAt: null },
+      { id: 'td_demo_3', text: 'Memorize 30 advanced SAT vocabulary words', priority: 'low', status: 'done', deadline: '', createdAt: now - 10800000, completedAt: now - 1800000 }
     ],
     weekPlan: {
       0: { note: 'Math focus day', tasks: [{ id: 'w1', text: 'Calculus problem set 1-15', done: true, createdAt: now - 86400000 }] },
@@ -3913,11 +3941,87 @@ function weekFullyDone(){
   if(e.total <= 0 || e.done !== e.total) return false;
   return WEEK_DAYS.every((n, i) => !!(state.weekPlan[i] && state.weekPlan[i].tasks.length));
 }
-function todoSortList(arr){  return arr.slice().sort((a, b) => {
+function formatTaskDeadline(deadlineStr, isDone){
+  if(!deadlineStr) return null;
+  const parts = String(deadlineStr).trim().split('-');
+  if(parts.length !== 3) return null;
+  const y = parseInt(parts[0], 10);
+  const m = parseInt(parts[1], 10) - 1;
+  const d = parseInt(parts[2], 10);
+  const dl = new Date(y, m, d);
+  if(isNaN(dl.getTime())) return null;
+
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const dlStart = dl.getTime();
+  const diffDays = Math.round((dlStart - todayStart) / (1000 * 60 * 60 * 24));
+  const dateText = dl.toLocaleDateString([], { month: 'short', day: 'numeric', year: dl.getFullYear() !== now.getFullYear() ? 'numeric' : undefined });
+
+  if(isDone){
+    return {
+      cls: 'dl-done',
+      text: '📅 Due ' + dateText,
+      title: 'Deadline was ' + dateText + ' (Completed)'
+    };
+  }
+  if(diffDays < 0){
+    const daysAgo = Math.abs(diffDays);
+    return {
+      cls: 'dl-overdue',
+      text: '🚨 Overdue (' + (daysAgo === 1 ? 'yesterday' : daysAgo + 'd ago') + ' · ' + dateText + ')',
+      title: 'Overdue! Deadline was ' + dateText
+    };
+  }
+  if(diffDays === 0){
+    return {
+      cls: 'dl-today',
+      text: '⚠️ Due Today (' + dateText + ')',
+      title: 'Deadline is today!'
+    };
+  }
+  if(diffDays === 1){
+    return {
+      cls: 'dl-soon',
+      text: '⏳ Due Tomorrow (' + dateText + ')',
+      title: 'Deadline is tomorrow'
+    };
+  }
+  if(diffDays <= 3){
+    return {
+      cls: 'dl-soon',
+      text: '⏳ Due in ' + diffDays + ' days (' + dateText + ')',
+      title: 'Deadline in ' + diffDays + ' days'
+    };
+  }
+  return {
+    cls: 'dl-future',
+    text: '📅 Due ' + dateText,
+    title: 'Deadline: ' + dateText
+  };
+}
+function todoSortList(arr){
+  const now = new Date();
+  const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  return arr.slice().sort((a, b) => {
     if((a.status === 'done') !== (b.status === 'done')) return a.status === 'done' ? 1 : -1;
     if(a.status === 'done' && b.status === 'done') return (b.completedAt || 0) - (a.completedAt || 0);
+
+    const aOverdue = a.deadline && a.deadline < todayStr;
+    const bOverdue = b.deadline && b.deadline < todayStr;
+    if(aOverdue !== bOverdue) return aOverdue ? -1 : 1;
+
     const r = (PRIORITY_RANK[a.priority] || 1) - (PRIORITY_RANK[b.priority] || 1);
-    return r !== 0 ? r : (a.createdAt || 0) - (b.createdAt || 0);
+    if(r !== 0) return r;
+
+    if(a.deadline && b.deadline){
+      if(a.deadline !== b.deadline) return a.deadline.localeCompare(b.deadline);
+    } else if(a.deadline && !b.deadline){
+      return -1;
+    } else if(!a.deadline && b.deadline){
+      return 1;
+    }
+
+    return (a.createdAt || 0) - (b.createdAt || 0);
   });
 }
 function countResources(){
@@ -3975,11 +4079,16 @@ function renderTodoPage(){
   }
   if(dateLbl){
     const now = new Date();
-    const dow = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][now.getDay()];
-    dateLbl.textContent = dow + ', ' + now.toLocaleDateString([], { month:'long', day:'numeric', year:'numeric' }) + ' · ' + c.done + ' of ' + c.all + ' done';
+    const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+    const overdueCount = list.filter(t => t.status !== 'done' && t.deadline && t.deadline < todayStr).length;
+    let metaTxt = c.done + ' of ' + c.all + ' tasks completed';
+    if(overdueCount > 0){
+      metaTxt += ' · 🚨 ' + overdueCount + ' overdue';
+    }
+    dateLbl.textContent = metaTxt;
   }
   if(!list.length){
-    host.innerHTML = '<div class="planner-empty" style="margin-top:16px"><span class="big">✓</span>Nothing planned yet.<br><b>Add your first task above</b> — set its priority and status, then tick <b>Done</b> when it is finished.</div>';
+    host.innerHTML = '<div class="planner-empty" style="margin-top:16px"><span class="big">✓</span>No tasks on your list yet.<br><b>Add your first task above</b> — set deadline, priority, and status, then tick <b>Done</b> when finished.</div>';
     return;
   }
   const f = state.todoFilter || 'all';
@@ -3993,7 +4102,7 @@ function renderTodoPage(){
   }
   html += '</div>';
   const total = list.length, doneN = c.done, pct = total ? Math.round((doneN / total) * 100) : 0;
-  html += '<div class="planner-progress" style="margin-top:16px;margin-bottom:0"><span class="pp-num">' + pct + '%</span><div class="pp-body"><div class="pp-lbl">Today\'s progress</div><div class="progress"><i style="width:' + pct + '%"></i></div></div></div>';
+  html += '<div class="planner-progress" style="margin-top:16px;margin-bottom:0"><span class="pp-num">' + pct + '%</span><div class="pp-body"><div class="pp-lbl">Overall task progress</div><div class="progress"><i style="width:' + pct + '%"></i></div></div></div>';
   host.innerHTML = html;
 }
 function todoItemHtml(t){
@@ -4002,11 +4111,18 @@ function todoItemHtml(t){
   const meta = [];
   if(t.createdAt) meta.push('Added ' + new Date(t.createdAt).toLocaleDateString([], { month:'short', day:'numeric' }));
   if(done && t.completedAt) meta.push('✓ Completed ' + new Date(t.completedAt).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }));
+  const dlInfo = formatTaskDeadline(t.deadline, done);
+  const dlBadgeHtml = dlInfo ? '<span class="todo-dl-badge ' + dlInfo.cls + '" title="' + escapeHtml(dlInfo.title) + '">' + dlInfo.text + '</span>' : '';
   return '<div class="planner-item pri-' + t.priority + (done ? ' st-done' : '') + '" data-todo-item="' + t.id + '">'
     + '<label class="pcheck" title="Mark as done"><input type="checkbox" data-todo-check="' + t.id + '"' + (done ? ' checked' : '') + '><span class="pcheck-box"></span></label>'
     + '<div class="planner-item-text"><div class="planner-item-title">' + escapeHtml(t.text) + '</div>'
-    + '<div class="planner-item-meta"><span class="pri pri-' + t.priority + '">' + PRIORITY_LABEL[t.priority] + '</span><span>' + meta.join(' · ') + '</span></div></div>'
-    + '<div class="planner-item-actions"><select class="pst" data-status="' + t.status + '" data-todo-status="' + t.id + '" title="Change status">' + opts + '</select>'
+    + '<div class="planner-item-meta">'
+    + '<span class="pri pri-' + t.priority + '">' + PRIORITY_LABEL[t.priority] + '</span>'
+    + dlBadgeHtml
+    + '<span>' + meta.join(' · ') + '</span></div></div>'
+    + '<div class="planner-item-actions">'
+    + '<input type="date" class="pst-date" data-todo-deadline-change="' + t.id + '" value="' + escapeHtml(t.deadline || '') + '" title="' + (t.deadline ? 'Deadline: ' + escapeHtml(t.deadline) + ' (click to change)' : 'Set deadline') + '">'
+    + '<select class="pst" data-status="' + t.status + '" data-todo-status="' + t.id + '" title="Change status">' + opts + '</select>'
     + '<button type="button" class="pdel" data-todo-del="' + t.id + '" title="Delete task">✕</button></div>'
     + '</div>';
 }
@@ -4266,11 +4382,22 @@ function addTodoFromInput(){
   if(!text){ toast('✎', 'Task is empty', 'Type what you need to get done first.'); if(inp) inp.focus(); return; }
   const priority = document.getElementById('todoPriorityInput').value || 'medium';
   const status = document.getElementById('todoStatusInput').value || 'todo';
+  const dlInp = document.getElementById('todoDeadlineInput');
+  const deadline = dlInp ? dlInp.value.trim() : '';
   state.todos = state.todos || [];
-  state.todos.push({ id: uid('td'), text: text.slice(0, 160), priority: priority, status: status, createdAt: Date.now(), completedAt: status === 'done' ? Date.now() : null });
+  state.todos.push({
+    id: uid('td'),
+    text: text.slice(0, 160),
+    priority: priority,
+    status: status,
+    deadline: deadline,
+    createdAt: Date.now(),
+    completedAt: status === 'done' ? Date.now() : null
+  });
   inp.value = '';
+  if(dlInp) dlInp.value = '';
   saveState(); renderPlanner();
-  toast('✓', 'Task added', text.slice(0, 60));
+  toast('✓', 'Task added', text.slice(0, 60) + (deadline ? ' · Due ' + deadline : ''));
 }
 function addWeekTask(dayIdx){
   const inp = document.querySelector('[data-week-add="' + dayIdx + '"]');
@@ -4766,6 +4893,19 @@ function plannerStaticInit(){
         } else { renderPlanner(); }
         return;
       }
+      const dlInput = e.target.closest ? e.target.closest('[data-todo-deadline-change]') : null;
+      if(dlInput){
+        const id = dlInput.dataset.todoDeadlineChange;
+        const task = (state.todos || []).filter(x => x.id === id)[0];
+        if(task){
+          const newDl = (dlInput.value || '').trim();
+          task.deadline = newDl;
+          saveState();
+          renderPlanner();
+          toast('📅', newDl ? 'Deadline updated' : 'Deadline removed', task.text.slice(0, 40) + (newDl ? ' · Due ' + newDl : ''));
+        }
+        return;
+      }
     });
     view.addEventListener('input', e => {
       if(e.target.matches && e.target.matches('[data-week-note]')){
@@ -4776,7 +4916,7 @@ function plannerStaticInit(){
     });
   }
   const handleKeydown = e => {
-    if(e.target.id === 'todoInput' && e.key === 'Enter'){ e.preventDefault(); addTodoFromInput(); return; }
+    if((e.target.id === 'todoInput' || e.target.id === 'todoDeadlineInput') && e.key === 'Enter'){ e.preventDefault(); addTodoFromInput(); return; }
     if(e.target.id === 'resSubjectInput' && e.key === 'Enter'){ e.preventDefault(); addResourceSubject(); return; }
     if(e.target.id === 'resLinkUrlInput' && e.key === 'Enter'){ e.preventDefault(); addWebLinkFromInput(); return; }
     if(e.target.id === 'resLinkNameInput' && e.key === 'Enter'){ e.preventDefault(); addWebLinkFromInput(); return; }
