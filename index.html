@@ -51,7 +51,36 @@
 [data-theme="white"] .todo-dl-badge.dl-done{background:#f8fafc!important;color:#94a3b8!important;border-color:#e2e8f0!important}
 [data-theme="white"] .pst-date{background:#f8fafc!important;border-color:#cbd5e1!important;color:#334155!important;color-scheme:light}
 [data-theme="white"] .pst-date:hover{background:#f1f5f9!important;color:#09090b!important}
-[data-theme="white"] .pst-date:focus{border-color:#0284c7!important;background:#fff!important}</style>
+[data-theme="white"] .pst-date:focus{border-color:#0284c7!important;background:#fff!important}
+/* Grade System & Measure Styles */
+.mark-measure-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin-bottom:8px!important}
+.mark-measure-score-display{display:inline-flex!important;align-items:center!important;gap:8px!important;white-space:nowrap!important;flex-shrink:0!important}
+.mark-measure-score-max{font-family:var(--mono)!important;font-size:22px!important;font-weight:800!important;color:var(--text-2)!important;white-space:nowrap!important;line-height:1!important;display:inline-flex!important;align-items:center!important;margin:0!important;padding:0!important;vertical-align:middle!important}
+.mark-direct-input{vertical-align:middle!important;line-height:1.1!important;height:42px!important;box-sizing:border-box!important}
+[data-theme="white"] .mark-measure-score-max{color:#475569!important}
+.grade-system-selector{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:550px){.grade-system-selector{grid-template-columns:repeat(2,1fr)}}
+.grade-sys-card{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);color:var(--text-2);cursor:pointer;transition:all .18s var(--ease);font-family:inherit;text-align:left}
+.grade-sys-card:hover{background:rgba(255,255,255,.09);color:#fff;border-color:var(--glass-border-2);transform:translateY(-1px)}
+.grade-sys-card.active{background:#fff;color:#09090b;border-color:#fff;box-shadow:0 0 16px rgba(255,255,255,.2)}
+.grade-sys-card.active .gs-badge{background:#09090b;color:#fff}
+.grade-sys-card.active .gs-scale{color:rgba(0,0,0,.65)}
+.gs-badge{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex-shrink:0}
+.gs-text{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.gs-name{font-size:12px;font-weight:700}
+.gs-scale{font-size:10px;color:var(--text-3);font-weight:500}
+[data-theme="white"] .grade-sys-card{background:#f1f5f9!important;color:#475569!important;border-color:#cbd5e1!important}
+[data-theme="white"] .grade-sys-card:hover{background:#e2e8f0!important;color:#09090b!important}
+[data-theme="white"] .grade-sys-card.active{background:#09090b!important;color:#ffffff!important;border-color:#09090b!important}
+[data-theme="white"] .grade-sys-card.active .gs-badge{background:#ffffff!important;color:#09090b!important}
+[data-theme="white"] .grade-sys-card.active .gs-scale{color:rgba(255,255,255,.7)!important}
+.test-sub-highest-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.08);color:#fff;font-size:11.5px;font-weight:600}
+.test-sub-highest-badge b{color:#38bdf8;font-weight:700}
+.test-sub-highest-badge.empty{background:transparent;color:var(--text-3);padding:0}
+.test-sub-bullet{color:var(--text-3);margin:0 2px}
+[data-theme="white"] .test-sub-highest-badge{background:#e2e8f0!important;color:#09090b!important}
+[data-theme="white"] .test-sub-highest-badge b{color:#0284c7!important}
+</style>
 </head>
 <body>
 <div class="bg-orbs" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div></div>
@@ -239,9 +268,9 @@
               </div>
               <div class="planner-form">
                 <div class="planner-input-wrap"><input type="text" id="todoInput" maxlength="160" placeholder="What do you need to get done?" autocomplete="off"></div>
-                <div class="planner-date-wrap" title="Task deadline (optional)">
+                <div class="planner-date-wrap" title="Task deadline (DD/MM/YYYY, optional)">
                   <span class="pdate-label">📅 Deadline:</span>
-                  <input type="date" class="planner-date-input" id="todoDeadlineInput" title="Deadline / Due Date">
+                  <input type="date" class="planner-date-input" id="todoDeadlineInput" title="Deadline / Due Date (DD/MM/YYYY)">
                 </div>
                 <select class="planner-select" id="todoPriorityInput" title="Priority">
                   <option value="high">🔴 High</option>
@@ -340,17 +369,15 @@
         </div>
       </div>
       <div id="journal-section-tests">
-        <div class="journal-stat-row">
+        <div class="journal-stat-row" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
           <div class="journal-stat"><div class="lbl">Total Tests</div><div class="val" id="journalTotalTests">0</div></div>
-          <div class="journal-stat"><div class="lbl">Average Mark</div><div class="val accent" id="journalAvgMark">0.0<small style="font-size:14px;color:var(--text-3)">/10</small></div></div>
           <div class="journal-stat"><div class="lbl">Subjects Active</div><div class="val" id="journalSubjectCount">0</div></div>
-          <div class="journal-stat"><div class="lbl">Highest Mark</div><div class="val" id="journalBestMark">—</div></div>
         </div>
         <div class="card planner-card" style="margin-bottom:20px">
           <div class="planner-head">
             <div>
               <h3>Test History Subjects</h3>
-              <div class="ph-sub">Manage subject folders to archive test papers, mark scores from 0 to 10, and review mistakes.</div>
+              <div class="ph-sub">Manage subject folders to track exam scores across grading systems (Normal /10, IELTS /9.0, VACT /30, Custom), and review mistakes.</div>
             </div>
           </div>
           <div class="planner-form">
@@ -999,7 +1026,7 @@
 <div class="modal-backdrop" id="testModalBackdrop">
   <div class="modal" style="max-width:520px">
     <h3 id="testModalTitle">Log Test Result</h3>
-    <p class="modal-sub">Record test score from 0 to 10, review your mistakes, and link exam files.</p>
+    <p class="modal-sub">Choose grading system (Normal /10, IELTS /9.0, VACT /30, or Custom), enter your score, and review mistakes.</p>
     <div class="field">
       <label for="testSubjectSelect">Subject</label>
       <select id="testSubjectSelect" class="planner-select" style="width:100%"></select>
@@ -1009,37 +1036,69 @@
       <input type="text" id="testTitleInput" maxlength="120" placeholder="e.g. Midterm Exam, Unit 4 Quiz, Mock Test 2">
     </div>
     <div class="field">
-      <label>Mark Measure (Type score or select 0 → 10)</label>
-      <div class="mark-measure-wrapper">
-        <div class="mark-measure-top">
-          <span class="mark-measure-lbl">Score (Type directly or choose)</span>
-          <div class="mark-measure-score-display">
-            <input type="text" id="testMarkInput" class="mark-direct-input" maxlength="5" value="8.5" placeholder="8.5" autocomplete="off" spellcheck="false" title="Enter score directly (e.g. 7.8, 0.8, 0,3)">
-            <span class="mark-measure-score-max">/ 10</span>
+      <label style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span>Grade System</span>
+        <span style="font-size:11.5px;color:var(--text-3);font-weight:500">Select grading system</span>
+      </label>
+      <div class="grade-system-selector" id="gradeSystemSelector">
+        <button type="button" class="grade-sys-card active" data-system="normal" data-max="10">
+          <span class="gs-badge">10</span>
+          <div class="gs-text">
+            <div class="gs-name">Normal</div>
+            <div class="gs-scale">by 10</div>
+          </div>
+        </button>
+        <button type="button" class="grade-sys-card" data-system="ielts" data-max="9">
+          <span class="gs-badge">9.0</span>
+          <div class="gs-text">
+            <div class="gs-name">IELTS</div>
+            <div class="gs-scale">by 9.0</div>
+          </div>
+        </button>
+        <button type="button" class="grade-sys-card" data-system="vact" data-max="30">
+          <span class="gs-badge">30</span>
+          <div class="gs-text">
+            <div class="gs-name">VACT</div>
+            <div class="gs-scale">by 30</div>
+          </div>
+        </button>
+        <button type="button" class="grade-sys-card" data-system="custom" data-max="custom">
+          <span class="gs-badge">⚙️</span>
+          <div class="gs-text">
+            <div class="gs-name">Custom</div>
+            <div class="gs-scale">any scale</div>
+          </div>
+        </button>
+      </div>
+
+      <div id="customGradeSystemBox" class="custom-sys-box" style="display:none;margin-top:10px">
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px dashed var(--glass-border-2);border-radius:12px;padding:10px 14px">
+          <span style="font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em">Custom Max Points:</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:18px;font-weight:800;color:var(--text-3)">/</span>
+            <input type="text" id="testMaxMarkInput" class="mark-direct-input" maxlength="6" value="10" placeholder="e.g. 8, 20, 100" autocomplete="off" spellcheck="false" style="width:85px;text-align:center;font-size:18px;height:36px" title="Enter any custom scale maximum (e.g. 8, 20, 100)">
+          </div>
+          <span style="font-size:11px;color:var(--text-3);line-height:1.3">Enter any exam limit (e.g. 8 for an 8-point quiz, 20, 50, 100)</span>
+        </div>
+      </div>
+
+      <div class="mark-measure-wrapper" style="margin-top:12px">
+        <div class="mark-measure-top" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px">
+          <span class="mark-measure-lbl" id="markMeasureTitleLbl">Score (<span id="markMeasureSysTag">Normal: / 10</span>)</span>
+          <div class="mark-measure-score-display" style="display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0">
+            <input type="text" id="testMarkInput" class="mark-direct-input" maxlength="6" value="8.5" placeholder="8.5" autocomplete="off" spellcheck="false" style="vertical-align:middle" title="Enter score directly (e.g. 7.8, 0.8, 0,3)">
+            <span class="mark-measure-score-max" id="markMeasureScoreMaxDisplay" style="white-space:nowrap;display:inline-flex;align-items:center;font-size:22px;font-weight:800;font-family:var(--mono);color:var(--text-2);line-height:1">/ 10</span>
           </div>
         </div>
-        <div class="mark-picker-grid" id="markPillsGrid">
-          <button type="button" class="mark-pill-btn" data-mark="0">0</button>
-          <button type="button" class="mark-pill-btn" data-mark="1">1</button>
-          <button type="button" class="mark-pill-btn" data-mark="2">2</button>
-          <button type="button" class="mark-pill-btn" data-mark="3">3</button>
-          <button type="button" class="mark-pill-btn" data-mark="4">4</button>
-          <button type="button" class="mark-pill-btn" data-mark="5">5</button>
-          <button type="button" class="mark-pill-btn" data-mark="6">6</button>
-          <button type="button" class="mark-pill-btn" data-mark="7">7</button>
-          <button type="button" class="mark-pill-btn" data-mark="8">8</button>
-          <button type="button" class="mark-pill-btn active" data-mark="8.5">8.5</button>
-          <button type="button" class="mark-pill-btn" data-mark="9">9</button>
-          <button type="button" class="mark-pill-btn" data-mark="10">10</button>
-        </div>
-        <div style="margin-top:6px">
+        <div class="mark-picker-grid" id="markPillsGrid"></div>
+        <div style="margin-top:8px">
           <input type="range" class="mark-slider" id="testMarkSlider" min="0" max="10" step="0.1" value="8.5">
           <div class="mark-half-step-row">
-            <span>0 (Lowest)</span>
-            <span>Type score above, slide bar, or click presets</span>
-            <span>10 (Perfect)</span>
+            <span id="markSliderMinLbl">0 (Lowest)</span>
+            <span id="markSliderMidLbl">Type score or slide bar</span>
+            <span id="markSliderMaxLbl">10 (Perfect)</span>
           </div>
-          <div class="res-upload-hint" style="margin-top:6px">Tip: You can type any custom point value directly (e.g. <b>7.8</b>, <b>0.8</b>, <b>0.3</b> or comma <b>0,8</b>).</div>
+          <div class="res-upload-hint" style="margin-top:6px" id="markMeasureTip">Tip: You can type any point value directly (e.g. <b>7.8</b>, <b>0.8</b>, or comma <b>0,8</b>).</div>
         </div>
       </div>
     </div>
@@ -1288,13 +1347,30 @@ function normalizeState(raw){
     .map(s => cleanText(s, 40)).filter(Boolean);
   if(!tSubs.length) tSubs.push('General');
   const tests = (Array.isArray(rawJ.tests) ? rawJ.tests : []).map((t, i) => {
+    const rawSys = ['normal', 'ielts', 'vact', 'custom'].includes(t.gradeSystem) ? t.gradeSystem : null;
+    const rawMax = typeof t.maxMark === 'number' ? t.maxMark : parseFloat(typeof t.maxMark === 'string' ? t.maxMark.replace(',', '.') : t.maxMark);
+    let maxMarkVal = !isNaN(rawMax) && rawMax > 0 ? Math.max(0.1, Math.min(1000, Math.round(rawMax * 100) / 100)) : null;
+
+    let gradeSystem = rawSys;
+    if(!gradeSystem){
+      if(maxMarkVal === 9) gradeSystem = 'ielts';
+      else if(maxMarkVal === 30) gradeSystem = 'vact';
+      else if(maxMarkVal && maxMarkVal !== 10) gradeSystem = 'custom';
+      else gradeSystem = 'normal';
+    }
+    if(!maxMarkVal){
+      maxMarkVal = gradeSystem === 'ielts' ? 9 : (gradeSystem === 'vact' ? 30 : 10);
+    }
+
     const rawMark = typeof t.mark === 'number' ? t.mark : parseFloat(typeof t.mark === 'string' ? t.mark.replace(',', '.') : t.mark);
-    const markVal = !isNaN(rawMark) ? Math.max(0, Math.min(10, Math.round(rawMark * 100) / 100)) : 8.5;
+    const markVal = !isNaN(rawMark) ? Math.max(0, Math.min(maxMarkVal, Math.round(rawMark * 100) / 100)) : (gradeSystem === 'vact' ? 24 : (gradeSystem === 'ielts' ? 7.5 : 8.5));
     return {
       id: cleanId(t.id, 'tst_' + i + '_' + Math.random().toString(36).slice(2, 8)),
       subject: cleanText(t.subject, 40) || tSubs[0],
       title: cleanText(t.title, 120) || 'Test Result',
       mark: markVal,
+      maxMark: maxMarkVal,
+      gradeSystem: gradeSystem,
       mistakes: cleanText(t.mistakes, 3000),
       url: normUrl(t.url || t.linkUrl || ''),
       date: Number(t.date) || Date.now()
@@ -1738,6 +1814,8 @@ function getUnlockedDemoState(){
           subject: 'Mathematics',
           title: 'Advanced Calculus Midterm Exam',
           mark: 9.5,
+          maxMark: 10,
+          gradeSystem: 'normal',
           mistakes: 'Lost 0.5 points on integration by parts sign error in problem 4b. Review polar coordinates transformation.',
           url: 'https://drive.google.com/file/d/demo-calculus-midterm-graded/view',
           date: now - 86400000
@@ -1745,9 +1823,11 @@ function getUnlockedDemoState(){
         {
           id: 'tst_demo_2',
           subject: 'Physics',
-          title: 'Mechanics & Thermodynamics Unit Test',
-          mark: 8.5,
-          mistakes: 'Misapplied conservation of momentum in elastic collision section. Be careful with vector directions next time.',
+          title: 'VACT National Physics Practice Test',
+          mark: 28.25,
+          maxMark: 30,
+          gradeSystem: 'vact',
+          mistakes: 'Scored 28.25/30 on VACT scale. Miscalculated wave interference path difference in problem 38.',
           url: 'https://terabox.com/s/demo-physics-mechanics-test',
           date: now - (86400000 * 3)
         },
@@ -1755,17 +1835,21 @@ function getUnlockedDemoState(){
           id: 'tst_demo_3',
           subject: 'English',
           title: 'IELTS Academic Full Mock Examination',
-          mark: 9.0,
-          mistakes: 'Writing Task 2 could have had better paragraph transitions. Reading and Listening scored 9.0.',
+          mark: 8.5,
+          maxMark: 9,
+          gradeSystem: 'ielts',
+          mistakes: 'IELTS Band 8.5/9.0 (Listening 9.0, Reading 9.0, Writing 8.0, Speaking 8.0). Paragraph coherence was excellent.',
           url: 'https://drive.google.com/file/d/demo-ielts-mock-solutions/view',
           date: now - (86400000 * 5)
         },
         {
           id: 'tst_demo_4',
           subject: 'Chemistry',
-          title: 'Organic Chemistry Reactions Quiz',
-          mark: 10.0,
-          mistakes: 'Flawless score! All reaction mechanisms and catalysts identified accurately.',
+          title: 'Organic Synthesis 8-Point Mastery Quiz',
+          mark: 7.6,
+          maxMark: 8,
+          gradeSystem: 'custom',
+          mistakes: 'Scored 7.6 / 8 on custom 8-point quiz scale. Missed 0.4 points on stereochemistry drawing.',
           url: '',
           date: now - (86400000 * 7)
         }
@@ -1920,8 +2004,23 @@ function getVnTimeString(ts){
 }
 function getVnDateMonthString(ts){
   const p = getVnTimeParts(ts);
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return months[p.month - 1] + ' ' + p.day;
+  const dd = String(p.day).padStart(2, '0');
+  const mm = String(p.month).padStart(2, '0');
+  return dd + '/' + mm + '/' + p.year;
+}
+function formatDmy(val){
+  if(!val && val !== 0) return '';
+  if(typeof val === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(val.trim())){
+    const p = val.trim().split('-');
+    return p[2] + '/' + p[1] + '/' + p[0];
+  }
+  let d;
+  if(val instanceof Date) d = val;
+  else d = new Date(val);
+  if(isNaN(d.getTime())) return '';
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  return dd + '/' + mm + '/' + d.getFullYear();
 }
 function getVnWeekdayString(ts){
   const p = getVnTimeParts(ts);
@@ -3658,7 +3757,9 @@ function renderHeatmap(){
       const str = hrs >= 10 ? Math.round(hrs) + 'h' : (hrs >= 1 ? (hrs % 1 === 0 ? hrs.toFixed(0) : hrs.toFixed(1)) + 'h' : hrs.toFixed(1) + 'h');
       label = '<span class="heat-val">' + str + '</span>';
     }
-    const fullDate = cursor.toLocaleDateString([], { weekday:'short', month:'short', day:'numeric' });
+    const pTime = getVnTimeParts(cursor);
+    const heatDays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const fullDate = heatDays[pTime.dow] + ' ' + formatDmy(cursor);
     const fullDuration = secs > 0 ? formatDuration(secs) : 'No study';
     cells.push('<div class="heat-cell l' + level + '" title="' + fullDate + ' — ' + fullDuration + '">' + label + '</div>');
     cursor = addDays(cursor, 1); guard++;
@@ -3700,7 +3801,7 @@ function renderStats(){
       const hStyle = pct > 0 ? 'height:' + pct + '%;min-height:8px' : 'height:3px';
       const p = getVnTimeParts(x.d);
       const dayNum = p.day;
-      const labelTitle = p.month + '/' + p.day + ': ' + (x.secs > 0 ? formatDuration(x.secs) : '0m');
+      const labelTitle = String(p.day).padStart(2, '0') + '/' + String(p.month).padStart(2, '0') + ': ' + (x.secs > 0 ? formatDuration(x.secs) : '0m');
       return '<div class="bar-wrap" title="' + labelTitle + '"><div class="bar-col"><div class="' + cls + '" style="' + hStyle + '" data-val="' + labelTitle + '"></div></div><div class="bar-lbl' + (x.isToday ? ' today' : '') + '">' + dayNum + '</div></div>';
     }).join('');
   }
@@ -3955,7 +4056,7 @@ function formatTaskDeadline(deadlineStr, isDone){
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const dlStart = dl.getTime();
   const diffDays = Math.round((dlStart - todayStart) / (1000 * 60 * 60 * 24));
-  const dateText = dl.toLocaleDateString([], { month: 'short', day: 'numeric', year: dl.getFullYear() !== now.getFullYear() ? 'numeric' : undefined });
+  const dateText = formatDmy(dl);
 
   if(isDone){
     return {
@@ -3976,21 +4077,21 @@ function formatTaskDeadline(deadlineStr, isDone){
     return {
       cls: 'dl-today',
       text: '⚠️ Due Today (' + dateText + ')',
-      title: 'Deadline is today!'
+      title: 'Deadline is today (' + dateText + ')'
     };
   }
   if(diffDays === 1){
     return {
       cls: 'dl-soon',
       text: '⏳ Due Tomorrow (' + dateText + ')',
-      title: 'Deadline is tomorrow'
+      title: 'Deadline is tomorrow (' + dateText + ')'
     };
   }
   if(diffDays <= 3){
     return {
       cls: 'dl-soon',
       text: '⏳ Due in ' + diffDays + ' days (' + dateText + ')',
-      title: 'Deadline in ' + diffDays + ' days'
+      title: 'Deadline in ' + diffDays + ' days (' + dateText + ')'
     };
   }
   return {
@@ -4109,8 +4210,8 @@ function todoItemHtml(t){
   const done = t.status === 'done';
   const opts = STATUS_ORDER.map(s => '<option value="' + s + '"' + (t.status === s ? ' selected' : '') + '>' + STATUS_LABEL[s] + '</option>').join('');
   const meta = [];
-  if(t.createdAt) meta.push('Added ' + new Date(t.createdAt).toLocaleDateString([], { month:'short', day:'numeric' }));
-  if(done && t.completedAt) meta.push('✓ Completed ' + new Date(t.completedAt).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }));
+  if(t.createdAt) meta.push('Added ' + formatDmy(t.createdAt));
+  if(done && t.completedAt) meta.push('✓ Completed ' + formatDmy(t.completedAt) + ' ' + new Date(t.completedAt).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }));
   const dlInfo = formatTaskDeadline(t.deadline, done);
   const dlBadgeHtml = dlInfo ? '<span class="todo-dl-badge ' + dlInfo.cls + '" title="' + escapeHtml(dlInfo.title) + '">' + dlInfo.text + '</span>' : '';
   return '<div class="planner-item pri-' + t.priority + (done ? ' st-done' : '') + '" data-todo-item="' + t.id + '">'
@@ -4121,7 +4222,7 @@ function todoItemHtml(t){
     + dlBadgeHtml
     + '<span>' + meta.join(' · ') + '</span></div></div>'
     + '<div class="planner-item-actions">'
-    + '<input type="date" class="pst-date" data-todo-deadline-change="' + t.id + '" value="' + escapeHtml(t.deadline || '') + '" title="' + (t.deadline ? 'Deadline: ' + escapeHtml(t.deadline) + ' (click to change)' : 'Set deadline') + '">'
+    + '<input type="date" class="pst-date" data-todo-deadline-change="' + t.id + '" value="' + escapeHtml(t.deadline || '') + '" title="' + (t.deadline ? 'Deadline: ' + escapeHtml(formatDmy(t.deadline)) + ' (click to change)' : 'Set deadline (DD/MM/YYYY)') + '">'
     + '<select class="pst" data-status="' + t.status + '" data-todo-status="' + t.id + '" title="Change status">' + opts + '</select>'
     + '<button type="button" class="pdel" data-todo-del="' + t.id + '" title="Delete task">✕</button></div>'
     + '</div>';
@@ -4167,7 +4268,7 @@ function renderSchedulePage(){
       + rewardChipHtml(PLANNER_REWARDS.weekComplete, wkDone ? 'Week 100% done — earned!' : 'Week 100% done', true);
   }
   if(rangeLbl){
-    rangeLbl.textContent = dates[0].toLocaleDateString([], { month:'short', day:'numeric' }) + ' — ' + last.toLocaleDateString([], { month:'short', day:'numeric', year:'numeric' }) + ' · finish all 7 days for +' + PLANNER_REWARDS.weekComplete.tokens + ' 🎡 +' + PLANNER_REWARDS.weekComplete.coins + ' 🪙 +' + PLANNER_REWARDS.weekComplete.xp + ' ✦';
+    rangeLbl.textContent = formatDmy(dates[0]) + ' — ' + formatDmy(last) + ' · finish all 7 days for +' + PLANNER_REWARDS.weekComplete.tokens + ' 🎡 +' + PLANNER_REWARDS.weekComplete.coins + ' 🪙 +' + PLANNER_REWARDS.weekComplete.xp + ' ✦';
   }
   if(sig === _weekSig){ restoreScheduleDrafts(_drafts.week); return; }
   if(_weekEditing){ restoreScheduleDrafts(_drafts.week); return; }
@@ -4397,7 +4498,7 @@ function addTodoFromInput(){
   inp.value = '';
   if(dlInp) dlInp.value = '';
   saveState(); renderPlanner();
-  toast('✓', 'Task added', text.slice(0, 60) + (deadline ? ' · Due ' + deadline : ''));
+  toast('✓', 'Task added', text.slice(0, 60) + (deadline ? ' · Due ' + formatDmy(deadline) : ''));
 }
 function addWeekTask(dayIdx){
   const inp = document.querySelector('[data-week-add="' + dayIdx + '"]');
@@ -4902,7 +5003,7 @@ function plannerStaticInit(){
           task.deadline = newDl;
           saveState();
           renderPlanner();
-          toast('📅', newDl ? 'Deadline updated' : 'Deadline removed', task.text.slice(0, 40) + (newDl ? ' · Due ' + newDl : ''));
+          toast('📅', newDl ? 'Deadline updated' : 'Deadline removed', task.text.slice(0, 40) + (newDl ? ' · Due ' + formatDmy(newDl) : ''));
         }
         return;
       }
@@ -5179,34 +5280,161 @@ document.getElementById('accountSyncBtn').addEventListener('click', async ()=>{
   await pushStateToCloud();
   toast('☁','Synced','Progress pushed to cloud');
 });
+let activeGradeSystem = 'normal';
 let activeTestMark = 8.5;
+let activeTestMaxMark = 10;
 let currentEditingTestId = null;
 let currentTestFileObj = null;
 let testAttachKind = 'url';
 let currentReadingLifeId = null;
-function getMarkBadgeClass(m){
-  m = Number(m) || 0;
-  if(m >= 8.5) return 'mark-high';
-  if(m >= 7.0) return 'mark-good';
-  if(m >= 5.0) return 'mark-mid';
+function getMarkBadgeClass(m, max){
+  const mark = Number(m) || 0;
+  const maxMark = Number(max) > 0 ? Number(max) : 10;
+  const pct = mark / maxMark;
+  if(pct >= 0.85) return 'mark-high';
+  if(pct >= 0.70) return 'mark-good';
+  if(pct >= 0.50) return 'mark-mid';
   return 'mark-low';
 }
-function parseMarkString(raw){
+function parseMaxMarkString(raw){
+  if(raw == null) return 10;
+  const s = String(raw).trim().replace(',', '.');
+  if(!s) return 10;
+  const num = parseFloat(s);
+  if(isNaN(num) || num <= 0) return 10;
+  return Math.max(0.1, Math.min(1000, Math.round(num * 100) / 100));
+}
+function parseMarkString(raw, max = 10){
   if(raw == null) return null;
   const s = String(raw).trim().replace(',', '.');
   if(!s) return null;
   const num = parseFloat(s);
   if(isNaN(num)) return null;
-  return Math.max(0, Math.min(10, Math.round(num * 100) / 100));
+  const limit = (typeof max === 'number' && max > 0) ? max : 1000;
+  return Math.max(0, Math.min(limit, Math.round(num * 100) / 100));
+}
+function updateMarkPillsForScale(system, maxMark){
+  const container = document.getElementById('markPillsGrid');
+  if(!container) return;
+  const mm = Number(maxMark) > 0 ? Number(maxMark) : 10;
+  let pills = [];
+  if(system === 'ielts'){
+    pills = [0, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0];
+  } else if(system === 'vact'){
+    pills = [0, 15, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30];
+  } else if(system === 'normal' || Math.abs(mm - 10) < 0.05){
+    pills = [0, 1, 2, 3, 4, 5, 6, 7, 8, 8.5, 9, 9.5, 10];
+  } else if(Math.abs(mm - 8) < 0.05){
+    pills = [0, 1, 2, 3, 4, 5, 6, 7, 7.5, 8];
+  } else if(Math.abs(mm - 20) < 0.05){
+    pills = [0, 5, 10, 12, 14, 15, 16, 17, 18, 19, 20];
+  } else if(Math.abs(mm - 100) < 0.05){
+    pills = [0, 20, 40, 50, 60, 70, 75, 80, 85, 90, 100];
+  } else {
+    const fractions = [0, 0.3, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1];
+    pills = Array.from(new Set(fractions.map(f => Math.round(f * mm * 10) / 10)));
+  }
+  container.innerHTML = pills.map(p => {
+    const pNum = Math.round(p * 100) / 100;
+    const isAct = Math.abs(pNum - activeTestMark) < 0.05;
+    return '<button type="button" class="mark-pill-btn' + (isAct ? ' active' : '') + '" data-mark="' + pNum + '">' + pNum + '</button>';
+  }).join('');
+}
+function setGradeSystem(sysKey, maxVal, fromUserClick = false){
+  activeGradeSystem = ['normal', 'ielts', 'vact', 'custom'].includes(sysKey) ? sysKey : 'normal';
+
+  if(activeGradeSystem === 'normal'){
+    activeTestMaxMark = 10;
+  } else if(activeGradeSystem === 'ielts'){
+    activeTestMaxMark = 9;
+  } else if(activeGradeSystem === 'vact'){
+    activeTestMaxMark = 30;
+  } else if(activeGradeSystem === 'custom'){
+    const customVal = maxVal != null ? parseMaxMarkString(maxVal) : (activeTestMaxMark > 0 ? activeTestMaxMark : 10);
+    activeTestMaxMark = customVal;
+  }
+
+  document.querySelectorAll('.grade-sys-card').forEach(card => {
+    card.classList.toggle('active', card.dataset.system === activeGradeSystem);
+  });
+
+  const customBox = document.getElementById('customGradeSystemBox');
+  const customInput = document.getElementById('testMaxMarkInput');
+  if(customBox){
+    if(activeGradeSystem === 'custom'){
+      customBox.style.display = 'block';
+      if(customInput){
+        customInput.value = (Math.round(activeTestMaxMark * 100) / 100).toString();
+        if(fromUserClick) setTimeout(() => customInput.focus(), 60);
+      }
+    } else {
+      customBox.style.display = 'none';
+      if(customInput){
+        customInput.value = activeTestMaxMark.toString();
+      }
+    }
+  }
+
+  const maxDisp = document.getElementById('markMeasureScoreMaxDisplay');
+  if(maxDisp){
+    maxDisp.textContent = activeGradeSystem === 'ielts' ? '/ 9.0' : '/ ' + (Math.round(activeTestMaxMark * 100) / 100);
+  }
+
+  const sysTag = document.getElementById('markMeasureSysTag');
+  if(sysTag){
+    if(activeGradeSystem === 'normal') sysTag.textContent = 'Normal: / 10';
+    else if(activeGradeSystem === 'ielts') sysTag.textContent = 'IELTS Band: / 9.0';
+    else if(activeGradeSystem === 'vact') sysTag.textContent = 'VACT Exam: / 30';
+    else sysTag.textContent = 'Custom System: / ' + (Math.round(activeTestMaxMark * 100) / 100);
+  }
+
+  const tip = document.getElementById('markMeasureTip');
+  if(tip){
+    if(activeGradeSystem === 'ielts') tip.innerHTML = 'Tip: IELTS Band scores range from <b>0.0</b> to <b>9.0</b> in increments of <b>0.5</b> (e.g. <b>6.5</b>, <b>7.0</b>, <b>8.0</b>, <b>8.5</b>).';
+    else if(activeGradeSystem === 'vact') tip.innerHTML = 'Tip: VACT University Entrance scores range up to <b>30.0</b> points (e.g. <b>24.5</b>, <b>27.25</b>, <b>28.5</b>).';
+    else if(activeGradeSystem === 'custom') tip.innerHTML = 'Tip: Custom grading system — enter any maximum score and mark (e.g. <b>7.8 / 8</b>, <b>18 / 20</b>).';
+    else tip.innerHTML = 'Tip: Standard 10-point scale. Type any custom point value directly (e.g. <b>7.8</b>, <b>0.8</b>, or comma <b>0,8</b>).';
+  }
+
+  const slider = document.getElementById('testMarkSlider');
+  if(slider){
+    slider.min = "0";
+    slider.max = activeTestMaxMark.toString();
+    slider.step = activeGradeSystem === 'ielts' ? "0.5" : (activeTestMaxMark > 50 ? "1" : (activeTestMaxMark > 15 ? "0.25" : "0.1"));
+  }
+
+  const minLbl = document.getElementById('markSliderMinLbl');
+  if(minLbl) minLbl.textContent = '0 (Lowest)';
+  const maxLbl = document.getElementById('markSliderMaxLbl');
+  if(maxLbl){
+    maxLbl.textContent = (activeGradeSystem === 'ielts' ? '9.0' : activeTestMaxMark) + ' (Perfect)';
+  }
+
+  updateMarkPillsForScale(activeGradeSystem, activeTestMaxMark);
+
+  if(fromUserClick){
+    if(activeGradeSystem === 'ielts' && (activeTestMark > 9 || activeTestMark < 4)){
+      activeTestMark = 7.5;
+    } else if(activeGradeSystem === 'vact' && activeTestMark < 12){
+      activeTestMark = 24.0;
+    } else if(activeGradeSystem === 'normal' && activeTestMark > 10){
+      activeTestMark = 8.5;
+    } else if(activeTestMark > activeTestMaxMark){
+      activeTestMark = activeTestMaxMark;
+    }
+  } else {
+    if(activeTestMark > activeTestMaxMark){
+      activeTestMark = activeTestMaxMark;
+    }
+  }
+  setTestMarkVal(activeTestMark);
 }
 function setTestMarkVal(val, fromInput = false){
-  const parsed = parseMarkString(val);
+  const parsed = parseMarkString(val, activeTestMaxMark);
   if(parsed !== null){
     activeTestMark = parsed;
   }
-  const currentVal = activeTestMark != null ? activeTestMark : 8.5;
-  const disp = document.getElementById('testMarkDisplayVal');
-  if(disp) disp.textContent = (Math.round(currentVal * 100) / 100).toString();
+  const currentVal = activeTestMark != null ? activeTestMark : (activeGradeSystem === 'vact' ? 24 : (activeGradeSystem === 'ielts' ? 7.5 : 8.5));
   const inp = document.getElementById('testMarkInput');
   if(inp && !fromInput){
     inp.value = (Math.round(currentVal * 100) / 100).toString();
@@ -5262,39 +5490,53 @@ function renderTestHistory(){
   const subjects = j.testSubjects || ['General'];
   const tests = j.tests || [];
   const total = tests.length;
-  const avg = total > 0 ? (tests.reduce((acc, t) => acc + (Number(t.mark) || 0), 0) / total).toFixed(1) : '0.0';
-  let best = '—';
-  if(total > 0){
-    const maxMark = Math.max(...tests.map(t => Number(t.mark) || 0));
-    best = (Math.round(maxMark * 100) / 100) + ' / 10';
-  }
+
   const totEl = document.getElementById('journalTotalTests');
   if(totEl) totEl.textContent = total;
-  const avgEl = document.getElementById('journalAvgMark');
-  if(avgEl) avgEl.innerHTML = avg + '<small style="font-size:14px;color:var(--text-3)">/10</small>';
   const cntEl = document.getElementById('journalSubjectCount');
   if(cntEl) cntEl.textContent = subjects.length;
-  const bestEl = document.getElementById('journalBestMark');
-  if(bestEl) bestEl.textContent = best;
+
   const container = document.getElementById('testSubjectsList');
   if(!container) return;
   if(subjects.length === 0){
     container.innerHTML = '<div class="empty-state"><span class="big">📁</span>No subjects yet. Type a subject name above and press "+ Add Subject"!</div>';
     return;
   }
+
   container.innerHTML = subjects.map(sub => {
     const subTests = tests.filter(t => t.subject === sub);
     const count = subTests.length;
-    const subAvg = count > 0 ? (subTests.reduce((a, b) => a + (Number(b.mark) || 0), 0) / count).toFixed(1) : null;
-    const metaTxt = count + ' test' + (count === 1 ? '' : 's') + (subAvg !== null ? ' · Avg: ' + subAvg + '/10' : '');
+
+    let highestBadgeHtml = '<span class="test-sub-highest-badge empty">No tests yet</span>';
+    if(count > 0){
+      let bestT = subTests[0];
+      let bestPct = -1;
+      subTests.forEach(t => {
+        const mx = Number(t.maxMark) > 0 ? Number(t.maxMark) : (t.gradeSystem === 'ielts' ? 9 : (t.gradeSystem === 'vact' ? 30 : 10));
+        const pct = (Number(t.mark) || 0) / mx;
+        if(pct > bestPct){ bestPct = pct; bestT = t; }
+      });
+      const bMark = (Math.round((Number(bestT.mark) || 0) * 100) / 100).toString();
+      const bMax = (Number(bestT.maxMark) > 0 ? Number(bestT.maxMark) : (bestT.gradeSystem === 'ielts' ? 9 : (bestT.gradeSystem === 'vact' ? 30 : 10))).toString();
+      const bSys = bestT.gradeSystem === 'ielts' ? 'IELTS ' : (bestT.gradeSystem === 'vact' ? 'VACT ' : '');
+      highestBadgeHtml = '<span class="test-sub-highest-badge">🏆 Highest: <b>' + escapeHtml(bSys + bMark + ' / ' + bMax) + '</b></span>';
+    }
+
     let testsHtml = '';
     if(subTests.length === 0){
       testsHtml = '<div class="wd-empty" style="padding:16px 4px;color:var(--text-3)">No test history recorded for ' + escapeHtml(sub) + ' yet. Click "+ Log Test" to record marks, mistakes, and papers!</div>';
     } else {
       testsHtml = subTests.map((t, idx) => {
         const markVal = Number(t.mark) || 0;
-        const badgeCls = getMarkBadgeClass(markVal);
+        const maxVal = Number(t.maxMark) > 0 ? Number(t.maxMark) : (t.gradeSystem === 'ielts' ? 9 : (t.gradeSystem === 'vact' ? 30 : 10));
+        const badgeCls = getMarkBadgeClass(markVal, maxVal);
         const formattedMark = (Math.round(markVal * 100) / 100).toString();
+        const formattedMax = (Math.round(maxVal * 100) / 100).toString();
+        const sysBadgeTag = t.gradeSystem === 'ielts'
+          ? '<small style="font-size:10px;opacity:.85;margin-right:4px;letter-spacing:.04em">IELTS</small>'
+          : (t.gradeSystem === 'vact'
+            ? '<small style="font-size:10px;opacity:.85;margin-right:4px;letter-spacing:.04em">VACT</small>'
+            : '');
         const dateStr = relativeTime(t.date);
         let attachmentHtml = '';
         if(t.url){
@@ -5309,7 +5551,7 @@ function renderTestHistory(){
         return '<div class="test-item" data-test-id="' + t.id + '">'
           + '<div class="test-item-top">'
           + '<div class="test-item-title-box">'
-          + '<span class="test-mark-badge ' + badgeCls + '">' + formattedMark + ' / 10</span>'
+          + '<span class="test-mark-badge ' + badgeCls + '">' + sysBadgeTag + formattedMark + ' / ' + formattedMax + '</span>'
           + '<span class="test-item-title" title="' + escapeHtml(t.title) + '">' + escapeHtml(t.title) + '</span>'
           + '</div>'
           + '<span class="test-item-date">' + dateStr + '</span>'
@@ -5331,7 +5573,11 @@ function renderTestHistory(){
       + '<div class="test-subject-icon">📁</div>'
       + '<div>'
       + '<div class="test-subject-name">' + escapeHtml(sub) + '</div>'
-      + '<div class="test-subject-meta">' + metaTxt + '</div>'
+      + '<div class="test-subject-meta">'
+      + '<span>' + count + ' test' + (count === 1 ? '' : 's') + '</span>'
+      + '<span class="test-sub-bullet">·</span>'
+      + highestBadgeHtml
+      + '</div>'
       + '</div>'
       + '</div>'
       + '<div class="test-subject-actions">'
@@ -5361,12 +5607,20 @@ function openTestModal(subject, testId){
       if(tTitle) tTitle.value = t.title || '';
       if(tMistakes) tMistakes.value = t.mistakes || '';
       if(tUrl) tUrl.value = t.url || '';
-      setTestMarkVal(t.mark != null ? t.mark : 8.5);
+      const targetSys = ['normal','ielts','vact','custom'].includes(t.gradeSystem)
+        ? t.gradeSystem
+        : (t.maxMark === 9 ? 'ielts' : (t.maxMark === 30 ? 'vact' : (t.maxMark && t.maxMark !== 10 ? 'custom' : 'normal')));
+      const targetMax = Number(t.maxMark) > 0 ? Number(t.maxMark) : (targetSys === 'ielts' ? 9 : (targetSys === 'vact' ? 30 : 10));
+      activeTestMark = Number(t.mark) || (targetSys === 'vact' ? 24 : (targetSys === 'ielts' ? 7.5 : 8.5));
+      setGradeSystem(targetSys, targetMax, false);
+      setTestMarkVal(activeTestMark);
     }
   } else {
     if(tTitle) tTitle.value = '';
     if(tMistakes) tMistakes.value = '';
     if(tUrl) tUrl.value = '';
+    activeTestMark = 8.5;
+    setGradeSystem('normal', 10, false);
     setTestMarkVal(8.5);
   }
   const bd = document.getElementById('testModalBackdrop');
@@ -5382,16 +5636,24 @@ function setTestAttachKind(kind){}
 function saveTestModal(){
   const subSel = document.getElementById('testSubjectSelect');
   const subject = subSel ? subSel.value : 'General';
-  const title = (document.getElementById('testTitleInput').value || '').trim() || 'Test ' + new Date().toLocaleDateString();
+  const title = (document.getElementById('testTitleInput').value || '').trim() || 'Test ' + formatDmy(new Date());
   const mistakes = (document.getElementById('testMistakesInput').value || '').trim();
+
+  const maxMark = activeTestMaxMark > 0 ? activeTestMaxMark : 10;
+  const gradeSystem = activeGradeSystem || 'normal';
+
   const rawInputMark = document.getElementById('testMarkInput') ? document.getElementById('testMarkInput').value : '';
-  const parsedInputMark = parseMarkString(rawInputMark);
-  const mark = parsedInputMark !== null ? parsedInputMark : (activeTestMark != null ? activeTestMark : 8.5);
+  const parsedInputMark = parseMarkString(rawInputMark, maxMark);
+  const mark = parsedInputMark !== null ? parsedInputMark : (activeTestMark != null ? activeTestMark : (gradeSystem === 'vact' ? 24 : (gradeSystem === 'ielts' ? 7.5 : 8.5)));
   activeTestMark = mark;
+
   const rawUrl = (document.getElementById('testUrlInput') ? document.getElementById('testUrlInput').value : '').trim();
   const url = normUrl(rawUrl);
   state.journal = state.journal || { testSubjects:['General'], tests:[] };
   state.journal.tests = state.journal.tests || [];
+
+  const sysLabel = gradeSystem === 'ielts' ? 'IELTS ' : (gradeSystem === 'vact' ? 'VACT ' : '');
+
   if(currentEditingTestId){
     const idx = state.journal.tests.findIndex(x => x.id === currentEditingTestId);
     if(idx !== -1){
@@ -5401,6 +5663,8 @@ function saveTestModal(){
         subject,
         title,
         mark,
+        maxMark,
+        gradeSystem,
         mistakes,
         url,
         data: '',
@@ -5408,7 +5672,7 @@ function saveTestModal(){
         fileSize: 0,
         fileType: ''
       };
-      toast('✓', 'Test updated', title + ' · ' + mark + '/10');
+      toast('✓', 'Test updated', title + ' · ' + sysLabel + mark + ' / ' + maxMark);
     }
   } else {
     state.journal.tests.unshift({
@@ -5416,11 +5680,13 @@ function saveTestModal(){
       subject,
       title,
       mark,
+      maxMark,
+      gradeSystem,
       mistakes,
       url,
       date: Date.now()
     });
-    toast('✓', 'Test recorded', title + ' · ' + mark + '/10');
+    toast('✓', 'Test recorded', title + ' · ' + sysLabel + mark + ' / ' + maxMark);
   }
   saveState();
   closeTestModal();
@@ -5664,19 +5930,55 @@ function initJournalEventListeners(){
   };
   if(addSubBtn) addSubBtn.addEventListener('click', handleAddSubject);
   if(addSubInp) addSubInp.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); handleAddSubject(); } });
-  document.querySelectorAll('.mark-pill-btn').forEach(btn => {
-    btn.addEventListener('click', () => setTestMarkVal(btn.dataset.mark));
-  });
+  const pillsGrid = document.getElementById('markPillsGrid');
+  if(pillsGrid){
+    pillsGrid.addEventListener('click', e => {
+      const btn = e.target.closest('.mark-pill-btn');
+      if(btn && btn.dataset.mark != null){
+        setTestMarkVal(btn.dataset.mark);
+      }
+    });
+  }
+  const gradeSysSelector = document.getElementById('gradeSystemSelector');
+  if(gradeSysSelector){
+    gradeSysSelector.addEventListener('click', e => {
+      const card = e.target.closest('.grade-sys-card');
+      if(card && card.dataset.system){
+        setGradeSystem(card.dataset.system, card.dataset.max, true);
+      }
+    });
+  }
+  const maxInput = document.getElementById('testMaxMarkInput');
+  if(maxInput){
+    maxInput.addEventListener('input', () => {
+      if(activeGradeSystem === 'custom'){
+        const p = parseMaxMarkString(maxInput.value);
+        setGradeSystem('custom', p, false);
+      }
+    });
+    maxInput.addEventListener('blur', () => {
+      if(activeGradeSystem === 'custom'){
+        const p = parseMaxMarkString(maxInput.value);
+        setGradeSystem('custom', p, false);
+      }
+    });
+    maxInput.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        maxInput.blur();
+      }
+    });
+  }
   const markSlider = document.getElementById('testMarkSlider');
   if(markSlider) markSlider.addEventListener('input', () => setTestMarkVal(markSlider.value));
   const markInput = document.getElementById('testMarkInput');
   if(markInput){
     markInput.addEventListener('input', () => {
-      const p = parseMarkString(markInput.value);
+      const p = parseMarkString(markInput.value, activeTestMaxMark);
       if(p !== null) setTestMarkVal(p, true);
     });
     markInput.addEventListener('blur', () => {
-      const p = parseMarkString(markInput.value);
+      const p = parseMarkString(markInput.value, activeTestMaxMark);
       setTestMarkVal(p !== null ? p : activeTestMark, false);
     });
     markInput.addEventListener('keydown', e => {
