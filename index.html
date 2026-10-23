@@ -52,6 +52,12 @@
 [data-theme="white"] .pst-date{background:#f8fafc!important;border-color:#cbd5e1!important;color:#334155!important;color-scheme:light}
 [data-theme="white"] .pst-date:hover{background:#f1f5f9!important;color:#09090b!important}
 [data-theme="white"] .pst-date:focus{border-color:#0284c7!important;background:#fff!important}
+/* Subject Notes Section Styles */
+.subject-note-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--text-2);font-size:11.5px;font-weight:600}
+.subject-note-chip.math{background:rgba(56,189,248,.12);color:#38bdf8;border:1px solid rgba(56,189,248,.25)}
+.subject-note-chip.physics{background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.25)}
+.subject-note-chip.english{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.25)}
+.subject-note-chip.chemistry{background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.25)}
 /* Grade System & Measure Styles */
 .mark-measure-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin-bottom:8px!important}
 .mark-measure-score-display{display:inline-flex!important;align-items:center!important;gap:8px!important;white-space:nowrap!important;flex-shrink:0!important}
@@ -366,6 +372,7 @@
         <div class="view-subtabs" id="journalSubtabs">
           <button type="button" class="subtab-btn active" data-journal-tab="tests">📊 Test History</button>
           <button type="button" class="subtab-btn" data-journal-tab="life">📖 Life &amp; Thoughts</button>
+          <button type="button" class="subtab-btn" data-journal-tab="notes">📝 Notes</button>
         </div>
       </div>
       <div id="journal-section-tests">
@@ -412,6 +419,30 @@
           </div>
         </div>
         <div class="life-notes-grid" id="lifeNotesGrid"></div>
+      </div>
+      <div id="journal-section-notes" style="display:none">
+        <div class="card planner-card" style="margin-bottom:20px">
+          <div class="planner-head">
+            <div>
+              <h3>Subject Notes &amp; Formulas</h3>
+              <div class="ph-sub">Organize formulas, math shortcuts, English grammar, and cheat sheets by subject.</div>
+            </div>
+            <div class="planner-head-actions">
+              <button type="button" class="btn primary" id="openNewSubjectNoteBtn">✍️ Write Note</button>
+            </div>
+          </div>
+          <div class="life-folders-strip" id="noteSubjectsStrip"></div>
+          <div class="planner-form">
+            <div class="planner-input-wrap" style="flex:1.5">
+              <input type="text" id="noteSearchInput" placeholder="🔍 Search notes, equations, tricks, grammar…" autocomplete="off">
+            </div>
+            <div class="planner-input-wrap" style="flex:1">
+              <input type="text" id="newNoteSubjectInput" maxlength="35" placeholder="New subject (e.g. English Grammar, Physics)…" autocomplete="off">
+            </div>
+            <button type="button" class="btn ghost planner-add" id="addNoteSubjectBtn">+ Subject</button>
+          </div>
+        </div>
+        <div class="life-notes-grid" id="subjectNotesGrid"></div>
       </div>
     </section>
     <section class="view" id="view-timer">
@@ -1173,6 +1204,65 @@
     </div>
   </div>
 </div>
+<div class="modal-backdrop" id="subjectNoteModalBackdrop">
+  <div class="modal" style="max-width:580px">
+    <h3 id="subjectNoteModalTitle">Write Subject Note</h3>
+    <p class="modal-sub">Record formulas, exam tricks, grammar rules, or quick cheat sheets.</p>
+    <div class="field-row">
+      <div class="field">
+        <label for="subjectNoteSubjectSelect">Subject</label>
+        <select id="subjectNoteSubjectSelect" class="planner-select" style="width:100%"></select>
+      </div>
+      <div class="field">
+        <label for="subjectNoteTagSelect">Category / Type</label>
+        <select id="subjectNoteTagSelect" class="planner-select" style="width:100%">
+          <option value="📐 Formula">📐 Formula / Equation</option>
+          <option value="⚡ Trick / Shortcut">⚡ Trick / Shortcut</option>
+          <option value="📖 Grammar Rule">📖 Grammar Rule</option>
+          <option value="💡 Concept">💡 Core Concept</option>
+          <option value="🧠 Memory Key">🧠 Memory Key / Mnemonic</option>
+          <option value="📝 Summary">📝 Topic Summary</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="subjectNoteTitleInput">Note Title</label>
+      <input type="text" id="subjectNoteTitleInput" maxlength="140" placeholder="e.g. Quadratic Vieta Shortcuts, Inversion Grammar...">
+    </div>
+    <div class="field">
+      <label for="subjectNoteUrlInput">Reference Link (Optional — Desmos, Notion, GeoGebra, Drive, etc.)</label>
+      <input type="text" id="subjectNoteUrlInput" placeholder="https://..." autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="subjectNoteContentInput">Note Content (Formulas, Steps, Rules, Examples)</label>
+      <textarea id="subjectNoteContentInput" style="min-height:180px;font-family:var(--font);line-height:1.6" placeholder="Write your equations, tricks, or grammar rules here..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="subjectNoteModalCancel">Cancel</button>
+      <button type="button" class="btn primary" id="subjectNoteModalSave">Save Note</button>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" id="subjectNoteReaderBackdrop">
+  <div class="modal life-reader-modal" style="max-width:600px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="life-note-badge" id="subjectNoteReaderSubject">Mathematics</span>
+        <span class="life-note-badge" id="subjectNoteReaderTag" style="background:rgba(56,189,248,.12);color:#38bdf8;border-color:rgba(56,189,248,.3)">⚡ Trick</span>
+      </div>
+      <span style="font-size:12px;color:var(--text-3)" id="subjectNoteReaderDate">Today</span>
+    </div>
+    <h3 id="subjectNoteReaderTitle" style="font-size:22px;font-weight:700;margin-bottom:12px;color:#fff;line-height:1.3">Note Title</h3>
+    <div id="subjectNoteReaderLinkWrap" style="margin-bottom:14px;display:none">
+      <a id="subjectNoteReaderLinkBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn primary" style="font-size:12.5px;padding:8px 14px;display:inline-flex;align-items:center;gap:6px">↗ Open Reference Link</a>
+    </div>
+    <div class="life-reader-content" id="subjectNoteReaderContent" style="white-space:pre-wrap;font-size:14.5px;line-height:1.75"></div>
+    <div class="modal-actions" style="margin-top:20px">
+      <button type="button" class="btn danger" id="subjectNoteReaderDeleteBtn">Delete</button>
+      <button type="button" class="btn ghost" id="subjectNoteReaderCloseBtn" style="flex:1;justify-content:center">Close</button>
+    </div>
+  </div>
+</div>
 <div class="toast-wrap" id="toastWrap"></div>
 <script>
 const PRESET_SUPABASE_URL = 'https://szsxenpcyadgfpmwivqb.supabase.co';
@@ -1254,8 +1344,11 @@ const DEFAULTS = {
     tests: [],
     lifeFolders: ['General', 'Personal', 'Reflections', 'Ideas'],
     lifeEntries: [],
+    noteSubjects: ['Mathematics', 'Physics', 'English', 'Chemistry'],
+    notes: [],
     activeSection: 'tests',
-    activeLifeFolder: 'all'
+    activeLifeFolder: 'all',
+    activeNoteSubject: 'all'
   }
 };
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
@@ -1389,13 +1482,31 @@ function normalizeState(raw){
     url: normUrl(e.url || ''),
     date: Number(e.date) || Date.now()
   }));
+  const defNoteSubs = ['Mathematics', 'Physics', 'English', 'Chemistry'];
+  const noteSubs = (Array.isArray(rawJ.noteSubjects) ? rawJ.noteSubjects : defNoteSubs)
+    .map(s => cleanText(s, 40)).filter(Boolean);
+  if(!noteSubs.length) noteSubs.push('General');
+
+  const notes = (Array.isArray(rawJ.notes) ? rawJ.notes : []).map((n, i) => ({
+    id: cleanId(n.id, 'note_' + i + '_' + Math.random().toString(36).slice(2, 8)),
+    subject: cleanText(n.subject, 40) || noteSubs[0],
+    title: cleanText(n.title, 140) || 'Subject Note',
+    content: cleanText(n.content, 30000),
+    tag: cleanText(n.tag, 35) || '📝 Summary',
+    url: normUrl(n.url || ''),
+    date: Number(n.date) || Date.now()
+  }));
+
   m.journal = {
     testSubjects: Array.from(new Set(tSubs)),
     tests: tests,
     lifeFolders: Array.from(new Set(lifeF)),
     lifeEntries: lifeEntries,
-    activeSection: ['tests', 'life'].includes(rawJ.activeSection) ? rawJ.activeSection : 'tests',
-    activeLifeFolder: (rawJ.activeLifeFolder === 'all' || lifeF.includes(rawJ.activeLifeFolder)) ? rawJ.activeLifeFolder : 'all'
+    noteSubjects: Array.from(new Set(noteSubs)),
+    notes: notes,
+    activeSection: ['tests', 'life', 'notes'].includes(rawJ.activeSection) ? rawJ.activeSection : 'tests',
+    activeLifeFolder: (rawJ.activeLifeFolder === 'all' || lifeF.includes(rawJ.activeLifeFolder)) ? rawJ.activeLifeFolder : 'all',
+    activeNoteSubject: (rawJ.activeNoteSubject === 'all' || noteSubs.includes(rawJ.activeNoteSubject)) ? rawJ.activeNoteSubject : 'all'
   };
   return m;
 }
@@ -1877,13 +1988,44 @@ function getUnlockedDemoState(){
           id: 'life_demo_3',
           folder: 'Personal',
           title: 'Semester goals and long-term vision',
-          content: 'Goal 1: Maintain average test score above 9.0/10 across all STEM subjects.\nGoal 2: Build a disciplined 3-hour daily deep work habit without burnout.\nGoal 3: Always honor break times to keep mental clarity razor sharp.',
+          content: 'Goal 1: Maintain high mastery across all STEM subjects.\nGoal 2: Build a disciplined 3-hour daily deep work habit without burnout.\nGoal 3: Always honor break times to keep mental clarity razor sharp.',
           tag: '🎯 Goal',
           date: now - (86400000 * 4)
         }
       ],
+      noteSubjects: ['Mathematics', 'Physics', 'English', 'Chemistry'],
+      notes: [
+        {
+          id: 'note_demo_1',
+          subject: 'Mathematics',
+          title: "Vieta's Formulas & Quadratic Shortcuts",
+          tag: '⚡ Trick / Shortcut',
+          content: "For quadratic equation ax² + bx + c = 0 with roots x₁, x₂:\n\n• Sum of roots: x₁ + x₂ = -b/a\n• Product of roots: x₁ · x₂ = c/a\n• Difference: |x₁ - x₂| = √Δ / |a|\n\n⚡ Fast Mental Checks:\n1. If a + b + c = 0 ➔ Roots are always x₁ = 1 and x₂ = c/a.\n2. If a - b + c = 0 ➔ Roots are always x₁ = -1 and x₂ = -c/a.\n3. If a · c < 0 ➔ Always 2 distinct real roots with opposite signs.",
+          url: 'https://desmos.com/calculator',
+          date: now - 7200000
+        },
+        {
+          id: 'note_demo_2',
+          subject: 'Physics',
+          title: 'Kinematics 5 Core Equations & Decision Rule',
+          tag: '📐 Formula',
+          content: "The 5 Kinematic Equations for constant acceleration a:\n\n1. v = v₀ + at (Missing Δx)\n2. Δx = v₀t + ½at² (Missing v)\n3. v² = v₀² + 2aΔx (Missing t)\n4. Δx = ½(v₀ + v)t (Missing a)\n5. Δx = vt - ½at² (Missing v₀)\n\n🎯 Strategy:\nIdentify the variable that is NEITHER given NOR requested in the question, then select the equation that omits that variable!",
+          url: 'https://geogebra.org',
+          date: now - (86400000 * 1.5)
+        },
+        {
+          id: 'note_demo_3',
+          subject: 'English',
+          title: 'Inversion Grammar Structures for Band 8.0+ Essays',
+          tag: '📖 Grammar Rule',
+          content: "Negative & Limiting Inversion Rules:\n\n1. Negative Adverbials:\n• 'Not only [aux] + [S] + [V], but [S] also...'\n  ➔ Not only does disciplined deep work boost retention, but it also elevates mental stamina.\n\n2. Limiting Adverbials:\n• 'Seldom / Rarely / Little did [S] realize...'\n  ➔ Seldom do students realize the exponential power of analyzing test mistakes.\n\n3. Conditionals without 'If':\n• 'Had [S] + [V3], [S] would have...'\n  ➔ Had I reviewed Vieta shortcuts earlier, I would have saved 10 minutes in the exam.",
+          url: 'https://notion.so',
+          date: now - (86400000 * 3)
+        }
+      ],
       activeSection: 'tests',
-      activeLifeFolder: 'all'
+      activeLifeFolder: 'all',
+      activeNoteSubject: 'all'
     }
   });
 }
@@ -5455,10 +5597,13 @@ function renderJournal(){
   });
   const testSec = document.getElementById('journal-section-tests');
   const lifeSec = document.getElementById('journal-section-life');
+  const noteSec = document.getElementById('journal-section-notes');
   if(testSec) testSec.style.display = sec === 'tests' ? 'block' : 'none';
   if(lifeSec) lifeSec.style.display = sec === 'life' ? 'block' : 'none';
+  if(noteSec) noteSec.style.display = sec === 'notes' ? 'block' : 'none';
   if(sec === 'tests') renderTestHistory();
-  else renderLifeSection();
+  else if(sec === 'life') renderLifeSection();
+  else if(sec === 'notes') renderSubjectNotesSection();
 }
 function moveTestOrder(testId, direction){
   if(!state.journal || !Array.isArray(state.journal.tests)) return;
@@ -5830,6 +5975,202 @@ function saveLifeNoteModal(){
   closeLifeNoteModal();
   renderLifeSection();
 }
+
+let currentEditingSubjectNoteId = null;
+let currentReadingSubjectNoteId = null;
+
+function renderSubjectNotesSection(){
+  const j = state.journal || { noteSubjects:['Mathematics','Physics','English','Chemistry'], notes:[] };
+  const subjects = j.noteSubjects || ['Mathematics','Physics','English','Chemistry'];
+  const notes = j.notes || [];
+  const activeS = j.activeNoteSubject || 'all';
+
+  const strip = document.getElementById('noteSubjectsStrip');
+  if(strip){
+    const allCount = notes.length;
+    let html = '<button type="button" class="life-folder-chip ' + (activeS === 'all' ? 'active' : '') + '" data-note-subject-filter="all">All (' + allCount + ')</button>';
+    subjects.forEach(s => {
+      const sCount = notes.filter(n => n.subject === s).length;
+      html += '<button type="button" class="life-folder-chip ' + (activeS === s ? 'active' : '') + '" data-note-subject-filter="' + escapeHtml(s) + '">'
+        + escapeHtml(s) + ' (' + sCount + ')'
+        + ' <span class="pdel" data-del-note-subject="' + escapeHtml(s) + '" style="width:16px;height:16px;font-size:11px;display:inline-grid;margin-left:4px" title="Delete subject">✕</span>'
+        + '</button>';
+    });
+    strip.innerHTML = html;
+  }
+
+  const query = (document.getElementById('noteSearchInput') ? document.getElementById('noteSearchInput').value : '').toLowerCase().trim();
+  let filtered = notes.filter(n => {
+    if(activeS !== 'all' && n.subject !== activeS) return false;
+    if(query){
+      const matchTitle = (n.title || '').toLowerCase().includes(query);
+      const matchContent = (n.content || '').toLowerCase().includes(query);
+      const matchSubject = (n.subject || '').toLowerCase().includes(query);
+      const matchTag = (n.tag || '').toLowerCase().includes(query);
+      return matchTitle || matchContent || matchSubject || matchTag;
+    }
+    return true;
+  });
+  filtered.sort((a, b) => (b.date || 0) - (a.date || 0));
+
+  const grid = document.getElementById('subjectNotesGrid');
+  if(!grid) return;
+  if(filtered.length === 0){
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;padding:40px 12px"><span class="big">📝</span>No subject notes found.<br>Click "✍️ Write Note" to record equations, math tricks, or grammar rules.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(n => {
+    const snippet = n.content ? escapeHtml(n.content.slice(0, 190)) : 'No content...';
+    let linkBadge = '';
+    if(n.url){
+      const prov = getLinkProvider(n.url);
+      linkBadge = '<a href="' + escapeHtml(n.url) + '" target="_blank" rel="noopener noreferrer" class="life-link-chip" onclick="event.stopPropagation()" title="Open ' + escapeHtml(prov.name) + '">' + prov.icon + ' ' + escapeHtml(prov.name) + ' ↗</a>';
+    }
+    return '<div class="life-note-card" data-open-subject-note="' + n.id + '">'
+      + '<div class="life-note-top">'
+      + '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+      + '<span class="life-note-badge" style="background:rgba(255,255,255,.07)">📁 ' + escapeHtml(n.subject) + '</span>'
+      + '<span class="life-note-badge" style="background:rgba(56,189,248,.1);color:#38bdf8;border-color:rgba(56,189,248,.25)">' + escapeHtml(n.tag || '📝 Summary') + '</span>'
+      + linkBadge
+      + '</div>'
+      + '<span class="life-note-date">' + relativeTime(n.date) + '</span>'
+      + '</div>'
+      + '<div class="life-note-title">' + escapeHtml(n.title) + '</div>'
+      + '<div class="life-note-snippet" style="white-space:pre-line">' + snippet + '</div>'
+      + '<div class="life-note-footer">'
+      + '<span>View full note →</span>'
+      + '<div style="display:flex;gap:4px">'
+      + '<button type="button" class="pdel" data-edit-subject-note="' + n.id + '" title="Edit note" onclick="event.stopPropagation()">✎</button>'
+      + '<button type="button" class="pdel" data-del-subject-note="' + n.id + '" title="Delete note" onclick="event.stopPropagation()">✕</button>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function openSubjectNoteModal(noteId){
+  currentEditingSubjectNoteId = noteId || null;
+  const subjects = (state.journal && state.journal.noteSubjects) || ['Mathematics', 'Physics', 'English', 'Chemistry'];
+  const sSel = document.getElementById('subjectNoteSubjectSelect');
+  if(sSel){
+    sSel.innerHTML = subjects.map(s => '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>').join('');
+  }
+  const titleEl = document.getElementById('subjectNoteModalTitle');
+  if(titleEl) titleEl.textContent = noteId ? 'Edit Subject Note' : 'Write Subject Note';
+  const tTitle = document.getElementById('subjectNoteTitleInput');
+  const tUrl = document.getElementById('subjectNoteUrlInput');
+  const tContent = document.getElementById('subjectNoteContentInput');
+  const tTag = document.getElementById('subjectNoteTagSelect');
+
+  if(noteId){
+    const note = (state.journal && state.journal.notes || []).find(x => x.id === noteId);
+    if(note){
+      if(sSel && subjects.includes(note.subject)) sSel.value = note.subject;
+      if(tTitle) tTitle.value = note.title || '';
+      if(tUrl) tUrl.value = note.url || '';
+      if(tContent) tContent.value = note.content || '';
+      if(tTag && note.tag) tTag.value = note.tag;
+    }
+  } else {
+    const curS = (state.journal && state.journal.activeNoteSubject !== 'all' && subjects.includes(state.journal.activeNoteSubject))
+      ? state.journal.activeNoteSubject
+      : (subjects[0] || 'Mathematics');
+    if(sSel) sSel.value = curS;
+    if(tTitle) tTitle.value = '';
+    if(tUrl) tUrl.value = '';
+    if(tContent) tContent.value = '';
+  }
+  const bd = document.getElementById('subjectNoteModalBackdrop');
+  if(bd) bd.classList.add('open');
+  setTimeout(() => { if(tTitle) tTitle.focus(); }, 80);
+}
+
+function closeSubjectNoteModal(){
+  const bd = document.getElementById('subjectNoteModalBackdrop');
+  if(bd) bd.classList.remove('open');
+  currentEditingSubjectNoteId = null;
+}
+
+function saveSubjectNoteModal(){
+  const sSel = document.getElementById('subjectNoteSubjectSelect');
+  const subject = sSel ? sSel.value : 'Mathematics';
+  const title = (document.getElementById('subjectNoteTitleInput').value || '').trim() || 'Study Note ' + formatDmy(new Date());
+  const content = (document.getElementById('subjectNoteContentInput').value || '').trim();
+  const rawUrl = (document.getElementById('subjectNoteUrlInput') ? document.getElementById('subjectNoteUrlInput').value : '').trim();
+  const url = normUrl(rawUrl);
+  const tag = document.getElementById('subjectNoteTagSelect') ? document.getElementById('subjectNoteTagSelect').value : '📐 Formula';
+
+  state.journal = state.journal || { noteSubjects:['Mathematics'], notes:[] };
+  state.journal.notes = state.journal.notes || [];
+
+  if(currentEditingSubjectNoteId){
+    const idx = state.journal.notes.findIndex(x => x.id === currentEditingSubjectNoteId);
+    if(idx !== -1){
+      state.journal.notes[idx] = {
+        ...state.journal.notes[idx],
+        subject,
+        title,
+        content,
+        tag,
+        url
+      };
+      toast('✓', 'Note updated', title);
+    }
+  } else {
+    state.journal.notes.unshift({
+      id: uid('note'),
+      subject,
+      title,
+      content,
+      tag,
+      url,
+      date: Date.now()
+    });
+    toast('✓', 'Note saved', title);
+  }
+  saveState();
+  closeSubjectNoteModal();
+  renderSubjectNotesSection();
+}
+
+function openSubjectNoteReader(noteId){
+  currentReadingSubjectNoteId = noteId;
+  const note = (state.journal && state.journal.notes || []).find(x => x.id === noteId);
+  if(!note) return;
+  const tTitle = document.getElementById('subjectNoteReaderTitle');
+  const tSubject = document.getElementById('subjectNoteReaderSubject');
+  const tTag = document.getElementById('subjectNoteReaderTag');
+  const tDate = document.getElementById('subjectNoteReaderDate');
+  const tContent = document.getElementById('subjectNoteReaderContent');
+  const linkWrap = document.getElementById('subjectNoteReaderLinkWrap');
+  const linkBtn = document.getElementById('subjectNoteReaderLinkBtn');
+
+  if(tTitle) tTitle.textContent = note.title;
+  if(tSubject) tSubject.textContent = '📁 ' + note.subject;
+  if(tTag) tTag.textContent = note.tag || '📝 Summary';
+  if(tDate) tDate.textContent = formatDmy(note.date) + ' (' + relativeTime(note.date) + ')';
+  if(tContent) tContent.textContent = note.content || '(No note content)';
+
+  if(note.url && linkWrap && linkBtn){
+    const prov = getLinkProvider(note.url);
+    linkBtn.href = note.url;
+    linkBtn.innerHTML = prov.icon + ' Open in ' + escapeHtml(prov.name) + ' ↗';
+    linkWrap.style.display = 'block';
+  } else if(linkWrap){
+    linkWrap.style.display = 'none';
+  }
+
+  const bd = document.getElementById('subjectNoteReaderBackdrop');
+  if(bd) bd.classList.add('open');
+}
+
+function closeSubjectNoteReader(){
+  const bd = document.getElementById('subjectNoteReaderBackdrop');
+  if(bd) bd.classList.remove('open');
+  currentReadingSubjectNoteId = null;
+}
+
 function openLifeReader(noteId){
   currentReadingLifeId = noteId;
   const entry = (state.journal && state.journal.lifeEntries || []).find(x => x.id === noteId);
@@ -6042,6 +6383,59 @@ function initJournalEventListeners(){
       toast('✕', 'Entry deleted', '');
     }
   });
+
+  // Subject Notes UI Listeners
+  const openNewNoteBtn = document.getElementById('openNewSubjectNoteBtn');
+  if(openNewNoteBtn) openNewNoteBtn.addEventListener('click', () => openSubjectNoteModal());
+  const noteSaveBtn = document.getElementById('subjectNoteModalSave');
+  if(noteSaveBtn) noteSaveBtn.addEventListener('click', saveSubjectNoteModal);
+  const noteCancelBtn = document.getElementById('subjectNoteModalCancel');
+  if(noteCancelBtn) noteCancelBtn.addEventListener('click', closeSubjectNoteModal);
+  const noteModalBackdrop = document.getElementById('subjectNoteModalBackdrop');
+  if(noteModalBackdrop) noteModalBackdrop.addEventListener('click', e => { if(e.target === noteModalBackdrop) closeSubjectNoteModal(); });
+
+  const noteReaderCloseBtn = document.getElementById('subjectNoteReaderCloseBtn');
+  if(noteReaderCloseBtn) noteReaderCloseBtn.addEventListener('click', closeSubjectNoteReader);
+  const noteReaderBackdrop = document.getElementById('subjectNoteReaderBackdrop');
+  if(noteReaderBackdrop) noteReaderBackdrop.addEventListener('click', e => { if(e.target === noteReaderBackdrop) closeSubjectNoteReader(); });
+  const noteReaderDeleteBtn = document.getElementById('subjectNoteReaderDeleteBtn');
+  if(noteReaderDeleteBtn){
+    noteReaderDeleteBtn.addEventListener('click', () => {
+      if(!currentReadingSubjectNoteId) return;
+      if(confirm('Delete this subject note?')){
+        state.journal = state.journal || { notes:[] };
+        state.journal.notes = (state.journal.notes || []).filter(x => x.id !== currentReadingSubjectNoteId);
+        saveState();
+        closeSubjectNoteReader();
+        renderSubjectNotesSection();
+        toast('✕', 'Note deleted', '');
+      }
+    });
+  }
+
+  const addNoteSubBtn = document.getElementById('addNoteSubjectBtn');
+  const addNoteSubInp = document.getElementById('newNoteSubjectInput');
+  const handleAddNoteSubject = () => {
+    if(!addNoteSubInp) return;
+    const name = addNoteSubInp.value.trim().slice(0, 35);
+    if(!name){ toast('⚠', 'Enter subject name', ''); addNoteSubInp.focus(); return; }
+    state.journal = state.journal || { noteSubjects:['Mathematics'] };
+    state.journal.noteSubjects = state.journal.noteSubjects || ['Mathematics'];
+    if(state.journal.noteSubjects.some(s => s.toLowerCase() === name.toLowerCase())){
+      toast('⚠', 'Subject already exists', name);
+      return;
+    }
+    state.journal.noteSubjects.push(name);
+    state.journal.activeNoteSubject = name;
+    addNoteSubInp.value = '';
+    saveState();
+    renderSubjectNotesSection();
+    toast('✓', 'Subject created', name);
+  };
+  if(addNoteSubBtn) addNoteSubBtn.addEventListener('click', handleAddNoteSubject);
+  if(addNoteSubInp) addNoteSubInp.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); handleAddNoteSubject(); } });
+  const noteSearchInp = document.getElementById('noteSearchInput');
+  if(noteSearchInp) noteSearchInp.addEventListener('input', () => renderSubjectNotesSection());
   const journalView = document.getElementById('view-journal');
   if(journalView){
     journalView.addEventListener('click', e => {
@@ -6128,6 +6522,53 @@ function initJournalEventListeners(){
           state.journal.lifeEntries = (state.journal.lifeEntries || []).filter(x => x.id !== id);
           saveState();
           renderLifeSection();
+          toast('✕', 'Note deleted', '');
+        }
+        return;
+      }
+
+      // Subject Notes Click Handlers
+      const noteChip = t.closest('[data-note-subject-filter]');
+      if(noteChip && !t.closest('[data-del-note-subject]')){
+        state.journal = state.journal || {};
+        state.journal.activeNoteSubject = noteChip.dataset.noteSubjectFilter;
+        renderSubjectNotesSection();
+        saveState();
+        return;
+      }
+      const delNoteSubBtn = t.closest('[data-del-note-subject]');
+      if(delNoteSubBtn){
+        const s = delNoteSubBtn.dataset.delNoteSubject;
+        if(confirm('Delete subject "' + s + '"? Notes in it will be moved to General.')){
+          state.journal = state.journal || { noteSubjects:[], notes:[] };
+          state.journal.noteSubjects = (state.journal.noteSubjects || []).filter(x => x !== s);
+          if(!state.journal.noteSubjects.length) state.journal.noteSubjects.push('General');
+          (state.journal.notes || []).forEach(n => { if(n.subject === s) n.subject = state.journal.noteSubjects[0] || 'General'; });
+          if(state.journal.activeNoteSubject === s) state.journal.activeNoteSubject = 'all';
+          saveState();
+          renderSubjectNotesSection();
+          toast('✕', 'Subject deleted', s);
+        }
+        return;
+      }
+      const openSubNote = t.closest('[data-open-subject-note]');
+      if(openSubNote && !t.closest('[data-del-subject-note]') && !t.closest('[data-edit-subject-note]')){
+        openSubjectNoteReader(openSubNote.dataset.openSubjectNote);
+        return;
+      }
+      const editSubNoteBtn = t.closest('[data-edit-subject-note]');
+      if(editSubNoteBtn){
+        openSubjectNoteModal(editSubNoteBtn.dataset.editSubjectNote);
+        return;
+      }
+      const delSubNoteBtn = t.closest('[data-del-subject-note]');
+      if(delSubNoteBtn){
+        const id = delSubNoteBtn.dataset.delSubjectNote;
+        if(confirm('Delete this subject note?')){
+          state.journal = state.journal || { notes:[] };
+          state.journal.notes = (state.journal.notes || []).filter(x => x.id !== id);
+          saveState();
+          renderSubjectNotesSection();
           toast('✕', 'Note deleted', '');
         }
         return;
